@@ -5,7 +5,7 @@ import MainPage from "./MainPage";
 function MainRoutes() {
 	return (
 		<Routes>
-			<Route path="/" element={<MainPage />} />
+			<Route path="/" element={<IndexPage />} />
 		</Routes>
 	);
 }

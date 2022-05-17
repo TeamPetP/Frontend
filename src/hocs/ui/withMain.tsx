@@ -1,51 +1,52 @@
 import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
-import IndexPage from "./index";
+import IndexPage from "../../pages/Main/index";
 import ProtectAnimalsList from "../../components/ProtectAnimalsList/ProtectAnimalsList";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
 import Background from "../../assets/images/background.jpg";
 import Petpgram from "../../assets/images/petpgram.png";
 
-const MainPage = () => {
-	return (
-		<Wrap>
-			<Container>
-				<LeftArea>
-					<MenuImg src={Petpgram} alt="펫피그램" />
-					<ProtectAnimalsList />
-				</LeftArea>
-				<RightArea>
-					<Content>
-						<Routes>
-							<Route path="/" element={<IndexPage />} />
-						</Routes>
-					</Content>
-				</RightArea>
-			</Container>
-		</Wrap>
-	);
+const WithMain = (PropsComponent: any, title: string) => {
+	const Component = () => {
+		return (
+			<Wrap>
+				<Container>
+					<LeftArea>
+						{title === "팻피그램" ? (
+							<MenuImg src={Petpgram} alt={title} />
+						) : (
+							<></>
+						)}
+						<ProtectAnimalsList />
+					</LeftArea>
+					<RightArea>
+						<Content>
+							<PropsComponent />
+						</Content>
+					</RightArea>
+				</Container>
+			</Wrap>
+		);
+	};
+	return Component;
 };
 
-export default MainPage;
+export default WithMain;
 
 const Wrap = styled.div`
 	width: 100%;
-	max-height: calc(100vh - 100px);
+	height: calc(100vh - 100px);
 	overflow: hidden;
 	background: url(${Background}) no-repeat center bottom / cover;
 `;
 
 const Container = styled.div`
 	width: 1230px;
-	max-height: inherit;
+	height: inherit;
 	margin: 0 auto;
 	display: flex;
 	justify-content: space-between;
-
-	& > div {
-		height: inherit;
-	}
 `;
 
 const LeftArea = styled.div`
@@ -59,6 +60,7 @@ const MenuImg = styled.img`
 
 const RightArea = styled.div`
 	width: 640px;
+	height: 100%;
 	overflow-y: scroll;
 	direction: ltr;
 	background-color: #fff;

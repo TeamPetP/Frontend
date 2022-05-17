@@ -14,13 +14,13 @@ const Navbar = () => {
 				<Logo src={LogoImg} alt="펫피" />
 			</NavLogo>
 			<Menuwrap>
-				<Menu to="/search" selected={pathname === "/"}>
+				<Menu to="/" selected={pathname === "/"}>
 					펫피그램
 				</Menu>
-				<Menu to="/search" selected={pathname === "/meeting"}>
+				<Menu to="/meeting" selected={pathname === "/meeting"}>
 					펫미팅
 				</Menu>
-				<Menu to="/search" selected={pathname === "/map"}>
+				<Menu to="/map" selected={pathname === "/map"}>
 					지도
 				</Menu>
 				<UserMenu>

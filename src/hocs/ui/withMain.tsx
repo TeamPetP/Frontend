@@ -6,6 +6,7 @@ import styled from "styled-components";
 import * as theme from "../../styles/theme";
 import Background from "../../assets/images/background.jpg";
 import Petpgram from "../../assets/images/petpgram.png";
+import PetMeeting from "../../assets/images/petmeeting.png";
 
 const WithMain = (PropsComponent: any, title: string) => {
 	const Component = () => {
@@ -15,6 +16,11 @@ const WithMain = (PropsComponent: any, title: string) => {
 					<LeftArea>
 						{title === "팻피그램" ? (
 							<MenuImg src={Petpgram} alt={title} />
+						) : (
+							<></>
+						)}
+						{title === "펫미팅" ? (
+							<MenuImg src={PetMeeting} alt={title} />
 						) : (
 							<></>
 						)}

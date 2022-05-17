@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
-import IndexPage from "../../pages/Main/index";
 import ProtectAnimalsList from "../../components/ProtectAnimalsList/ProtectAnimalsList";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";

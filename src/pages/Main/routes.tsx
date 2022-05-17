@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import IndexPage from "./index";
-import PetMeetingPage from "./petmeeting";
+import IndexPage from "./PetpGram";
+import PetMeetingPage from "./PetMeeting";
 
 function MainRoutes() {
 	return (

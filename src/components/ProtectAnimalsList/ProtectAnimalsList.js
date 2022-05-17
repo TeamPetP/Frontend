@@ -98,6 +98,7 @@ const ProtectAnimalsList = () => {
 export default ProtectAnimalsList;
 
 const Wrap = styled.div`
+	width: 100%;
 	background-color: #fff;
 	border-radius: 5px;
 	border: 2px solid #c1c1c1;

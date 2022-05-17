@@ -44,27 +44,49 @@ const Wrap = styled.div`
 	height: calc(100vh - 100px);
 	overflow: hidden;
 	background: url(${Background}) no-repeat center bottom / cover;
+
+	position: relative;
 `;
 
 const Container = styled.div`
-	width: 1230px;
+	max-width: 1230px;
 	height: inherit;
 	margin: 0 auto;
+	padding: 0px 40px;
 	display: flex;
 	justify-content: space-between;
+	position: relative;
+	z-index: 1;
+	@media screen and (max-width: 916px) {
+		padding: 0px 24px;
+	}
 `;
 
 const LeftArea = styled.div`
-	width: 540px;
+	max-width: 540px;
+	width: 46%;
+
+	margin-right: 26px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	@media screen and (max-width: 916px) {
+		display: none;
+	}
 `;
 
 const MenuImg = styled.img`
 	width: 100%;
-	margin: 80px 0 50px;
+	margin: 0px 0 40px 0px;
 `;
 
 const RightArea = styled.div`
-	width: 640px;
+	max-width: 640px;
+	min-width: 460px;
+	width: 52%;
 	height: 100%;
 	overflow-y: scroll;
 	direction: ltr;
@@ -73,9 +95,22 @@ const RightArea = styled.div`
 	border-top: 0;
 	box-sizing: border-box;
 
-	&::-webkit-scrollbar,
+	/* &::-webkit-scrollbar,
 	::-webkit-scrollbar-track {
 		display: none;
+	} */
+	&::-webkit-scrollbar {
+		background: white;
+		width: 7px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: #f3593a;
+		border-radius: 20px;
+	}
+	@media screen and (max-width: 916px) {
+		width: 100%;
+		max-width: 100%;
+		min-width: 100%;
 	}
 `;
 

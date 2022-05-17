@@ -70,5 +70,6 @@
 				}
 			]
 		]
-	}
+	},
+	"proxy": "https://www.camp-us.link"
 }

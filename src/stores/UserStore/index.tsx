@@ -1,6 +1,5 @@
 import { observable, action, computed, makeObservable } from "mobx";
 import { RootStoreModel } from "../RootStore";
-import { autobind } from "core-decorators";
 
 export interface IUserStore {
 	id: string;
@@ -8,7 +7,6 @@ export interface IUserStore {
 	pic?: string;
 }
 
-@autobind
 export class UserStore implements IUserStore {
 	private rootStore: RootStoreModel | undefined;
 

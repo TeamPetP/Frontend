@@ -6,18 +6,24 @@ import withMain from "../../../hocs/ui/withMain";
 const Wrapper = styled.div`
 	width: 100%;
 	height: 100%;
+	display: flex;
+	justify-content: space-between;
 `;
-
+const Test = styled.div`
+	width: 49%;
+	height: 200px;
+	background-color: red;
+`;
+const Test2 = styled.div`
+	width: 49%;
+	height: 200px;
+	background-color: blue;
+`;
 const IndexPage = observer(() => {
 	const { userStore } = useStores();
 	return (
 		<Wrapper>
-			<div>index page {userStore.getName}</div>
-			<input
-				onChange={(value) => {
-					userStore.setName(value.target.value);
-				}}
-			/>
+			<Test></Test> <Test2></Test2>
 		</Wrapper>
 	);
 });

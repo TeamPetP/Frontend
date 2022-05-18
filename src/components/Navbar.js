@@ -4,36 +4,41 @@ import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import LogoImg from "../logo.png";
 import * as theme from "../styles/theme";
-
+import Modal from "./common/Modal";
 const Navbar = () => {
 	const [user, setUser] = useState(false);
 	const { pathname } = useLocation();
 	return (
-		<NavWrap>
-			<NavLogo to="/">
-				<Logo src={LogoImg} alt="펫피" />
-			</NavLogo>
-			<Menuwrap>
-				<Menu to="/" selected={pathname === "/"}>
-					펫피그램
-				</Menu>
-				<Menu to="/meeting" selected={pathname === "/meeting"}>
-					펫미팅
-				</Menu>
-				<Menu to="/map" selected={pathname === "/map"}>
-					지도
-				</Menu>
-				<UserMenu>
-					{user ? (
-						<ProfileButton>
-							<UserProfile src={LogoImg}></UserProfile>
-						</ProfileButton>
-					) : (
-						<LoginBtn>로그인</LoginBtn>
-					)}
-				</UserMenu>
-			</Menuwrap>
-		</NavWrap>
+		<>
+			<Modal visible={false} width="640">
+				HIHI
+			</Modal>
+			<NavWrap>
+				<NavLogo to="/">
+					<Logo src={LogoImg} alt="펫피" />
+				</NavLogo>
+				<Menuwrap>
+					<Menu to="/" selected={pathname === "/"}>
+						펫피그램
+					</Menu>
+					<Menu to="/meeting" selected={pathname === "/meeting"}>
+						펫미팅
+					</Menu>
+					<Menu to="/map" selected={pathname === "/map"}>
+						지도
+					</Menu>
+					<UserMenu>
+						{user ? (
+							<ProfileButton>
+								<UserProfile src={LogoImg}></UserProfile>
+							</ProfileButton>
+						) : (
+							<LoginBtn>로그인</LoginBtn>
+						)}
+					</UserMenu>
+				</Menuwrap>
+			</NavWrap>
+		</>
 	);
 };
 

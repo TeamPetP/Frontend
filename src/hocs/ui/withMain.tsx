@@ -55,8 +55,6 @@ const Container = styled.div`
 	padding: 0px 40px;
 	display: flex;
 	justify-content: space-between;
-	position: relative;
-	z-index: 1;
 	@media screen and (max-width: 916px) {
 		padding: 0px 24px;
 	}
@@ -94,6 +92,7 @@ const RightArea = styled.div`
 	border: 2px solid ${theme.SecondaryColor};
 	border-top: 0;
 	box-sizing: border-box;
+	padding: 0px;
 
 	/* &::-webkit-scrollbar,
 	::-webkit-scrollbar-track {

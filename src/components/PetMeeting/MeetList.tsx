@@ -59,6 +59,13 @@ const Meeting = styled.div`
   background-color: #fff;
   border: 1px solid ${theme.PrimaryColor};
   box-sizing: border=box;
+	margin-bottom : 20px;
+	cursor: pointer;
+	transition :${theme.Transition};
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 `;
 
 const Options = styled.div`
@@ -72,7 +79,7 @@ justify-content: start;
 `;
 
 const Caregory = styled.span`
-  padding: 6px 20px;
+  padding: 4px 20px;
   background-color: ${theme.TextConentColor};
   color: #fff;
   border-radius: 5px;
@@ -113,6 +120,7 @@ margin-right: 8px;
 
 const Button = styled.button`
 	color : ${theme.TextSubColor};
+	background-color : transparent;
 	padding : 4px;
 	transition: ${theme.Transition};
 	

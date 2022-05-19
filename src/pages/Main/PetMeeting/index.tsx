@@ -18,6 +18,7 @@ const IndexPage = observer(() => {
   return (
     <Wrapper>
       <MeetList />
+      <MeetList />
 			<CreateMeetingBtn />
     </Wrapper>
   );

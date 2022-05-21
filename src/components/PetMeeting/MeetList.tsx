@@ -16,7 +16,7 @@ const MeetList = () => {
 					<Tag color={theme.PrimaryColor} text="D-3" />
 					<Tag text="공예/만들기" />
 				</Tags>
-				<BookmarkButton isBookmark />
+				<BookmarkButton isBookmark={isBookmark} />
 			</Options>
 			<MeetCondition
 				status={status}

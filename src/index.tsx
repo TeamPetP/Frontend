@@ -1,23 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { StoreProvider } from "./contexts/StoreContext";
-
+import GlobalStyle from "./styles/globalStyle";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RootStore } from "./stores/RootStore";
 const root = ReactDOM.createRoot(
-	document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 
 const rootstore = new RootStore();
 
 root.render(
-	<React.StrictMode>
-		<StoreProvider store={rootstore}>
-			<App />
-		</StoreProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <StoreProvider store={rootstore}>
+      <App />
+      <GlobalStyle />
+    </StoreProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

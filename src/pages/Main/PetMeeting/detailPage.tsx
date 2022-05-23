@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import { useStores } from '../../../hooks/useStores';
+import withMain from '../../../hocs/ui/withMain';
 import styled from 'styled-components';
 import * as theme from '../../../styles/theme';
 import user_profile from '../../../assets/images/user_profile.png';
@@ -13,6 +14,7 @@ const Wrapper = styled.div`
 	width: 100%;
 	height: 100%;
 	position: relative;
+	padding: 10px;
 `;
 
 const DetailPage = observer(() => {
@@ -72,7 +74,7 @@ const DetailPage = observer(() => {
 	);
 });
 
-export default DetailPage;
+export default withMain(DetailPage, '펫미팅');
 
 const Meeting = styled.div`
 	padding: 20px;

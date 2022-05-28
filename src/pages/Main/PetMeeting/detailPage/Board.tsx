@@ -7,13 +7,6 @@ import * as theme from '../../../../styles/theme';
 import user_profile from '../../../../assets/images/user_profile.png';
 import SampleImg from '../../../../assets/images/bg1.png';
 
-const Wrapper = styled.div`
-	width: 100%;
-	height: 100%;
-	position: relative;
-	padding: 10px;
-`;
-
 const Board = observer(() => {
 	const { userStore } = useStores();
 	const [isBookmark, setIsBookmark] = useState(false);
@@ -55,7 +48,6 @@ const Meeting = styled.div`
 	padding: 10px 20px;
 	background-color: #fff;
 	box-sizing: border-box;
-	cursor: pointer;
 	transition: ${theme.Transition};
 	border-bottom : 1px solid ${theme.SecondaryColor};
 

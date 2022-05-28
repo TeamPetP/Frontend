@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import * as theme from "../../../styles/theme";
 import MeetInfo from "./detailPage/MeetInfo";
 import Board from "./detailPage/Board";
+import Gallery from './detailPage/Gallery';
 
 const DetailPage = observer(() => {
 	const [selectedTabs, setSelectedTabs] = useState('info');
@@ -45,7 +46,7 @@ const DetailPage = observer(() => {
 			<div>
 				{selectedTabs === 'info' && <MeetInfo />}
 				{selectedTabs === 'board' && <Board />}
-				{selectedTabs === 'gallery' && <MeetInfo />}
+				{selectedTabs === 'gallery' && <Gallery />}
 			</div>
 		</>
 	);
@@ -65,7 +66,6 @@ const Tab = styled.div`
 	font-size: 20px;
 	text-align: center;
 	line-height: 24px;
-	margin-bottom: 24px;
 	cursor: pointer;
 	transition: all 200ms ease;
 	border-bottom: ${(props: { selectedTabs: string; page: string }) =>

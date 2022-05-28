@@ -10,13 +10,6 @@ import Tag from '../../../../components/PetMeeting/common/Tag';
 import BookmarkButton from '../../../../components/PetMeeting/common/BookmarkButton';
 import MeetCondition from '../../../../components/PetMeeting/common/MeetCondition';
 
-const Wrapper = styled.div`
-	width: 100%;
-	height: 100%;
-	position: relative;
-	padding: 10px;
-`;
-
 const MeetInfo = observer(() => {
 	const { userStore } = useStores();
 	const [isBookmark, setIsBookmark] = useState(false);
@@ -81,7 +74,6 @@ const Meeting = styled.div`
 	background-color: #fff;
 	box-sizing: border=box;
 	margin-bottom: 20px;
-	cursor: pointer;
 	transition: ${theme.Transition};
 
 	&:last-child {

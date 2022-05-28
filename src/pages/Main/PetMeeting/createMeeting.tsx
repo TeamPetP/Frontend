@@ -1,17 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import styled from 'styled-components';
-import * as theme from '../../../styles/theme';
-import { useStores } from '../../../hooks/useStores';
-import { observer } from 'mobx-react';
-import withMain from '../../../hocs/ui/withMain';
-import * as district from '../../../components/common/addressData';
-import PageTitle from '../../../components/common/PageTitle';
-import ContentName from '../../../components/common/ContentName';
-import ImageUpload from '../../../components/common/ImageUpload';
-import TextInput, { TextArea } from '../../../components/common/TextInput';
-import SubmitButton from '../../../components/common/SubmitButton';
-import checkmark_full from '../../../assets/images/checkmark_full.png';
-import checkmark_outline from '../../../assets/images/checkmark_outline.png';
+import React, { useState, useCallback } from "react";
+import styled from "styled-components";
+import * as theme from "../../../styles/theme";
+import { useStores } from "../../../hooks/useStores";
+import { observer } from "mobx-react";
+import withMain from "../../../hocs/ui/withMain";
+import district from "../../../components/common/addressData";
+import PageTitle from "../../../components/common/PageTitle";
+import ContentName from "../../../components/common/ContentName";
+import ImageUpload from "../../../components/common/ImageUpload";
+import TextInput, { TextArea } from "../../../components/common/TextInput";
+import SubmitButton from "../../../components/common/SubmitButton";
+import checkmark_full from "../../../assets/images/checkmark_full.png";
+import checkmark_outline from "../../../assets/images/checkmark_outline.png";
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -21,10 +21,10 @@ const Wrapper = styled.div`
 
 const CreateMeeting = observer(() => {
 	const { userStore } = useStores();
-	const [checkedPeriod, setCheckedPeriod] = useState('period1');
-	const [checkedPersonnel, setCheckedPersonnel] = useState('personnel1');
-	const [checkedGender, setCheckedGender] = useState('gender0');
-	const [checkedAge, setCheckedAge] = useState('age0');
+	const [checkedPeriod, setCheckedPeriod] = useState("period1");
+	const [checkedPersonnel, setCheckedPersonnel] = useState("personnel1");
+	const [checkedGender, setCheckedGender] = useState("gender0");
+	const [checkedAge, setCheckedAge] = useState("age0");
 
 	/* 지역 검색 */
 	const sido = district.sido;
@@ -69,21 +69,21 @@ const CreateMeeting = observer(() => {
 	};
 
 	const period = [
-		{ id: 'period1', value: '정기모임' },
-		{ id: 'period2', value: '1회 모임' },
+		{ id: "period1", value: "정기모임" },
+		{ id: "period2", value: "1회 모임" },
 	];
 	const personnel = [
-		{ id: 'personnel1', value: '제한없음' },
-		{ id: 'personnel2', value: '직접입력' },
+		{ id: "personnel1", value: "제한없음" },
+		{ id: "personnel2", value: "직접입력" },
 	];
 	const gender = [
-		{ id: 'gender0', value: '누구나' },
-		{ id: 'gender1', value: '남성만' },
-		{ id: 'gender2', value: '여성만' },
+		{ id: "gender0", value: "누구나" },
+		{ id: "gender1", value: "남성만" },
+		{ id: "gender2", value: "여성만" },
 	];
 	const age = [
-		{ id: 'age0', value: '누구나' },
-		{ id: 'age1', value: '직접입력' },
+		{ id: "age0", value: "누구나" },
+		{ id: "age1", value: "직접입력" },
 	];
 
 	const setImageUpload = useCallback(
@@ -141,7 +141,10 @@ const CreateMeeting = observer(() => {
 							)}
 						</Select> */}
 					</SelectBox>
-					<TextInput placeholder="모임 장소를 입력해 주세요." maxLength={30} />
+					<TextInput
+						placeholder="모임 장소를 입력해 주세요."
+						maxLength={30}
+					/>
 				</Distance>
 				<Distance top={0} bottom={0}>
 					<ContentName inputTitle="날짜 및 시간" />
@@ -164,12 +167,12 @@ const CreateMeeting = observer(() => {
 							</>
 						))}
 					</RadioWrap>
-					{checkedPeriod === 'period1' && (
+					{checkedPeriod === "period1" && (
 						<TextInput placeholder="정기모임을 할 약속시간을 입력해주세요." />
 					)}
-					{checkedPeriod === 'period2' && (
+					{checkedPeriod === "period2" && (
 						<TextInput placeholder="모임을 할 약속시간과 날짜를 입력해주세요." />
-					)}{' '}
+					)}{" "}
 					{/* 캘린더로 바꾸기 */}
 				</Distance>
 				<Line />
@@ -193,14 +196,14 @@ const CreateMeeting = observer(() => {
 								</RadioLabel>
 							</>
 						))}
-						{checkedPersonnel === 'personnel2' && (
+						{checkedPersonnel === "personnel2" && (
 							<TextInput
 								width="120px"
 								marginTop="0"
 								marginBottom="0"
 								placeholder="숫자만"
 							/>
-						)}{' '}
+						)}{" "}
 						{/* 캘린더로 바꾸기 */}
 					</RadioWrap>
 				</Distance>
@@ -233,7 +236,7 @@ const CreateMeeting = observer(() => {
 	);
 });
 
-export default withMain(CreateMeeting, '펫미팅');
+export default withMain(CreateMeeting, "펫미팅");
 
 const CreateContent = styled.div`
 	padding: 40px;
@@ -257,7 +260,8 @@ const RadioLabel = styled.label`
 	cursor: pointer;
 	width: 120px;
 	padding: 0 28px;
-	background: url(${(props: { Ischecked: boolean }) => props.Ischecked ? checkmark_full : checkmark_outline})
+	background: url(${(props: { Ischecked: boolean }) =>
+			props.Ischecked ? checkmark_full : checkmark_outline})
 		no-repeat left center / 20px;
 `;
 

@@ -5,6 +5,27 @@ import { observer } from 'mobx-react';
 import withMain from '../../../hocs/ui/withMain';
 import * as theme from '../../../styles/theme';
 import pencil from '../../../assets/images/pencil.png';
+import { useNavigate } from 'react-router';
+
+const IndexPage = observer(() => {
+	const navigate = useNavigate();
+
+	const moveDetailPage =()=>{
+		navigate(`/meeting/detail`);
+	}
+
+	const moveCreatePage =()=>{
+		navigate(`/meeting/create`);
+	}
+	return (
+		<Wrapper>
+			<MeetList moveDetailPage={moveDetailPage}/>
+			<CreateMeetingBtn onClick={moveCreatePage}/>
+		</Wrapper>
+	);
+});
+
+export default withMain(IndexPage, '펫미팅');
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -13,22 +34,8 @@ const Wrapper = styled.div`
 	padding: 10px;
 `;
 
-const IndexPage = observer(() => {
-	const { userStore } = useStores();
-
-	return (
-		<Wrapper>
-			<MeetList />
-			<MeetList />
-			<CreateMeetingBtn />
-		</Wrapper>
-	);
-});
-
-export default withMain(IndexPage, '펫미팅');
-
 const CreateMeetingBtn = styled.button`
-	position: fixed;
+	position: absolute;
 	bottom: 20px;
 	right: 20px;
 	width: 50px;

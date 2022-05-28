@@ -5,12 +5,15 @@ import Tag from './common/Tag';
 import BookmarkButton from './common/BookmarkButton';
 import MeetCondition from './common/MeetCondition';
 
-const MeetList = () => {
+interface IMeetType {
+	moveDetailPage: any;
+}
+const MeetList = ( {moveDetailPage} : IMeetType) => {
 	const [isBookmark, setIsBookmark] = useState(false);
 	const [status, setStatus] = useState(false);
 
 	return (
-		<Meeting>
+		<Meeting onClick={() => moveDetailPage()}>
 			<Options>
 				<Tags>
 					<Tag color={theme.PrimaryColor} text="D-3" />

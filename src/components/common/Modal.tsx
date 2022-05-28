@@ -1,16 +1,23 @@
 import React from "react";
 import styled from "styled-components";
+import Background from "../../assets/images/modal_background.png";
 
 interface IModalType {
 	visible: boolean;
 	children: any;
+	closeVisible: any;
 	width?: string;
 }
-function Modal({ visible, children, width }: IModalType) {
+function Modal({ visible, children, width, closeVisible }: IModalType) {
 	return (
 		<>
-			<ModalOverlay visible={visible} />
 			<ModalWrapper visible={visible}>
+				<ModalOverlay
+					onClick={() => {
+						console.log("test");
+						closeVisible();
+					}}
+				/>
 				<ModalInner className="modal-inner" width={width}>
 					{children}
 				</ModalInner>
@@ -35,8 +42,6 @@ const ModalWrapper = styled.div`
 
 const ModalOverlay = styled.div`
 	box-sizing: border-box;
-	display: ${(props: { visible: boolean }) =>
-		props.visible ? "block" : "none"};
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -56,10 +61,12 @@ const ModalInner = styled.div`
 		props.width ? props.width + "px" : "640px"};
 	height: 80%;
 	top: 50%;
+	z-index: 1001;
 	transform: translateY(-50%);
 	margin: 0 auto;
 	padding: 40px 20px;
 
+	background-image: url(${Background});
 	@media screen and (max-width: ${(props: { width: string | undefined }) =>
 			props.width ? Number(props.width) + 80 + "px" : "768px"}) {
 		width: 90%;

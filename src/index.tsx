@@ -6,19 +6,26 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RootStore } from "./stores/RootStore";
+import { AuthProvider } from "./contexts/UserContext";
+import { BrowserRouter as Router } from "react-router-dom";
+
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+	document.getElementById("root") as HTMLElement
 );
 
 const rootstore = new RootStore();
 
 root.render(
-  <React.StrictMode>
-    <StoreProvider store={rootstore}>
-      <App />
-      <GlobalStyle />
-    </StoreProvider>
-  </React.StrictMode>
+	<React.StrictMode>
+		<Router>
+			<StoreProvider store={rootstore}>
+				<AuthProvider>
+					<App />
+				</AuthProvider>
+				<GlobalStyle />
+			</StoreProvider>
+		</Router>
+	</React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

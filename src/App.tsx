@@ -4,20 +4,19 @@ import Navbar from "./components/Navbar";
 import MainRoutes from "./pages/Main/routes";
 import MyPageRoutes from "./pages/MyPage/routes";
 import AuthRoutes from "./pages/Auth/routes";
-
+import Modal from "./modals";
 import "./App.css";
 
 function App() {
 	return (
 		<>
-			<Router>
-				<Navbar />
-				<Routes>
-					<Route path="/*" element={<MainRoutes />} />
-					<Route path="/mypage" element={<MyPageRoutes />} />
-					<Route path="/auth/*" element={<AuthRoutes />} />
-				</Routes>
-			</Router>
+			<Navbar />
+			<Routes>
+				<Route path="/*" element={<MainRoutes />} />
+				<Route path="/mypage" element={<MyPageRoutes />} />
+				<Route path="/auth/*" element={<AuthRoutes />} />
+			</Routes>
+			<Modal />
 		</>
 	);
 }

@@ -7,7 +7,7 @@ const Wrapper = styled.div`
 	height: 100%;
 `;
 
-const SignInPage = observer(() => {
+const SignUpPage = observer(() => {
 	const { userStore } = useStores();
 	return (
 		<Wrapper>
@@ -21,4 +21,4 @@ const SignInPage = observer(() => {
 	);
 });
 
-export default SignInPage;
+export default SignUpPage;

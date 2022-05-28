@@ -4,6 +4,7 @@ import * as theme from '../../../styles/theme';
 import { useStores } from '../../../hooks/useStores';
 import { observer } from 'mobx-react';
 import withMain from '../../../hocs/ui/withMain';
+import * as district from '../../../components/common/addressData';
 import PageTitle from '../../../components/common/PageTitle';
 import ContentName from '../../../components/common/ContentName';
 import ImageUpload from '../../../components/common/ImageUpload';
@@ -24,12 +25,34 @@ const CreateMeeting = observer(() => {
 	const [checkedPersonnel, setCheckedPersonnel] = useState('personnel1');
 	const [checkedGender, setCheckedGender] = useState('gender0');
 	const [checkedAge, setCheckedAge] = useState('age0');
-	const [postOption, setPostOption] = useState({
-		postTitle: '',
-		postContent: '',
-		postImage: [],
-		categoryType: '카테고리',
+
+	/* 지역 검색 */
+	const sido = district.sido;
+	const sigungu = district.sigungu;
+	const [address, setAddress] = useState({
+		doNm: null,
+		sigunguNm: null,
+		rate: null,
+		name: null,
 	});
+
+	// 지역 도 변경
+	/* const changedoNm = (value: string) => {
+		setAddress((address) => {
+			return { ...address, doNm: value };
+		});
+
+		setAddress((address) => {
+			return { ...address, sigunguNm: null };
+		});
+	};
+
+	// 지역 시군구 변경
+	const changesigunguNm = (value: string) => {
+		setAddress((address) => {
+			return { ...address, sigunguNm: value };
+		});
+	}; */
 
 	const radioPeriodHandler = (e: any) => {
 		setCheckedPeriod(e.target.defaultValue);
@@ -90,6 +113,34 @@ const CreateMeeting = observer(() => {
 				</Distance>
 				<Distance top={0} bottom={20}>
 					<ContentName inputTitle="장소" />
+					<SelectBox>
+						{/* <Select
+							placeholder="시/도"
+							onChange={changedoNm}
+							value={address.doNm}
+						>
+							{sido.map((s) => (
+								<Option key={s} value={s}>
+									{s}
+								</Option>
+							))}
+						</Select>
+						<Select
+							placeholder="시/군/구"
+							onChange={changesigunguNm}
+							value={address.sigunguNm}
+						>
+							{address.doNm ? (
+								sigungu[address.doNm].map((sigunguNm: string, index: any) => (
+									<Option key={index} value={sigunguNm}>
+										{sigunguNm}
+									</Option>
+								))
+							) : (
+								<></>
+							)}
+						</Select> */}
+					</SelectBox>
 					<TextInput placeholder="모임 장소를 입력해 주세요." maxLength={30} />
 				</Distance>
 				<Distance top={0} bottom={0}>
@@ -154,7 +205,7 @@ const CreateMeeting = observer(() => {
 					</RadioWrap>
 				</Distance>
 				<Line />
-				<Distance top={0} bottom={0}>
+				<Distance top={0} bottom={40}>
 					<ContentName inputTitle="성별" />
 					<RadioWrap>
 						{gender.map((value) => (
@@ -175,34 +226,6 @@ const CreateMeeting = observer(() => {
 							</>
 						))}
 					</RadioWrap>
-				</Distance>
-				<Line />
-				<Distance top={0} bottom={40}>
-					<ContentName inputTitle="나이" />
-					<RadioWrap>
-						{age.map((value) => (
-							<>
-								<Radio
-									type="radio"
-									name="age"
-									id={value.id}
-									defaultValue={value.id}
-									onClick={radioAgeHandler}
-								/>
-								<RadioLabel
-									htmlFor={value.id}
-									Ischecked={checkedAge === value.id}
-								>
-									{value.value}
-								</RadioLabel>
-							</>
-						))}
-					</RadioWrap>
-					{checkedAge === 'age1' && (
-						<>
-							<TextInput width="48%" /> ~ <TextInput width="48%" />
-						</>
-					)}
 				</Distance>
 				<SubmitButton text="모임 만들기" />
 			</CreateContent>
@@ -234,8 +257,7 @@ const RadioLabel = styled.label`
 	cursor: pointer;
 	width: 120px;
 	padding: 0 28px;
-	background: url(${(props: { Ischecked: boolean }) =>
-			props.Ischecked ? checkmark_full : checkmark_outline})
+	background: url(${(props: { Ischecked: boolean }) => props.Ischecked ? checkmark_full : checkmark_outline})
 		no-repeat left center / 20px;
 `;
 
@@ -244,3 +266,18 @@ const Line = styled.div`
 	height: 1px;
 	margin: 20px 0;
 `;
+
+const SelectBox = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+const Select = styled.select`
+	width: calc(50% - 5px);
+	border: 1px solid #c1c1c1;
+	font-size: 15px;
+	padding: 10px;
+`;
+
+const Option = styled.option``;

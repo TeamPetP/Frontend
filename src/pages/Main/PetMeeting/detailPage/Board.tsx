@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import { useStores } from '../../../../hooks/useStores';
-import withMain from '../../../../hocs/ui/withMain';
+import Comment from '../../../../components/common/Comment';
 import styled from 'styled-components';
 import * as theme from '../../../../styles/theme';
 import user_profile from '../../../../assets/images/user_profile.png';
-import DefaultImg from '../../../../components/common/DefaultImg';
-import Tag from '../../../../components/PetMeeting/common/Tag';
-import BookmarkButton from '../../../../components/PetMeeting/common/BookmarkButton';
-import MeetCondition from '../../../../components/PetMeeting/common/MeetCondition';
+import SampleImg from '../../../../assets/images/bg1.png';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -34,35 +31,20 @@ const Board = observer(() => {
 					</div>
 				</div>
 			</Creator>
-			<MeetCondition
-				status={status}
-				meetTitle="수제간식 원데이클래스 같이 하실 분!"
-				age="20~30대만"
-				date="5월 7일 오후 2시"
-				personnel={2}
-			/>
-			{/* <MeetThumbnail src={}/> */}
-			<DefaultImg />
-			<Content>
-				aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-				<br />
-				aaaaaaa
-			</Content>
-			<Line />
-			<Member>
-				<Members>
-					참여중인 친구
-					<MemberLength>2/3</MemberLength>
-				</Members>
-				<div>
-					<MemberThumbnail src={user_profile} />
-					<MemberThumbnail src={user_profile} />
-				</div>
-			</Member>
-			<ButtonWrap>
-				<SubmitBtn>관심 꾸-욱zzz</SubmitBtn>
-				<SubmitBtn>참여 신청</SubmitBtn>
-			</ButtonWrap>
+			<BoardContent>
+				<BoardTitle>수제간식 원데이클래스 재밌었어요!</BoardTitle>
+				<ContentImg>
+					<img src={SampleImg} alt="활동사진" />
+					<img src={SampleImg} alt="활동사진" />
+					<img src={SampleImg} alt="활동사진" />
+				</ContentImg>
+				<Content>
+					aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+					<br />
+					aaaaaaa
+				</Content>
+			</BoardContent>
+			<Comment />
 		</Meeting>
 	);
 });
@@ -76,20 +58,12 @@ const Meeting = styled.div`
 	margin-bottom: 20px;
 	cursor: pointer;
 	transition: ${theme.Transition};
+	border-bottom : 1px solid ${theme.SecondaryColor};
 
 	&:last-child {
 		margin-bottom: 0;
+		border-bottom: 0;
 	}
-`;
-
-const Options = styled.div`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-`;
-
-const Tags = styled.div`
-	justify-content: start;
 `;
 
 const Creator = styled.div`
@@ -135,49 +109,21 @@ const CreateTime = styled.span`
 	color: ${theme.TextSubColor};
 `;
 
-const Member = styled.div`
-	& img {
-		margin-right: 8px;
-	}
+const BoardTitle = styled.div`
+font-size:20px;
+font-weight: 500;
+color: #000;
+margin-bottom: 16px;
 `;
 
-const MemberThumbnail = styled.img`
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	margin-right: 15px;
-	overflow: hidden;
-`;
+const BoardContent =styled.div``;
 
-const Line = styled.div`
-	background-color: #cfcfcf;
-	height: 1px;
-	margin: 20px 0;
-`;
-
-const Members = styled.div`
-	font-size: 20px;
-	font-weight: bold;
-	margin-bottom: 10px;
-`;
-
-const MemberLength = styled.span`
-	color: ${theme.PrimaryColor};
-	padding-left: 12px;
-`;
-
-const ButtonWrap = styled.div`
-	display: flex;
-	justify-content: space-between;
-	margin-top: 20px;
-`;
-const SubmitBtn = styled.button`
-	background-color: ${theme.PrimaryColor};
-	color: #fff;
-	border-radius: 5px;
-	font-size: 26px;
-	font-family: ${theme.jalnan};
-	display: block;
-	width: calc(50% - 5px);
-	padding: 8px;
+const ContentImg = styled.div`
+& img{
+	width: 72px;
+	margin-right: 8px;
+	border: 1px solid black;
+	box-sizing: border-box;
+}
+margin-bottom: 16px;
 `;

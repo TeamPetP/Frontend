@@ -52,10 +52,9 @@ const Board = observer(() => {
 export default Board;
 
 const Meeting = styled.div`
-	padding: 20px;
+	padding: 10px 20px;
 	background-color: #fff;
-	box-sizing: border=box;
-	margin-bottom: 20px;
+	box-sizing: border-box;
 	cursor: pointer;
 	transition: ${theme.Transition};
 	border-bottom : 1px solid ${theme.SecondaryColor};

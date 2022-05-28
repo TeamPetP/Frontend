@@ -1,16 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import styled from 'styled-components';
-import * as theme from '../../../styles/theme';
-import { useStores } from '../../../hooks/useStores';
-import { observer } from 'mobx-react';
-import withMain from '../../../hocs/ui/withMain';
-import PageTitle from '../../../components/common/PageTitle';
-import ContentName from '../../../components/common/ContentName';
-import ImageUpload from '../../../components/common/ImageUpload';
-import TextInput, { TextArea } from '../../../components/common/TextInput';
-import SubmitButton from '../../../components/common/SubmitButton';
-import checkmark_full from '../../../assets/images/checkmark_full.png';
-import checkmark_outline from '../../../assets/images/checkmark_outline.png';
+import React, { useState, useCallback } from "react";
+import styled from "styled-components";
+import * as theme from "../../../styles/theme";
+import { useStores } from "../../../hooks/useStores";
+import { observer } from "mobx-react";
+import withMain from "../../../hocs/ui/withMain";
+import district from "../../../components/common/addressData";
+import PageTitle from "../../../components/common/PageTitle";
+import ContentName from "../../../components/common/ContentName";
+import ImageUpload from "../../../components/common/ImageUpload";
+import TextInput, { TextArea } from "../../../components/common/TextInput";
+import SubmitButton from "../../../components/common/SubmitButton";
+import checkmark_full from "../../../assets/images/checkmark_full.png";
+import checkmark_outline from "../../../assets/images/checkmark_outline.png";
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -20,16 +21,38 @@ const Wrapper = styled.div`
 
 const CreateMeeting = observer(() => {
 	const { userStore } = useStores();
-	const [checkedPeriod, setCheckedPeriod] = useState('period1');
-	const [checkedPersonnel, setCheckedPersonnel] = useState('personnel1');
-	const [checkedGender, setCheckedGender] = useState('gender0');
-	const [checkedAge, setCheckedAge] = useState('age0');
-	const [postOption, setPostOption] = useState({
-		postTitle: '',
-		postContent: '',
-		postImage: [],
-		categoryType: '카테고리',
+	const [checkedPeriod, setCheckedPeriod] = useState("period1");
+	const [checkedPersonnel, setCheckedPersonnel] = useState("personnel1");
+	const [checkedGender, setCheckedGender] = useState("gender0");
+	const [checkedAge, setCheckedAge] = useState("age0");
+
+	/* 지역 검색 */
+	const sido = district.sido;
+	const sigungu = district.sigungu;
+	const [address, setAddress] = useState({
+		doNm: null,
+		sigunguNm: null,
+		rate: null,
+		name: null,
 	});
+
+	// 지역 도 변경
+	/* const changedoNm = (value: string) => {
+		setAddress((address) => {
+			return { ...address, doNm: value };
+		});
+
+		setAddress((address) => {
+			return { ...address, sigunguNm: null };
+		});
+	};
+
+	// 지역 시군구 변경
+	const changesigunguNm = (value: string) => {
+		setAddress((address) => {
+			return { ...address, sigunguNm: value };
+		});
+	}; */
 
 	const radioPeriodHandler = (e: any) => {
 		setCheckedPeriod(e.target.defaultValue);
@@ -46,21 +69,21 @@ const CreateMeeting = observer(() => {
 	};
 
 	const period = [
-		{ id: 'period1', value: '정기모임' },
-		{ id: 'period2', value: '1회 모임' },
+		{ id: "period1", value: "정기모임" },
+		{ id: "period2", value: "1회 모임" },
 	];
 	const personnel = [
-		{ id: 'personnel1', value: '제한없음' },
-		{ id: 'personnel2', value: '직접입력' },
+		{ id: "personnel1", value: "제한없음" },
+		{ id: "personnel2", value: "직접입력" },
 	];
 	const gender = [
-		{ id: 'gender0', value: '누구나' },
-		{ id: 'gender1', value: '남성만' },
-		{ id: 'gender2', value: '여성만' },
+		{ id: "gender0", value: "누구나" },
+		{ id: "gender1", value: "남성만" },
+		{ id: "gender2", value: "여성만" },
 	];
 	const age = [
-		{ id: 'age0', value: '누구나' },
-		{ id: 'age1', value: '직접입력' },
+		{ id: "age0", value: "누구나" },
+		{ id: "age1", value: "직접입력" },
 	];
 
 	const setImageUpload = useCallback(
@@ -90,7 +113,38 @@ const CreateMeeting = observer(() => {
 				</Distance>
 				<Distance top={0} bottom={20}>
 					<ContentName inputTitle="장소" />
-					<TextInput placeholder="모임 장소를 입력해 주세요." maxLength={30} />
+					<SelectBox>
+						{/* <Select
+							placeholder="시/도"
+							onChange={changedoNm}
+							value={address.doNm}
+						>
+							{sido.map((s) => (
+								<Option key={s} value={s}>
+									{s}
+								</Option>
+							))}
+						</Select>
+						<Select
+							placeholder="시/군/구"
+							onChange={changesigunguNm}
+							value={address.sigunguNm}
+						>
+							{address.doNm ? (
+								sigungu[address.doNm].map((sigunguNm: string, index: any) => (
+									<Option key={index} value={sigunguNm}>
+										{sigunguNm}
+									</Option>
+								))
+							) : (
+								<></>
+							)}
+						</Select> */}
+					</SelectBox>
+					<TextInput
+						placeholder="모임 장소를 입력해 주세요."
+						maxLength={30}
+					/>
 				</Distance>
 				<Distance top={0} bottom={0}>
 					<ContentName inputTitle="날짜 및 시간" />
@@ -113,12 +167,12 @@ const CreateMeeting = observer(() => {
 							</>
 						))}
 					</RadioWrap>
-					{checkedPeriod === 'period1' && (
+					{checkedPeriod === "period1" && (
 						<TextInput placeholder="정기모임을 할 약속시간을 입력해주세요." />
 					)}
-					{checkedPeriod === 'period2' && (
+					{checkedPeriod === "period2" && (
 						<TextInput placeholder="모임을 할 약속시간과 날짜를 입력해주세요." />
-					)}{' '}
+					)}{" "}
 					{/* 캘린더로 바꾸기 */}
 				</Distance>
 				<Line />
@@ -142,19 +196,19 @@ const CreateMeeting = observer(() => {
 								</RadioLabel>
 							</>
 						))}
-						{checkedPersonnel === 'personnel2' && (
+						{checkedPersonnel === "personnel2" && (
 							<TextInput
 								width="120px"
 								marginTop="0"
 								marginBottom="0"
 								placeholder="숫자만"
 							/>
-						)}{' '}
+						)}{" "}
 						{/* 캘린더로 바꾸기 */}
 					</RadioWrap>
 				</Distance>
 				<Line />
-				<Distance top={0} bottom={0}>
+				<Distance top={0} bottom={40}>
 					<ContentName inputTitle="성별" />
 					<RadioWrap>
 						{gender.map((value) => (
@@ -176,41 +230,13 @@ const CreateMeeting = observer(() => {
 						))}
 					</RadioWrap>
 				</Distance>
-				<Line />
-				<Distance top={0} bottom={40}>
-					<ContentName inputTitle="나이" />
-					<RadioWrap>
-						{age.map((value) => (
-							<>
-								<Radio
-									type="radio"
-									name="age"
-									id={value.id}
-									defaultValue={value.id}
-									onClick={radioAgeHandler}
-								/>
-								<RadioLabel
-									htmlFor={value.id}
-									Ischecked={checkedAge === value.id}
-								>
-									{value.value}
-								</RadioLabel>
-							</>
-						))}
-					</RadioWrap>
-					{checkedAge === 'age1' && (
-						<>
-							<TextInput width="48%" /> ~ <TextInput width="48%" />
-						</>
-					)}
-				</Distance>
 				<SubmitButton text="모임 만들기" />
 			</CreateContent>
 		</Wrapper>
 	);
 });
 
-export default withMain(CreateMeeting, '펫미팅');
+export default withMain(CreateMeeting, "펫미팅");
 
 const CreateContent = styled.div`
 	padding: 40px;
@@ -244,3 +270,18 @@ const Line = styled.div`
 	height: 1px;
 	margin: 20px 0;
 `;
+
+const SelectBox = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+const Select = styled.select`
+	width: calc(50% - 5px);
+	border: 1px solid #c1c1c1;
+	font-size: 15px;
+	padding: 10px;
+`;
+
+const Option = styled.option``;

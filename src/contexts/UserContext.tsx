@@ -37,13 +37,13 @@ export const AuthProvider = ({ children }: any) => {
 						// 로그인 성공시 user를 넘겨줌
 						console.log(res.data);
 						// setUser(user);
+						modalStore.signInState = false;
 					})
 					.catch((e) => {
 						if (e.response?.data.code === "USER_NOT_FOUND") {
 							modalStore.signUpState = true;
 							modalStore.signInState = false;
 						}
-						console.log(e.response?.data.code);
 					});
 			} else {
 				// 로그아웃시 Header에서

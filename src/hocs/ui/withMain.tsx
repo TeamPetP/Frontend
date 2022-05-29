@@ -6,6 +6,7 @@ import * as theme from "../../styles/theme";
 import Background from "../../assets/images/background.jpg";
 import Petpgram from "../../assets/images/petpgram.png";
 import PetMeeting from "../../assets/images/petmeeting.png";
+import mypage from "../../assets/images/mypage.png";
 
 const WithMain = (PropsComponent: any, title: string) => {
 	const Component = () => {
@@ -20,6 +21,11 @@ const WithMain = (PropsComponent: any, title: string) => {
 						)}
 						{title === "펫미팅" ? (
 							<MenuImg src={PetMeeting} alt={title} />
+						) : (
+							<></>
+						)}
+						{title === "마이페이지" ? (
+							<MenuImg src={mypage} alt={title} />
 						) : (
 							<></>
 						)}

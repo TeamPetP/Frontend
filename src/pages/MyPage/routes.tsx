@@ -8,9 +8,9 @@ function MyPageRoutes() {
 	return (
 		<Routes>
 			<Route path="/" element={<IndexPage />} />
-			<Route path="/mypage/alrim" element={<AlrimPage />} />
-			<Route path="/mypage/myMeet" element={<MyMeetPage />} />
-			<Route path="/mypage/attentionMeet" element={<AttentionMeetPage />} />
+			<Route path="/alrim" element={<AlrimPage />} />
+			<Route path="/myMeet" element={<MyMeetPage />} />
+			<Route path="/attentionMeet" element={<AttentionMeetPage />} />
 		</Routes>
 	);
 }

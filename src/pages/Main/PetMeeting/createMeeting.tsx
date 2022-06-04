@@ -4,7 +4,7 @@ import * as theme from "../../../styles/theme";
 import { useStores } from "../../../hooks/useStores";
 import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
-import district from "../../../components/common/addressData";
+import {sido, sigungu} from "../../../components/common/AddressData";
 import PageTitle from "../../../components/common/PageTitle";
 import ContentName from "../../../components/common/ContentName";
 import ImageUpload from "../../../components/common/ImageUpload";
@@ -27,8 +27,6 @@ const CreateMeeting = observer(() => {
 	const [checkedAge, setCheckedAge] = useState("age0");
 
 	/* 지역 검색 */
-	const sido = district.sido;
-	const sigungu = district.sigungu;
 	const [address, setAddress] = useState({
 		doNm: null,
 		sigunguNm: null,

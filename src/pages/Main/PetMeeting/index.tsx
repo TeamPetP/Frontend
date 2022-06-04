@@ -1,6 +1,5 @@
 import MeetList from '../../../components/PetMeeting/MeetList';
 import styled from 'styled-components';
-import { useStores } from '../../../hooks/useStores';
 import { observer } from 'mobx-react';
 import withMain from '../../../hocs/ui/withMain';
 import * as theme from '../../../styles/theme';

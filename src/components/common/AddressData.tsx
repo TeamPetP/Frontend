@@ -1,25 +1,25 @@
-let sido = [
-	"전체",
-	"서울시",
-	"부산시",
-	"대구시",
-	"인천시",
-	"광주시",
-	"대전시",
-	"울산시",
-	"세종시",
-	"경기도",
-	"강원도",
-	"충청북도",
-	"충청남도",
-	"전라북도",
-	"전라남도",
-	"경상북도",
-	"경상남도",
-	"제주도",
+export let sido = [
+	{name : "전체", value : "전체"},
+	{name : "서울시", value : "서울시"},
+	{name : "부산시", value : "부산시"},
+	{name : "대구시", value : "대구시"},
+	{name : "인천시", value : "인천시"},
+	{name : "광주시", value : "광주시"},
+	{name : "대전시", value : "대전시"},
+	{name : "울산시", value : "울산시"},
+	{name : "세종시", value : "세종시"},
+	{name : "경기도", value : "경기도"},
+	{name : "강원도", value : "강원도"},
+	{name : "충청북도", value : "충청북도"},
+	{name : "충청남도", value : "충청남도"},
+	{name : "전라북도", value : "전라북도"},
+	{name : "전라남도", value : "전라남도"},
+	{name : "경상북도", value : "경상북도"},
+	{name : "경상남도", value : "경상남도"},
+	{name : "제주도", value : "제주도"},
 ];
 
-let sigungu = {
+export let sigungu = {
 	전체: [],
 	서울시: [
 		"강남구",
@@ -263,4 +263,4 @@ let sigungu = {
 	제주도: ["서귀포시", "제주시"],
 };
 
-export default { sido, sigungu };
+export default sido;

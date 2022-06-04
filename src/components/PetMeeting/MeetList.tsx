@@ -4,6 +4,10 @@ import * as theme from '../../styles/theme';
 import Tag from './common/Tag';
 import BookmarkButton from './common/BookmarkButton';
 import MeetCondition from './common/MeetCondition';
+import SelectBox from '../../components/common/SelectBox';
+import Submit from '../../components/common/Submit';
+import sido  from "../common/AddressData";
+
 
 interface IMeetType {
 	moveDetailPage: any;
@@ -12,7 +16,28 @@ const MeetList = ( {moveDetailPage} : IMeetType) => {
 	const [isBookmark, setIsBookmark] = useState(false);
 	const [status, setStatus] = useState(false);
 
+	const meetState = [
+		{name : "모집중", value : "true"},
+		{name : "모집완료", value : "false"}
+	];
+
+	const filter = [
+		{name : "키워드", value : "keyword"},
+		{name : "모임장명", value : "creator"}
+	];
+
 	return (
+		<>
+		<form>
+			<SpaceBetween>
+				<SelectBox width="calc(50% - 5px)" options={sido}/>
+				<SelectBox width="calc(50% - 5px)" options={meetState}/>
+			</SpaceBetween>
+			<SpaceBetween>
+				<SelectBox width="calc(30% - 5px)" options={filter}/>
+				<Submit width="calc(70% - 5px)" />
+			</SpaceBetween>
+		</form>
 		<Meeting onClick={() => moveDetailPage()}>
 			<Options>
 				<Tags>
@@ -41,10 +66,18 @@ const MeetList = ( {moveDetailPage} : IMeetType) => {
 				<CreateTime>3시간전</CreateTime>
 			</Bottom>
 		</Meeting>
+		</>
 	);
 };
 
 export default MeetList;
+
+const SpaceBetween = styled.div`
+	display: flex;
+	justify-content : space-between;
+	align-items : center;
+	margin-bottom : 10px;
+`;
 
 const Meeting = styled.div`
 	padding: 20px;

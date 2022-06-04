@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
-import { useStores } from '../../../hooks/useStores';
 import withMain from '../../../hocs/ui/withMain';
 import styled from 'styled-components';
 import * as theme from "../../../styles/theme";

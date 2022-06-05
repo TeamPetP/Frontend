@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as theme from '../../styles/theme';
-import Tag from './common/Tag';
-import BookmarkButton from './common/BookmarkButton';
-import MeetCondition from './common/MeetCondition';
+import Tag from '../../components/common/Tag';
+import BookmarkButton from '../../components/common/BookmarkButton';
+import MeetCondition from '../../components/common/MeetCondition';
 import SelectBox from '../../components/common/SelectBox';
 import Submit from '../../components/common/Submit';
 import sido  from "../common/AddressData";

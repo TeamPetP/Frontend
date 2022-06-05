@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import bookmark from '../../../assets/images/bookmark.png';
-import bookmark_active from '../../../assets/images/bookmark_active.png';
+import bookmark from '../../assets/images/bookmark.png';
+import bookmark_active from '../../assets/images/bookmark_active.png';
 
 interface ITest {
 	isBookmark: boolean;

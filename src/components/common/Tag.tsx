@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as theme from '../../../styles/theme';
+import * as theme from '../../styles/theme';
 
 interface IInputType {
 	color?: string;

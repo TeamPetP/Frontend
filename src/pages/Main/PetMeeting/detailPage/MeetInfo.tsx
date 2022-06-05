@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import * as theme from '../../../../styles/theme';
 import user_profile from '../../../../assets/images/user_profile.png';
 import DefaultImg from '../../../../components/common/DefaultImg';
-import Tag from '../../../../components/PetMeeting/common/Tag';
-import BookmarkButton from '../../../../components/PetMeeting/common/BookmarkButton';
-import MeetCondition from '../../../../components/PetMeeting/common/MeetCondition';
+import Tag from '../../../../components/common/Tag';
+import BookmarkButton from '../../../../components/common/BookmarkButton';
+import MeetCondition from '../../../../components/common/MeetCondition';
 
 const MeetInfo = observer(() => {
 	const { userStore } = useStores();

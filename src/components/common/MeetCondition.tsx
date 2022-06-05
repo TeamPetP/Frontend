@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import * as theme from '../../../styles/theme';
-import condition1 from '../../../assets/images/condition1.png';
-import condition2 from '../../../assets/images/condition2.png';
-import condition3 from '../../../assets/images/condition3.png';
+import * as theme from '../../styles/theme';
+import condition1 from '../../assets/images/condition1.png';
+import condition2 from '../../assets/images/condition2.png';
+import condition3 from '../../assets/images/condition3.png';
 
 interface IConditionType {
 	status: boolean;

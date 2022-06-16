@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }: any) => {
 	const { modalStore } = useStores();
 
 	useEffect(() => {
+		// 로그아웃
 		signOut();
 		auth.onAuthStateChanged(async (firebaseUser: any) => {
 			console.log("auth auto state");

@@ -100,18 +100,11 @@ const RightArea = styled.div`
 	box-sizing: border-box;
 	padding: 0px;
 
-	/* &::-webkit-scrollbar,
+	&::-webkit-scrollbar,
 	::-webkit-scrollbar-track {
 		display: none;
-	} */
-	&::-webkit-scrollbar {
-		background: white;
-		width: 7px;
 	}
-	&::-webkit-scrollbar-thumb {
-		background: #f3593a;
-		border-radius: 20px;
-	}
+
 	@media screen and (max-width: 916px) {
 		width: 100%;
 		max-width: 100%;
@@ -119,4 +112,6 @@ const RightArea = styled.div`
 	}
 `;
 
-const Content = styled.div``;
+const Content = styled.div`
+	height: 100%;
+`;

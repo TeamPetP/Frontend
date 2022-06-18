@@ -9,10 +9,11 @@ import heart__fill from "../../../assets/images/heart__fill.png";
 
 import bookmark2 from "../../../assets/images/bookmark2.png";
 import bookmark2__fill from "../../../assets/images/bookmark2__fill.png";
+import Comment from "../../../components/common/Comment";
 
 const BoardWrapper = styled.div`
 	width: 100%;
-	min-height: 865px;
+	max-height: 865px;
 	padding: 16px 20px;
 
 	border: 1px solid #c1c1c1;
@@ -54,7 +55,7 @@ const BoardOnwerSetting = styled.div`
 
 	& > span {
 		color: #555555;
-		font-size: 20px;
+		font-size: 18px;
 
 		margin-left: 14px;
 
@@ -168,6 +169,25 @@ const SwiperToggleDot = styled.div`
 
 	cursor: pointer;
 `;
+const BoardSubNav = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 12px;
+`;
+const BoardLike = styled.div`
+	font-size: 18px;
+`;
+const BoardTime = styled.div`
+	font-size: 16px;
+`;
+const BoardText = styled.div`
+	margin-top: 12px;
+
+	width: 100%;
+`;
+
 function Board(props) {
 	const slider = useRef();
 	const [sliderDot, setSliderDot] = useState([]);
@@ -249,6 +269,16 @@ function Board(props) {
 					)}
 				</BookMarkWrapper>
 			</BoardNav>
+			<BoardSubNav>
+				<BoardLike>좋아요 56개</BoardLike>
+				<BoardTime>9시간 전</BoardTime>
+			</BoardSubNav>
+			<BoardText>
+				강아지랑 산책하기 딱 좋은 날이네요.
+				<br />
+				같이 보내는 첫봄! 같이 걸어요!
+			</BoardText>
+			<Comment />
 		</BoardWrapper>
 	);
 }

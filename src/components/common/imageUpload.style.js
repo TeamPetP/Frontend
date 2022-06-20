@@ -1,55 +1,58 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Wrap = styled.div`
-  margin-right: 20px;
+  position: relative;
 `;
-
-const ReviewInput = styled.input`
-  display: none;
-`;
-
-const PostWrap = styled.div`
+const Label = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   width: 100%;
-  margin-top: 22px;
-  margin-bottom: 15px;
-`;
-
-const PostUpload = styled.div`
-  width: 100px;
-  height: 100px;
-  border: 1px dashed #bdbdbd;
-  transition: all 200ms ease;
+  height: 110px;
+  overflow: hidden;
+  line-height: normal;
+  text-align: center;
+  color: #979797;
+  font-size: 16px;
+  vertical-align: middle;
   cursor: pointer;
+  background-color: #f7f7f7;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  box-sizing: border-box;
 
-  &:hover {
-    border: 1px dashed #73d13d;
-    color: #73d13d;
+  & img {
+    width: 20px;
+    height: fit-content;
   }
 `;
 
-const UploadContent = styled.div`
+const File = styled.input`
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+`;
+
+const Preview = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;
-  padding: 20px;
-`;
+  justify-content: space-around;
 
-const PostInput = styled.input`
-  display: none;
-`;
-
-const ButtonContent = styled.button`
-  width: 148px;
+  & img {
+    width: 80px;
+    height: fit-content;
+    margin-right: 8px;
+  }
 `;
 
 export const style = {
   Wrap,
-  ReviewInput,
-  PostWrap,
-  PostUpload,
-  UploadContent,
-  PostInput,
-  ButtonContent,
+  Label,
+  File,
+  Preview,
 };

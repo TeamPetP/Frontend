@@ -10,7 +10,6 @@ import backBtn from "../assets/images/back_btn.png";
 import menubar from "../assets/images/menubar.png";
 import * as theme from "../styles/theme";
 
-
 import { UserContext } from "../contexts/UserContext";
 
 import { useStores } from "../hooks/useStores";
@@ -72,12 +71,9 @@ const Navbar = observer(() => {
 					<Menu to="/meeting" selected={pathname === "/meeting"}>
 						펫미팅
 					</Menu>
-					<Menu to="/map" selected={pathname === "/map"}>
-						지도
-					</Menu>
 					<UserMenu>
 						{user != null && user.userAccessState ? (
-							<ProfileButton tp="/mypage">
+							<ProfileButton to="/mypage">
 								<UserProfile src={LogoImg}></UserProfile>
 							</ProfileButton>
 						) : (
@@ -101,9 +97,6 @@ const Navbar = observer(() => {
 						</Menu>
 						<Menu to="/meeting" selected={pathname === "/meeting"}>
 							펫미팅
-						</Menu>
-						<Menu to="/map" selected={pathname === "/map"}>
-							지도
 						</Menu>
 						<UserMenu>
 							{user ? (

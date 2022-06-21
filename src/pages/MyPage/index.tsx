@@ -34,7 +34,8 @@ const IndexPage = observer(() => {
 			<Padding>
 				<MyInfo>
 					<ProfileWrap>
-						{userStore.info.imgUrl.length > 0 ? (
+						{userStore.info.imgUrl &&
+						userStore.info.imgUrl.length > 0 ? (
 							<ProfileImg src={userStore.info.imgUrl} />
 						) : (
 							<ProfileImg src={user_profile} alt="프로필이미지" />

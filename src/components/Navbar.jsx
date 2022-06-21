@@ -75,7 +75,8 @@ const Navbar = observer(() => {
 							{user != null && user.userAccessState ? (
 								<ProfileButton to="/mypage">
 									{/* imgUrl */}
-									{userStore.info.imgUrl.length > 0 ? (
+									{userStore.info.imgUrl &&
+									userStore.info.imgUrl.length > 0 ? (
 										<UserProfile
 											src={userStore.info.imgUrl}
 										/>
@@ -85,9 +86,10 @@ const Navbar = observer(() => {
 								</ProfileButton>
 							) : (
 								<LoginBtn
-									onClick={() =>
-										(modalStore.signInState = true)
-									}
+									onClick={() => {
+										modalStore.signInState = true;
+										console.log("sfsfsf", user);
+									}}
 								>
 									로그인
 								</LoginBtn>

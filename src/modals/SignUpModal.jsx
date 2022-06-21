@@ -8,6 +8,7 @@ import { UserContext } from "../contexts/UserContext";
 import ProfileDefaultImage from "../assets/images/profile_default_image.png";
 import { SignUp } from "../services/authApi";
 import { useStores } from "../hooks/useStores";
+import { signOut } from "../services/firebaseAuth";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -128,7 +129,10 @@ function SignUpModal(props) {
 	return (
 		<Modal
 			visible={props.visibility}
-			closeVisible={() => props.SignInModalState()}
+			closeVisible={() => {
+				signOut();
+				props.SignInModalState();
+			}}
 			width="640"
 		>
 			<ModalWrapper>

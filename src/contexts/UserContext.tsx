@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }: any) => {
 
 	useEffect(() => {
 		// 로그아웃
-		signOut();
 		auth.onAuthStateChanged(async (firebaseUser: any) => {
 			if (firebaseUser) {
 				// 토큰을 가져온다.

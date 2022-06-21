@@ -100,8 +100,8 @@ const TextArea = styled.textarea`
 	font-size: 16px;
 `;
 
-function SignUpModal(props) {
-	const { user, setUser } = useContext(UserContext);
+function EditProfileModal(props) {
+	const { user } = useContext(UserContext);
 	const uploadPhoto = React.useRef("");
 	const [photo, setPhoto] = useState(false);
 	const [nickname, setNickname] = useState("");
@@ -124,13 +124,13 @@ function SignUpModal(props) {
 	return (
 		<Modal
 			visible={props.visibility}
-			closeVisible={() => props.SignInModalState()}
+			closeVisible={() => props.EditProfileModalState()}
 			width="640"
 		>
 			<ModalWrapper>
 				<Logo src={LogoImg} alt="펫피" />
 
-				{/* <label>
+				<label>
 					<ImageInput
 						type="file"
 						onChange={() => {
@@ -146,7 +146,7 @@ function SignUpModal(props) {
 							alt="profile_default_img"
 						/>
 					)}
-				</label> */}
+				</label>
 				<InputWrapper>
 					<InputTitle>이름</InputTitle>
 					<Input placeholder="이름을 입력해주세요."></Input>
@@ -155,22 +155,15 @@ function SignUpModal(props) {
 					<InputTitle>내 소개</InputTitle>
 					<TextArea placeholder="나를 소개해주세요."></TextArea>
 				</InputWrapper>
-				<Button
-					onClick={() =>
-						SignUp(
-							user,
-							nickname,
-							introduce,
-							setUser,
-							props.SignInModalState
-						)
-					}
-				>
-					회원가입
+				<Button onClick={() => SignUp(user, nickname, introduce)}>
+					수정하기
+				</Button>
+				<Button onClick={() => SignUp(user, nickname, introduce)}>
+					탈퇴하기
 				</Button>
 			</ModalWrapper>
 		</Modal>
 	);
 }
 
-export default SignUpModal;
+export default EditProfileModal;

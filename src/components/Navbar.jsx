@@ -17,10 +17,10 @@ import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
 
 const Navbar = observer(() => {
-	const { modalStore } = useStores();
 	const [menuclick, setMenuClick] = useState(false); // 모바일 메뉴 모달 노출
 	const [IsIconClicked, setIsIconClicked] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(true); // 디바이스 사이즈 체크
+	const { modalStore, userStore } = useStores();
 
 	const menuRef = useRef();
 	const { pathname } = useLocation();
@@ -55,6 +55,7 @@ const Navbar = observer(() => {
   
 	window.addEventListener('resize', deviceSizeCheck);
 
+	console.log(user);
 	return (
 		<>
 			<NavWrap>
@@ -75,9 +76,9 @@ const Navbar = observer(() => {
 						지도
 					</Menu>
 					<UserMenu>
-						{user ? (
-							<ProfileButton to="/mypage">
-								<UserProfile src={LogoImg}/>
+						{user != null && user.userAccessState ? (
+							<ProfileButton tp="/mypage">
+								<UserProfile src={LogoImg}></UserProfile>
 							</ProfileButton>
 						) : (
 							<LoginBtn
@@ -107,13 +108,13 @@ const Navbar = observer(() => {
 						<UserMenu>
 							{user ? (
 								<>
-								<MobileBtn PrimaryColor>마이페이지</MobileBtn>
-								<MobileBtn>로그아웃</MobileBtn>
+								<MobileBtn to="/mypage" PrimaryColor>마이페이지</MobileBtn>
+								<MobileLoginBtn>로그아웃</MobileLoginBtn>
 								</>
 							) : (
-								<MobileBtn PrimaryColor onClick={() => (modalStore.signInState = true)}>
+								<MobileLoginBtn PrimaryColor onClick={() => (modalStore.signInState = true)}>
 									로그인
-								</MobileBtn>
+								</MobileLoginBtn>
 							)}
 						</UserMenu>
 					</MobileMenuList>
@@ -274,7 +275,21 @@ const LoginBtn = styled.button`
 	border-radius: 5px;
 `;
 
-const MobileBtn = styled.button`
+const MobileBtn = styled(Link)`
+text-align: center;
+	display: block;
+	width: 370px;
+	height: 60px;
+	line-height: 60px;
+	background-color: ${(props) => props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};
+	color: #fff;
+	font-size: 26px;
+	border-radius: 5px;
+	margin-bottom: 25px;
+`;
+
+const MobileLoginBtn = styled.button`
+	display: block;
 	width: 370px;
 	height: 60px;
 	background-color: ${(props) => props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};

@@ -101,7 +101,7 @@ const TextArea = styled.textarea`
 `;
 
 function SignUpModal(props) {
-	const { user } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 	const uploadPhoto = React.useRef("");
 	const [photo, setPhoto] = useState(false);
 	const [nickname, setNickname] = useState("");
@@ -155,7 +155,17 @@ function SignUpModal(props) {
 					<InputTitle>내 소개</InputTitle>
 					<TextArea placeholder="나를 소개해주세요."></TextArea>
 				</InputWrapper>
-				<Button onClick={() => SignUp(user, nickname, introduce)}>
+				<Button
+					onClick={() =>
+						SignUp(
+							user,
+							nickname,
+							introduce,
+							setUser,
+							props.SignInModalState
+						)
+					}
+				>
 					회원가입
 				</Button>
 			</ModalWrapper>

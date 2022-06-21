@@ -1,6 +1,12 @@
 import axios from "axios";
 
-export const SignUp = (user: any, nickname: string, introduce: string) => {
+export const SignUp = (
+	user: any,
+	nickname: string,
+	introduce: string,
+	setUser: any,
+	closeEvent: any
+) => {
 	axios
 		.post(
 			`${process.env.REACT_APP_SERVER_API_URL}/members`,
@@ -13,7 +19,9 @@ export const SignUp = (user: any, nickname: string, introduce: string) => {
 			}
 		)
 		.then((e) => {
+			setUser({ ...user, userAccessState: true });
 			console.log(e);
+			closeEvent();
 		});
 };
 

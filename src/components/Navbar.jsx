@@ -34,7 +34,7 @@ const Navbar = observer(() => {
 						지도
 					</Menu>
 					<UserMenu>
-						{user ? (
+						{user != null && user.userAccessState ? (
 							<ProfileButton>
 								<UserProfile src={LogoImg}></UserProfile>
 							</ProfileButton>

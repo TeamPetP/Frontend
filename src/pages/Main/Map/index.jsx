@@ -121,6 +121,43 @@ const CheckBox = styled.input`
 
 	accent-color: #f3593a;
 `;
+const SearchButton = styled.div`
+	width: 100%;
+	height: 60px;
+
+	background-color: #f3593a;
+
+	border-radius: 10px;
+
+	font-size: 26px;
+	font-family: "yg-jalnan";
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	cursor: pointer;
+	color: white;
+
+	margin-bottom: 54px;
+`;
+const SearchList = styled.div`
+	width: 100%;
+	height: 300px;
+`;
+const SearchTitle = styled.div`
+	font-size: 26px;
+	font-family: "yg-jalnan";
+`;
+
+const SearchTitleLine = styled.div`
+	width: 100%;
+	height: 1px;
+	background-color: #f3593a;
+
+	margin-top: 12px;
+`;
+
 const IndexPage = observer(() => {
 	const { modalStore } = useStores();
 	const [openState, setOpenState] = useState(true);
@@ -169,6 +206,11 @@ const IndexPage = observer(() => {
 						<option>5km</option>
 					</Select>
 				</SearchDetailWrapper>
+				<SearchButton>검색</SearchButton>
+				<SearchList>
+					<SearchTitle>검색결과 리스트</SearchTitle>
+					<SearchTitleLine />
+				</SearchList>
 			</NavWrapper>
 			<Map id="map" open={openState}></Map>
 		</Wrapper>

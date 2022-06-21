@@ -1,12 +1,9 @@
-import React, { useState,
-	useEffect,
-	useContext,
-	useRef } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import LogoImg from "../logo.png";
-import backBtn from "../assets/images/back_btn.png";
+import backBtnIcon from "../assets/images/back_btn.png";
 import menubar from "../assets/images/menubar.png";
 import * as theme from "../styles/theme";
 
@@ -16,45 +13,46 @@ import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
 
 const Navbar = observer(() => {
+	const { pathname } = useLocation();
+
 	const [menuclick, setMenuClick] = useState(false); // 모바일 메뉴 모달 노출
 	const [IsIconClicked, setIsIconClicked] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(true); // 디바이스 사이즈 체크
 	const { modalStore, userStore } = useStores();
 
 	const menuRef = useRef();
-	const { pathname } = useLocation();
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
 		deviceSizeCheck();
-	  }, []);
-	
-	  useEffect(() => {
-		window.addEventListener('click', handleClickOutside);
+	}, []);
+
+	useEffect(() => {
+		window.addEventListener("click", handleClickOutside);
 		return () => {
-		  window.removeEventListener('click', handleClickOutside);
+			window.removeEventListener("click", handleClickOutside);
 		};
-	  }, []);
-	
-	  const handleClickOutside = (e) => {
+	}, []);
+
+	const handleClickOutside = (e) => {
 		if (!menuRef.current?.contains(e.target)) setIsIconClicked(false);
-	  };
+	};
 
 	// 모바일 메뉴 클릭
 	const handleMenuClick = () => setMenuClick(!menuclick);
 
 	// 디바이스 사이즈 체크
 	const deviceSizeCheck = () => {
-	  if (window.innerWidth <= 960) {
-		setIsDesktop(false);
-	  } else {
-		setIsDesktop(true);
-	  }
+		if (window.innerWidth <= 960) {
+			setIsDesktop(false);
+		} else {
+			setIsDesktop(true);
+		}
 	};
-  
-	window.addEventListener('resize', deviceSizeCheck);
 
-	console.log(user);
+	window.addEventListener("resize", deviceSizeCheck);
+
+	console.log("adadaaad", pathname);
 	return (
 		<>
 			<NavWrap>
@@ -64,34 +62,8 @@ const Navbar = observer(() => {
 				<MobileIcon onClick={handleMenuClick}>
 					{!isDesktop && <img src={menubar} alt="모바일 메뉴바" />}
 				</MobileIcon>
-				{isDesktop && <Menuwrap menuclick={menuclick} ref={menuRef}>
-					<Menu to="/" selected={pathname === "/"}>
-						펫피그램
-					</Menu>
-					<Menu to="/meeting" selected={pathname === "/meeting"}>
-						펫미팅
-					</Menu>
-					<UserMenu>
-						{user != null && user.userAccessState ? (
-							<ProfileButton to="/mypage">
-								<UserProfile src={LogoImg}></UserProfile>
-							</ProfileButton>
-						) : (
-							<LoginBtn
-								onClick={() => (modalStore.signInState = true)}
-							>
-								로그인
-							</LoginBtn>
-						)}
-					</UserMenu>
-				</Menuwrap>
-				}
-				{menuclick &&
-				<MobileMenuwrap menuclick={menuclick} ref={menuRef}>
-					<TitleArea>
-						<BackBtn onClick={handleMenuClick}/>
-					</TitleArea>
-					<MobileMenuList>
+				{isDesktop && (
+					<Menuwrap menuclick={menuclick} ref={menuRef}>
 						<Menu to="/" selected={pathname === "/"}>
 							펫피그램
 						</Menu>
@@ -99,20 +71,61 @@ const Navbar = observer(() => {
 							펫미팅
 						</Menu>
 						<UserMenu>
-							{user ? (
-								<>
-								<MobileBtn to="/mypage" PrimaryColor>마이페이지</MobileBtn>
-								<MobileLoginBtn>로그아웃</MobileLoginBtn>
-								</>
+							{user != null && user.userAccessState ? (
+								<ProfileButton to="/mypage">
+									<UserProfile src={LogoImg}></UserProfile>
+								</ProfileButton>
 							) : (
-								<MobileLoginBtn PrimaryColor onClick={() => (modalStore.signInState = true)}>
+								<LoginBtn
+									onClick={() =>
+										(modalStore.signInState = true)
+									}
+								>
 									로그인
-								</MobileLoginBtn>
+								</LoginBtn>
 							)}
 						</UserMenu>
-					</MobileMenuList>
-				</MobileMenuwrap>
-}
+					</Menuwrap>
+				)}
+				{menuclick && (
+					<MobileMenuwrap menuclick={menuclick} ref={menuRef}>
+						<TitleArea>
+							<BackBtn onClick={handleMenuClick} />
+						</TitleArea>
+						<MobileMenuList>
+							<Menu to="/" selected={pathname === "/"}>
+								펫피그램
+							</Menu>
+							<Menu
+								to="/meeting"
+								selected={pathname === "/meeting"}
+							>
+								펫미팅
+							</Menu>
+							<UserMenu>
+								{user & user.userAccessState ? (
+									<>
+										<MobileBtn to="/mypage" PrimaryColor>
+											마이페이지
+										</MobileBtn>
+										<MobileLoginBtn>
+											로그아웃
+										</MobileLoginBtn>
+									</>
+								) : (
+									<MobileLoginBtn
+										PrimaryColor
+										onClick={() =>
+											(modalStore.signInState = true)
+										}
+									>
+										로그인
+									</MobileLoginBtn>
+								)}
+							</UserMenu>
+						</MobileMenuList>
+					</MobileMenuwrap>
+				)}
 			</NavWrap>
 		</>
 	);
@@ -134,7 +147,7 @@ const NavWrap = styled.div`
 	box-sizing: border-box;
 
 	@media screen and (max-width: 960px) {
-		display:block;
+		display: block;
 		height: 80px;
 		padding: 0 20px;
 		overflow: visible;
@@ -150,41 +163,41 @@ const NavLogo = styled(Link)`
 `;
 
 const MobileIcon = styled.div`
- 	display: block;
-    position: absolute;
-    top: 19px;
-    right: 20px;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #73d13d;
+	display: block;
+	position: absolute;
+	top: 19px;
+	right: 20px;
+	font-size: 1.8rem;
+	cursor: pointer;
+	color: #73d13d;
 `;
 
 const TitleArea = styled.div`
-  border-bottom: 2px solid ${theme.SecondaryColor};
-  box-sizing: border-box;
-  height: 60px;
-  background-color: #fff;
-  position: relative;
-  display: flex;
-  align-items: center;
+	border-bottom: 2px solid ${theme.SecondaryColor};
+	box-sizing: border-box;
+	height: 60px;
+	background-color: #fff;
+	position: relative;
+	display: flex;
+	align-items: center;
 `;
 
 const BackBtn = styled.button`
-  width: 20px;
-  height: 18px;
-  background: transparent url(${backBtn}) no-repeat center center / 100%;
-  position: absolute;
-  top: 20xp;
-  left: 40px;
-  transition: ${theme.Transition};
+	width: 20px;
+	height: 18px;
+	background: transparent url(${backBtnIcon}) no-repeat center center / 100%;
+	position: absolute;
+	top: 20xp;
+	left: 40px;
+	transition: ${theme.Transition};
 
-  &:hover {
-    opacity: 0.7;
-  }
+	&:hover {
+		opacity: 0.7;
+	}
 
-  @media screen and (max-width: 960px) {
-    left: 20px;
-  }
+	@media screen and (max-width: 960px) {
+		left: 20px;
+	}
 `;
 
 const Logo = styled.img`
@@ -269,12 +282,13 @@ const LoginBtn = styled.button`
 `;
 
 const MobileBtn = styled(Link)`
-text-align: center;
+	text-align: center;
 	display: block;
 	width: 370px;
 	height: 60px;
 	line-height: 60px;
-	background-color: ${(props) => props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};
+	background-color: ${(props) =>
+		props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};
 	color: #fff;
 	font-size: 26px;
 	border-radius: 5px;
@@ -285,7 +299,8 @@ const MobileLoginBtn = styled.button`
 	display: block;
 	width: 370px;
 	height: 60px;
-	background-color: ${(props) => props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};
+	background-color: ${(props) =>
+		props.PrimaryColor ? `${theme.PrimaryColor}` : `#000000`};
 	color: #fff;
 	font-size: 26px;
 	border-radius: 5px;

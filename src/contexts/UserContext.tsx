@@ -30,17 +30,22 @@ export const AuthProvider = ({ children }: any) => {
 				defaultHeaders.Authorization = `Bearer ${token}`;
 				// 로그인 시도 (백엔드 API 구현 필요)
 				setUser(defaultHeaders);
+				console.log("testtest");
 				axios
 					.get("http://3.39.122.247:8080/members/me", {
 						headers: defaultHeaders,
 					})
 					.then(async (res: any) => {
+						console.log("testdtest");
+
 						// 로그인 성공시 user를 넘겨줌
 						console.log(res.data);
 						// setUser(user);
 						modalStore.signInState = false;
 					})
 					.catch((e) => {
+						console.log("test2dtest");
+
 						if (e.response?.data.code === "USER_NOT_FOUND") {
 							modalStore.signUpState = true;
 							modalStore.signInState = false;

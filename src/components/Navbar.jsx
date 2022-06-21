@@ -11,12 +11,12 @@ import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
 
 const Navbar = observer(() => {
-	const { modalStore } = useStores();
+	const { modalStore, userStore } = useStores();
 
 	const uploadPhoto = React.useRef("");
 	const { pathname } = useLocation();
 	const { user } = useContext(UserContext);
-
+	console.log(user);
 	return (
 		<>
 			<NavWrap>

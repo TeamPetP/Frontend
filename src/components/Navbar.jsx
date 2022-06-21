@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import LogoImg from "../logo.png";
 import backBtnIcon from "../assets/images/back_btn.png";
 import menubar from "../assets/images/menubar.png";
+import ProfileImage from "../assets/images/user_profile.png";
 import * as theme from "../styles/theme";
 
 import { UserContext } from "../contexts/UserContext";
@@ -73,7 +74,14 @@ const Navbar = observer(() => {
 						<UserMenu>
 							{user != null && user.userAccessState ? (
 								<ProfileButton to="/mypage">
-									<UserProfile src={LogoImg}></UserProfile>
+									{/* imgUrl */}
+									{userStore.info.imgUrl.length > 0 ? (
+										<UserProfile
+											src={userStore.info.imgUrl}
+										/>
+									) : (
+										<UserProfile src={ProfileImage} />
+									)}
 								</ProfileButton>
 							) : (
 								<LoginBtn
@@ -209,7 +217,7 @@ const Logo = styled.img`
 `;
 
 const Menuwrap = styled.div`
-	width: 500px;
+	width: 400px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -270,6 +278,8 @@ const ProfileButton = styled(Link)`
 const UserProfile = styled.img`
 	width: 100%;
 	height: 100%;
+
+	border-radius: 100%;
 `;
 
 const LoginBtn = styled.button`

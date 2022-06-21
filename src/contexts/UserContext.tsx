@@ -14,11 +14,11 @@ export const defaultHeaders: any = {
 export const AuthProvider = ({ children }: any) => {
 	const [user, setUser] = useState({});
 	const navigate: any = useNavigate();
-	const { modalStore } = useStores();
+	const { modalStore, userStore } = useStores();
 
 	useEffect(() => {
 		// 로그아웃
-		// signOut();
+		signOut();
 		auth.onAuthStateChanged(async (firebaseUser: any) => {
 			if (firebaseUser) {
 				// 토큰을 가져온다.
@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }: any) => {
 
 						// 로그인 성공시 user를 넘겨줌
 						console.log(res.data);
+						userStore.info = res.data;
 						setUser({ ...user, userAccessState: true });
 
 						// setUser(user);

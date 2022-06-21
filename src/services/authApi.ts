@@ -5,7 +5,8 @@ export const SignUp = (
 	nickname: string,
 	introduce: string,
 	setUser: any,
-	closeEvent: any
+	closeEvent: any,
+	setUserInfo: any
 ) => {
 	axios
 		.post(
@@ -20,7 +21,8 @@ export const SignUp = (
 		)
 		.then((e) => {
 			setUser({ ...user, userAccessState: true });
-			console.log(e);
+			console.log("test", e.data);
+			setUserInfo(e.data);
 			closeEvent();
 		});
 };

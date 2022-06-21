@@ -7,6 +7,7 @@ import Modal from "../components/common/Modal";
 import { UserContext } from "../contexts/UserContext";
 import ProfileDefaultImage from "../assets/images/profile_default_image.png";
 import { SignUp } from "../services/authApi";
+import { useStores } from "../hooks/useStores";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -106,6 +107,9 @@ function SignUpModal(props) {
 	const [photo, setPhoto] = useState(false);
 	const [nickname, setNickname] = useState("");
 	const [introduce, setIntroduce] = useState("");
+
+	const { userStore } = useStores();
+
 	function PhotoUpdate() {
 		if (uploadPhoto.current.files.length !== 0) {
 			setPhoto(uploadPhoto.current.files[0]);
@@ -162,7 +166,10 @@ function SignUpModal(props) {
 							nickname,
 							introduce,
 							setUser,
-							props.SignInModalState
+							props.SignInModalState,
+							(data) => {
+								userStore.info = data;
+							}
 						)
 					}
 				>

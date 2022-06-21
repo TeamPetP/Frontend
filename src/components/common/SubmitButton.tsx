@@ -20,5 +20,9 @@ const SubmitBtn = styled.button`
   font-family: ${theme.jalnan};
   display: block;
   width: 100%;
-  padding : 8px;
+  padding: 8px;
+
+  @media screen and (max-width: 600px) {
+    font-size: 18px;
+  }
 `;

@@ -10,6 +10,7 @@ import heart__fill from "../../../assets/images/heart__fill.png";
 import bookmark2 from "../../../assets/images/bookmark2.png";
 import bookmark2__fill from "../../../assets/images/bookmark2__fill.png";
 import Comment from "../../../components/common/Comment";
+import { EditPost } from "../../../services/postApi";
 
 const BoardWrapper = styled.div`
 	width: 100%;
@@ -210,6 +211,9 @@ function Board(props) {
 	function DotClickEvent(data) {
 		slider.current.slickGoTo(data);
 	}
+	function EditPost() {
+		props.EditEvent(props.info.postId);
+	}
 
 	const settings = {
 		dots: false,
@@ -233,7 +237,7 @@ function Board(props) {
 					<BoardUserName>{props.info.username}</BoardUserName>
 				</BoardUserInfo>
 				<BoardOnwerSetting>
-					<span>수정</span>
+					<span onClick={() => EditPost()}>수정</span>
 					<span>삭제</span>
 				</BoardOnwerSetting>
 			</BoardHeader>

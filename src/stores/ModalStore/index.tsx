@@ -12,6 +12,10 @@ export class ModalStore implements IModalStore {
 	@observable signInState = false;
 	@observable signUpState = false;
 	@observable createPetpGramState = false;
+	@observable editPetpGramState = false;
+
+	@observable petpGramPostId = 0;
+
 	@observable editProfile = false;
 
 	@computed get getSignInState(): boolean {
@@ -20,8 +24,14 @@ export class ModalStore implements IModalStore {
 	@computed get getSignUpState(): boolean {
 		return this.signUpState;
 	}
+	@computed get getPetPGramPostIdState(): number {
+		return this.petpGramPostId;
+	}
 	@computed get getCreatePetpGramState(): boolean {
 		return this.createPetpGramState;
+	}
+	@computed get getEditPetpGramState(): boolean {
+		return this.editPetpGramState;
 	}
 	@computed get getEditProfile(): boolean {
 		return this.editProfile;

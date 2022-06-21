@@ -4,6 +4,7 @@ import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
 import CreatePetpGramModal from "./CreatePetpGramModal";
 import EditProfileModal from "./EditProfile";
+import EditPetpGramModal from "./EditPetpGramModal";
 
 const Modal = observer(() => {
 	const { modalStore } = useStores();
@@ -28,6 +29,12 @@ const Modal = observer(() => {
 					modalStore.createPetpGramState = false;
 				}}
 			></CreatePetpGramModal>
+			<EditPetpGramModal
+				visibility={modalStore.getEditPetpGramState}
+				EditPetpGramModalState={() => {
+					modalStore.editPetpGramState = false;
+				}}
+			></EditPetpGramModal>
 			<EditProfileModal
 				visibility={modalStore.getEditProfile}
 				EditProfileModalState={() => {

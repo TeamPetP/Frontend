@@ -130,7 +130,7 @@ function SignUpModal(props) {
 			<ModalWrapper>
 				<Logo src={LogoImg} alt="펫피" />
 
-				<label>
+				{/* <label>
 					<ImageInput
 						type="file"
 						onChange={() => {
@@ -146,7 +146,7 @@ function SignUpModal(props) {
 							alt="profile_default_img"
 						/>
 					)}
-				</label>
+				</label> */}
 				<InputWrapper>
 					<InputTitle>이름</InputTitle>
 					<Input placeholder="이름을 입력해주세요."></Input>

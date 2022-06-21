@@ -100,8 +100,11 @@ const BoardList = styled.div`
 	height: calc(100% - 120px);
 `;
 const IndexPage = observer(() => {
-	const { userStore } = useStores();
+	const { modalStore } = useStores();
 
+	function createBoard() {
+		modalStore.createPetpGramState = true;
+	}
 	return (
 		<Wrapper>
 			<SearchBar>
@@ -128,7 +131,11 @@ const IndexPage = observer(() => {
 					],
 				}}
 			/>
-			<CreateButton>
+			<CreateButton
+				onClick={() => {
+					createBoard();
+				}}
+			>
 				<CreateButtonImage src={pencil} alt="create button" />
 			</CreateButton>
 		</Wrapper>

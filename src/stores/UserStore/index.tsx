@@ -10,8 +10,8 @@ export interface IUserStore {
 export class UserStore implements IUserStore {
 	private rootStore: RootStoreModel | undefined;
 
-	@observable id = "test";
-	@observable name = "태민";
+	@observable id = "";
+	@observable name = "";
 	@observable pic = "";
 
 	constructor(rootStore?: RootStoreModel) {

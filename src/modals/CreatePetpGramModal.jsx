@@ -93,7 +93,8 @@ const PhotoWrapper = styled.div`
 
 	display: flex;
 
-	overflow-x: scroll;
+	overflow-x: auto;
+	overflow-y: hidden;
 
 	& > * {
 		margin-right: 20px;

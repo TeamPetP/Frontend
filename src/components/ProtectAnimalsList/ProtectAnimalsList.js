@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import arrow_left from "../../assets/images/arrow_left.png";
 import arrow_right from "../../assets/images/arrow_right.png";
 import Slider from "react-slick";
 import Notice from "./Notice";
+// import { AbandonedAnimals } from "../../services/Api";
 
 function SamplePrevArrow(props) {
 	const { className, style, onClick } = props;
@@ -16,7 +17,7 @@ function SamplePrevArrow(props) {
 			<img
 				src={arrow_left}
 				alt="유기동물 정보 좌측으로 넘기기"
-				onclick={onClick}
+				onClick={onClick}
 			/>
 		</div>
 	);
@@ -33,7 +34,7 @@ function SampleNextArrow(props) {
 			<img
 				src={arrow_right}
 				alt="유기동물 정보 우측으로 넘기기"
-				onclick={onClick}
+				onClick={onClick}
 			/>
 		</div>
 	);
@@ -80,6 +81,11 @@ const ProtectAnimalsList = () => {
 	];
 	let json = JSON.stringify(true);
 	json = JSON.stringify(animals);
+
+	// useEffect(async () => {
+	// let data = await AbandonedAnimals();
+	// console.log(data);
+	// }, []);
 
 	return (
 		<Wrap>

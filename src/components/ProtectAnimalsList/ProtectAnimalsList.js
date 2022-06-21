@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import arrow_left from "../../assets/images/arrow_left.png";
 import arrow_right from "../../assets/images/arrow_right.png";
 import Slider from "react-slick";
 import Notice from "./Notice";
-// import { AbandonedAnimals } from "../../services/Api";
+import { AbandonedAnimals } from "../../services/Api";
 
 function SamplePrevArrow(props) {
 	const { className, style, onClick } = props;
@@ -53,46 +53,22 @@ const ProtectAnimalsList = () => {
 		prevArrow: <SamplePrevArrow />,
 	};
 
-	const animals = [
-		{
-			id: 1,
-			filename:
-				"https://cdn.mkhealth.co.kr/news/photo/202102/52163_52859_5928.jpg",
-			processState: "protect",
-			sexCd: "m",
-			careNm: "성남시",
-		},
-		{
-			id: 2,
-			filename:
-				"https://ewhagift.ewha.ac.kr/ezstock/035434400_1534729386.jpg",
-			processState: "end",
-			sexCd: "w",
-			careNm: "부산시",
-		},
-		{
-			id: 3,
-			filename:
-				"https://www.google.com/imgres?imgurl=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E&imgrefurl=https%3A%2F%2Fblankspace-dev.tistory.com%2Fm%2F200&tbnid=3bPYTaav1zN1YM&vet=12ahUKEwjkianS7tv3AhXjTPUHHYfQBK8QMygAegUIARDGAQ..i&docid=Od8TKEeMjkriMM&w=800&h=500&q=%EC%9D%B4%EB%AF%B8%EC%A7%80&ved=2ahUKEwjkianS7tv3AhXjTPUHHYfQBK8QMygAegUIARDGAQ",
-			processState: "protect",
-			sexCd: "m",
-			careNm: "경기도",
-		},
-	];
-	let json = JSON.stringify(true);
-	json = JSON.stringify(animals);
+	const [abandonedAnimalsData, setAbandonedAnimalsData] = useState([]);
 
-	// useEffect(async () => {
-	// let data = await AbandonedAnimals();
-	// console.log(data);
-	// }, []);
+	useEffect(() => {
+		async function fetchData() {
+			const response = await await AbandonedAnimals();
+			setAbandonedAnimalsData(response);
+		}
+		fetchData();
+	}, []);
 
 	return (
 		<Wrap>
 			<NoticeTitle>제 가족이 되어주세요!</NoticeTitle>
 			<SliderWrap sliderLength={1}>
 				<Slider {...settings}>
-					{animals.map((pet) => (
+					{abandonedAnimalsData.map((pet) => (
 						<Notice pet={pet} key={pet.id} />
 					))}
 				</Slider>

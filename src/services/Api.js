@@ -5,20 +5,11 @@ export const AbandonedAnimals = () => {
 	return new Promise((resolve, reject) => {
 		axios
 			.get(
-				`http://openapi.animal.go.kr:80/openapi/service/rest/abandonmentPublicSrvc?_wadl&type=xml`,
-				{
-					headers: {
-						Authorization:
-							"Bearer bNYMycUzaFkh3GXimcoDB2ZyjhRBw4wtJOVnzELf+tGrEUnWv09F8lhU5D33vD+BD14xi0TuG+m6VDdQC2jncg==",
-					},
-				}
+				`https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?serviceKey=wPvuYWDBBrqTMYnyvn%2BVxPOMP16o0uUHFPl0CumevcsUyxBTsyLhW9rtuzYFDCyLMbiYp%2FuYkrq4vIVXJIdxxA%3D%3D&_type=json`
 			)
 			.then((response) => {
 				console.log(response);
-				const dataArr = new XMLParser().parseFromString(response)
-					.children;
-				console.log(dataArr);
-				resolve(dataArr);
+				resolve(response.data.response.body.items.item);
 			})
 			.catch((e) => {
 				reject(e);

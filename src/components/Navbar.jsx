@@ -113,7 +113,7 @@ const Navbar = observer(() => {
 								펫미팅
 							</Menu>
 							<UserMenu>
-								{user & user.userAccessState ? (
+								{user != null && user.userAccessState ? (
 									<>
 										<MobileBtn to="/mypage" PrimaryColor>
 											마이페이지

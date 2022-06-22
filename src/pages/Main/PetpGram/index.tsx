@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useStores } from "../../../hooks/useStores";
 import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
-
+import nullIcon from "../../../assets/images/null.png";
 import searchIcon from "../../../assets/images/search.png";
 import { useEffect, useState, useContext } from "react";
 
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 	height: 100%;
 
 	padding: 18px 16px;
+	overflow-x: hidden;
 	overflow-y: auto;
 	&::-webkit-scrollbar {
 		background: white;
@@ -28,16 +29,6 @@ const Wrapper = styled.div`
 	}
 
 	position: relative;
-`;
-const Test = styled.div`
-	width: 49%;
-	height: 200px;
-	background-color: red;
-`;
-const Test2 = styled.div`
-	width: 49%;
-	height: 200px;
-	background-color: blue;
 `;
 
 const SearchBar = styled.div`
@@ -101,9 +92,29 @@ const BoardList = styled.div`
 	width: 100%;
 	height: calc(100% - 120px);
 `;
+
+const NullWrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	height: calc(100% - 180px);
+	margin: 20px 0px;
+	& > div {
+		margin-top: 20px;
+		margin-bottom: 40px;
+		font-family: "yg-jalnan";
+
+		font-size: 28px;
+	}
+	& > img {
+		width: 100%;
+	}
+`;
 const IndexPage = observer(() => {
 	const { modalStore } = useStores();
-	const [data, setData] = useState([]);
+	const [postData, setPostData] = useState<any>([]);
 	const { user } = useContext(UserContext);
 
 	function createBoard() {
@@ -113,48 +124,41 @@ const IndexPage = observer(() => {
 		modalStore.petpGramPostId = postId;
 		modalStore.editPetpGramState = true;
 	}
-
 	useEffect(() => {
 		async function fetchData() {
-			console.log(user);
-			if (user != {}) {
-				const postData: any = await SearchPost(user, 0, "");
-				console.log(postData);
-				setData(postData);
-			}
+			console.log("test", user);
+			const d: any = await SearchPost(user, 0, "");
+			console.log("Daata", d);
+			setPostData(d.data);
 		}
 		fetchData();
-	}, [user]);
+	}, []);
+
 	return (
 		<Wrapper>
-			<SearchBar onClick={() => console.log(user)}>
+			<SearchBar>
 				<SearchInput />
 				<SearchButton>
 					<img src={searchIcon} alt="serach" />
 				</SearchButton>
 			</SearchBar>
-			<Board
-				info={{
-					postId: 0,
-					username: "test",
-					imgUrlList: [
-						"https://cdn.discordapp.com/attachments/596354148082122752/982093203845025792/2022-06-03_10.27.43.png",
-						"https://ewhagift.ewha.ac.kr/ezstock/035434400_1534729386.jpg",
-					],
-				}}
-				EditEvent={(postId: number) => EditEvent(postId)}
-			/>
-			<Board
-				info={{
-					postId: 1,
-					username: "test",
-					imgUrlList: [
-						"https://cdn.mkhealth.co.kr/news/photo/202102/52163_52859_5928.jpg",
-						"https://ewhagift.ewha.ac.kr/ezstock/035434400_1534729386.jpg",
-					],
-				}}
-				EditEvent={(postId: number) => EditEvent(postId)}
-			/>
+			{postData.content != null &&
+				postData.content.map((e: any) => {
+					return (
+						<Board
+							info={e}
+							EditEvent={(postId: number) => EditEvent(postId)}
+						/>
+					);
+				})}
+			{postData.content != null && postData.content.length === 0 ? (
+				<NullWrapper>
+					<img src={nullIcon} />
+					<div>게시물이 존재하지 않습니다.</div>
+				</NullWrapper>
+			) : (
+				<></>
+			)}
 			<CreateButton
 				onClick={() => {
 					createBoard();

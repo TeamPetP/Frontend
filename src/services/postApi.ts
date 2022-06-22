@@ -61,13 +61,18 @@ export const SearchPost = (user: any, page: number, tag?: string) => {
 		console.log("aaa", user);
 		axios
 			.get(
-				`${process.env.REACT_APP_SERVER_API_URL}/posts/?page=${page}&tag=${tag}`,
+				`${process.env.REACT_APP_SERVER_API_URL}/posts/?page=${page}&tag=${tag}&size=10`,
 				{
 					headers: user,
 				}
 			)
 			.then((e) => {
+				console.log("tesaat", e);
 				resolve(e);
+			})
+			.catch((e) => {
+				console.log(e);
+				reject(e);
 			});
 	});
 };

@@ -12,9 +12,6 @@ const ParticipantsManagePage = () => {
   const [isSelect, setIsSelect] = useState(false);
   type checkList = { id: string; nickname: string };
   const [checkedInputs, setCheckedInputs] = useState([] as any);
-  const cancleParticipation = () => {
-    console.log(`참여취소`);
-  };
 
   const data = [
     { id: "1", nickname: "user1" },
@@ -22,21 +19,7 @@ const ParticipantsManagePage = () => {
     { id: "3", nickname: "user3" },
   ];
 
-  // 전체 checked
-  const onCheckedAll = useCallback(
-    (checked: boolean) => {
-      if (checked) {
-        const seq: string[] = [];
-        data.forEach((v) => seq.push(v.id));
-        setCheckedInputs(seq);
-      } else {
-        setCheckedInputs([]);
-      }
-    },
-    [data]
-  );
-
-  // 개별 check
+  // 참여 중인 친구 개별 선택
   const changeHandler = useCallback(
     (checked: boolean, id: string) => {
       if (checked) {
@@ -48,6 +31,23 @@ const ParticipantsManagePage = () => {
     },
     [checkedInputs]
   );
+
+  const acceptParticipation = (id: Number) => {
+    console.log(`참여수락`);
+  };
+
+  const refuseParticipation = (id: Number) => {
+    console.log(`참여거절`);
+  };
+
+  const exileParticipation = (id: Number) => {
+    console.log(`추방`);
+  };
+
+  const exileselectMember = (list: any) => {
+    console.log(`선택한 친구의 id : ${list}`);
+  };
+
   return (
     <>
       <PageTitle title="참여자 관리" />
@@ -61,7 +61,10 @@ const ParticipantsManagePage = () => {
           </Options>
           <Top>
             <Progress Isprogress={true}>모집중</Progress>
-            <Title>수제간식 원데이클래스 같이 하실 분!</Title>
+            <Title>
+              수제간식 원데이클래스 같이 하실 분!제간식 원데이클래스 같이 하실
+              분!
+            </Title>
           </Top>
         </Content>
         {/* 참여 요청 중인 친구 */}
@@ -77,10 +80,10 @@ const ParticipantsManagePage = () => {
               <div>User-1</div>
             </FlexStart>
             <SpaceBetween width="210px">
-              <Button width="100px" onClick={() => cancleParticipation()}>
+              <Button width="100px" onClick={() => acceptParticipation(1)}>
                 수락
               </Button>
-              <Button width="100px" onClick={() => cancleParticipation()}>
+              <Button width="100px" onClick={() => refuseParticipation(1)}>
                 거절
               </Button>
             </SpaceBetween>
@@ -94,25 +97,6 @@ const ParticipantsManagePage = () => {
               <span>
                 <span className="Primary">1</span>/4
               </span>
-            </div>
-            <div>
-              <Checkbox
-                type="checkbox"
-                id="allcheck"
-                onChange={(e) => onCheckedAll(e.target.checked)}
-              />
-              <Allchecked
-                htmlFor="allcheck"
-                checked={
-                  checkedInputs.length === 0
-                    ? false
-                    : checkedInputs.length === data.length
-                    ? true
-                    : false
-                }
-              >
-                전체선택
-              </Allchecked>
             </div>
           </SubTitle>
           {data.map((data) => (
@@ -135,13 +119,18 @@ const ParticipantsManagePage = () => {
                   <div>{data.nickname}</div>
                 </FlexStart>
                 <SpaceBetween width="100px">
-                  <Button width="100px" onClick={() => cancleParticipation()}>
+                  <Button width="100px" onClick={() => exileParticipation(1)}>
                     추방
                   </Button>
                 </SpaceBetween>
               </ParticipantsList>
             </div>
           ))}
+          <SpaceBetween width="100%">
+            <ExileBtn onClick={() => exileselectMember(checkedInputs)}>
+              선택 목록 추방
+            </ExileBtn>
+          </SpaceBetween>
         </Participate>
       </Wrapper>
     </>
@@ -184,16 +173,29 @@ const Top = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: #000000;
+
+  @media screen and (max-width: 600px) {
+    display: block;
+  }
 `;
 
 const Title = styled.div`
   position: relative;
+
+  @media screen and (max-width: 600px) {
+    font-size: 16px;
+  }
 `;
 
 const Progress = styled.span`
   color: ${(props: { Isprogress: boolean }) =>
     props.Isprogress ? theme.PrimaryColor : "#C1C1C1"};
   margin-right: 8px;
+
+  @media screen and (max-width: 600px) {
+    font-size: 14px;
+    display: block;
+  }
 `;
 
 const Participate = styled.div`
@@ -279,4 +281,15 @@ const Button = styled.button`
   width: ${(props: { width: string }) => props.width};
   display: block;
   height: 35px;
+`;
+
+const ExileBtn = styled.button`
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  height: 50px;
+  font-size: 18px;
+  font-family: "yg-jalnan";
+  border-radius: 5px;
+  margin: 20px;
 `;

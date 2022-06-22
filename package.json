@@ -77,5 +77,5 @@
 			]
 		]
 	},
-	"proxy": "http://3.39.122.247:8080"
+	"proxy": "http://localhost:3000"
 }

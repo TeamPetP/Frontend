@@ -33,17 +33,19 @@ export const EditPost = (
 };
 
 export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
-	axios
-		.post(
-			`${process.env.REACT_APP_SERVER_API_URL}/posts/`,
-			postRequestData,
-			{
-				headers: user,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve, reject) => {
+		axios
+			.post(
+				`${process.env.REACT_APP_SERVER_API_URL}/posts/`,
+				postRequestData,
+				{
+					headers: user,
+				}
+			)
+			.then((e) => {
+				console.log(e);
+			});
+	});
 };
 
 export const SearchDetailPost = (user: any, postId: number) => {

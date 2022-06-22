@@ -1,11 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import styled from "styled-components";
 import LogoImg from "../logo.png";
 import { signInGoogle, auth } from "../services/firebaseAuth";
 import Back from "../assets/images/back.png";
 import PhotoAddIcon from "../assets/images/photoadd.png";
-
+import { AwsS3 } from "../services/Aws";
+import { InfoData } from "../services/authApi";
+import { CreatePost } from "../services/postApi";
 import Modal from "../components/common/Modal";
+import { UserContext } from "../contexts/UserContext";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -123,16 +126,54 @@ const Input = styled.input`
 function CreatePetpGramModal(props) {
 	const [text, setText] = useState("");
 	const [image, setImage] = useState([]);
-	const uploadPhoto = useRef("");
+	const [imageFile, setImageFile] = useState([]);
+	const { user } = useContext(UserContext);
 
+	const uploadPhoto = useRef("");
+	async function Create() {
+		if (text != "") {
+			const data = await AwsS3(imageFile);
+			console.log(data);
+
+			let cText = text;
+
+			let tag = [];
+			while (cText.indexOf("#") != -1) {
+				let index = cText.indexOf("#") + 1;
+				let tagText = "";
+				while (index < cText.length && cText[index] != " ") {
+					tagText += cText[index];
+					index++;
+				}
+				tag = [...tag, tagText];
+
+				cText = cText.replace(
+					cText.slice(cText.indexOf("#"), index + 1),
+					""
+				);
+			}
+			console.log(tag);
+
+			const createPostData = await CreatePost(user, {
+				content: cText,
+				tagList: tag,
+				imgUrlList: data,
+			});
+
+			console.log(createPostData);
+		}
+	}
 	function PhotoUpdate() {
 		if (uploadPhoto.current.files.length !== 0) {
 			const reader = new FileReader();
 			// 이미지가 로드가 된 경우
 			reader.onload = (e) => {
+				console.log(e, e.target.type);
 				setImage([...image, e.target.result]);
 			};
 			// reader가 이미지 읽도록 하기
+			setImageFile([...imageFile, uploadPhoto.current.files[0]]);
+			console.log(uploadPhoto.current.files[0]);
 			reader.readAsDataURL(uploadPhoto.current.files[0]);
 		}
 	}
@@ -176,13 +217,16 @@ function CreatePetpGramModal(props) {
 									onClick={() => {
 										image.splice(index, 1);
 										setImage([...image]);
+
+										imageFile.splice(index, 1);
+										setImageFile([...imageFile]);
 									}}
 								/>
 							</>
 						);
 					})}
 				</PhotoWrapper>
-				<Button>게시글 등록</Button>
+				<Button onClick={() => Create()}>게시글 등록</Button>
 			</ModalWrapper>
 
 			<BackIcon

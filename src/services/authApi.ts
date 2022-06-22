@@ -1,4 +1,5 @@
 import axios from "axios";
+import { resolve } from "path";
 
 export const SignUp = (
 	user: any,
@@ -55,13 +56,16 @@ export const DeleteAuth = (user: any) => {
 };
 
 export const InfoData = (user: any) => {
-	axios
-		.get(`${process.env.REACT_APP_SERVER_API_URL}/members/me/info`, {
-			headers: user,
-		})
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve, reject) => {
+		axios
+			.get(`${process.env.REACT_APP_SERVER_API_URL}/members/me/info`, {
+				headers: user,
+			})
+			.then((e) => {
+				console.log(e);
+				resolve(e);
+			});
+	});
 };
 
 export const MyPost = (user: any, page: number, size: number) => {

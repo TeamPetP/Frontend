@@ -14,6 +14,7 @@
 		"@types/react-dom": "^18.0.3",
 		"@types/react-slick": "^0.23.8",
 		"@types/styled-components": "^5.1.25",
+		"aws-sdk": "^2.1159.0",
 		"axios": "^0.27.2",
 		"core-decorators": "^0.20.0",
 		"customize-cra": "^1.0.0",
@@ -28,8 +29,11 @@
 		"react-scripts": "5.0.1",
 		"react-slick": "^0.29.0",
 		"react-xml-parser": "^1.1.8",
+		"shortid": "^2.2.16",
 		"styled-components": "^5.3.5",
 		"typescript": "^4.6.4",
+		"util": "^0.12.4",
+		"uuid": "^8.3.2",
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
@@ -74,6 +78,5 @@
 				}
 			]
 		]
-	},
-	"proxy": "https://www.camp-us.link"
+	}
 }

@@ -7,6 +7,8 @@ import Modal from "../components/common/Modal";
 import { UserContext } from "../contexts/UserContext";
 import ProfileDefaultImage from "../assets/images/profile_default_image.png";
 import { SignUp } from "../services/authApi";
+import { useStores } from "../hooks/useStores";
+import { signOut } from "../services/firebaseAuth";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -64,12 +66,51 @@ const ProfileImage = styled.img`
 	cursor: pointer;
 `;
 
+const InputWrapper = styled.div`
+	width: 500px;
+	margin: 0 auto;
+	@media screen and (max-width: 768px) {
+		width: 90%;
+	}
+`;
+
+const InputTitle = styled.div`
+	margin-left: 4px;
+	margin-bottom: 4px;
+
+	font-size: 18px;
+`;
+const Input = styled.input`
+	width: 100%;
+	height: 60px;
+	border-radius: 10px;
+	border: 1.2px solid #f3593a;
+
+	padding: 10px 10px;
+
+	font-size: 16px;
+
+	margin-bottom: 20px;
+`;
+
+const TextArea = styled.textarea`
+	width: 100%;
+	height: 100px;
+	border-radius: 10px;
+	border: 1.2px solid #f3593a;
+	padding: 10px 10px;
+	font-size: 16px;
+`;
+
 function SignUpModal(props) {
-	const { user } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 	const uploadPhoto = React.useRef("");
 	const [photo, setPhoto] = useState(false);
 	const [nickname, setNickname] = useState("");
 	const [introduce, setIntroduce] = useState("");
+
+	const { userStore } = useStores();
+
 	function PhotoUpdate() {
 		if (uploadPhoto.current.files.length !== 0) {
 			setPhoto(uploadPhoto.current.files[0]);
@@ -88,13 +129,16 @@ function SignUpModal(props) {
 	return (
 		<Modal
 			visible={props.visibility}
-			closeVisible={() => props.SignInModalState()}
+			closeVisible={() => {
+				signOut();
+				props.SignInModalState();
+			}}
 			width="640"
 		>
 			<ModalWrapper>
 				<Logo src={LogoImg} alt="펫피" />
 
-				<label>
+				{/* <label>
 					<ImageInput
 						type="file"
 						onChange={() => {
@@ -110,8 +154,29 @@ function SignUpModal(props) {
 							alt="profile_default_img"
 						/>
 					)}
-				</label>
-				<Button onClick={() => SignUp(user, nickname, introduce)}>
+				</label> */}
+				<InputWrapper>
+					<InputTitle>이름</InputTitle>
+					<Input placeholder="이름을 입력해주세요."></Input>
+				</InputWrapper>
+				<InputWrapper>
+					<InputTitle>내 소개</InputTitle>
+					<TextArea placeholder="나를 소개해주세요."></TextArea>
+				</InputWrapper>
+				<Button
+					onClick={() =>
+						SignUp(
+							user,
+							nickname,
+							introduce,
+							setUser,
+							props.SignInModalState,
+							(data) => {
+								userStore.info = data;
+							}
+						)
+					}
+				>
 					회원가입
 				</Button>
 			</ModalWrapper>

@@ -9,10 +9,9 @@ export type TWithStoreHOC = <P extends unknown>(
 	Component: ComponentType<P>
 ) => (props: P) => JSX.Element;
 
-export const withStore: TWithStoreHOC = (WrappedComponent) => (props) => {
+export const withStore: TWithStoreHOC = (WrappedComponent) => (props: any) => {
 	const ComponentWithStore = () => {
 		const store = useStores();
-
 		return <WrappedComponent {...props} store={store} />;
 	};
 

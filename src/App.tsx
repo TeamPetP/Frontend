@@ -13,7 +13,7 @@ function App() {
 			<Navbar />
 			<Routes>
 				<Route path="/*" element={<MainRoutes />} />
-				<Route path="/mypage" element={<MyPageRoutes />} />
+				<Route path="/mypage/*" element={<MyPageRoutes />} />
 				<Route path="/auth/*" element={<AuthRoutes />} />
 			</Routes>
 			<Modal />

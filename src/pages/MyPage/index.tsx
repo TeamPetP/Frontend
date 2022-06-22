@@ -10,7 +10,7 @@ import Feed from "./index/Feed";
 import Bookmark from "./index/Bookmark";
 
 const IndexPage = observer(() => {
-  const { userStore } = useStores();
+  const { modalStore, userStore } = useStores();
   const navigate = useNavigate();
 
   const MoveAlrimPage = () => {
@@ -50,7 +50,9 @@ const IndexPage = observer(() => {
           <NickName>{userStore.getName}</NickName>
           <Intro>안녕하세요.</Intro>
         </MyInfo>
-        <EditProfile>프로필 편집</EditProfile>
+        <EditProfile onClick={() => (modalStore.editProfile = true)}>
+          프로필 편집
+        </EditProfile>
         <LogoutBtn>로그아웃</LogoutBtn>
       </Padding>
       <TabsWrap>

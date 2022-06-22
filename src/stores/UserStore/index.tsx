@@ -2,31 +2,30 @@ import { observable, action, computed, makeObservable } from "mobx";
 import { RootStoreModel } from "../RootStore";
 
 export interface IUserStore {
-	id: string;
-	name?: string;
-	pic?: string;
+	info: any;
 }
 
 export class UserStore implements IUserStore {
 	private rootStore: RootStoreModel | undefined;
 
-	@observable id = "test";
-	@observable name = "태민";
-	@observable pic = "";
+	@observable info: any = {};
 
 	constructor(rootStore?: RootStoreModel) {
 		this.rootStore = rootStore;
 		makeObservable(this);
 	}
 
-	@computed get getName(): string {
-		console.log("실행", this.name);
-		return this.name;
+	@computed get getInfo(): string {
+		console.log("실행", this.info);
+		return this.info;
 	}
-
+	@computed get getName(): string {
+		return this.info.name;
+	}
+	@action setInfo = (info: string): void => {
+		this.info = info;
+	};
 	@action setName = (name: string): void => {
-		// this.rootStore?.authStore.id
-		this.name = name;
-		console.log(this.name);
+		this.info = { ...this.info, name: name };
 	};
 }

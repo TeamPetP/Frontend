@@ -11,8 +11,10 @@ const MyMeetList = ({ data }: any) => {
   let myNickName = "고양이좋아";
   const isParticipants = data.members.includes(myNickName);
 
-  const editMeet = (id: Number) => {
-    console.log(`수정하기`);
+  const editMeet = (data: any) => {
+    navigate(`/meeting/edit`, {
+      state: data,
+    });
   };
 
   const management = (id: Number) => {
@@ -58,7 +60,7 @@ const MyMeetList = ({ data }: any) => {
       {/* 모임 개설자일 때 */}
       {memberId === data.memberId && (
         <SpaceBetween>
-          <Button width="calc(50% - 5px)" onClick={() => editMeet(1)}>
+          <Button width="calc(50% - 5px)" onClick={() => editMeet(data)}>
             수정하기
           </Button>
           <Button width="calc(50% - 5px)" onClick={() => management(1)}>

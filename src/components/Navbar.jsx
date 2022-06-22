@@ -12,6 +12,7 @@ import { UserContext } from "../contexts/UserContext";
 
 import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
+import { signOut } from "../services/firebaseAuth";
 
 const Navbar = observer(() => {
 	const { pathname } = useLocation();
@@ -118,7 +119,12 @@ const Navbar = observer(() => {
 										<MobileBtn to="/mypage" PrimaryColor>
 											마이페이지
 										</MobileBtn>
-										<MobileLoginBtn>
+										<MobileLoginBtn
+											onClick={() => {
+												signOut();
+												window.location.href = "/";
+											}}
+										>
 											로그아웃
 										</MobileLoginBtn>
 									</>

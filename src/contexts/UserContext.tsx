@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }: any) => {
 				defaultHeaders.Authorization = `Bearer ${token}`;
 				defaultHeaders.userAccessState = false;
 				// 로그인 시도 (백엔드 API 구현 필요)
-				setUser(defaultHeaders);
 				axios
 					.get("http://3.39.122.247:8080/members/me", {
 						headers: defaultHeaders,
@@ -38,8 +37,10 @@ export const AuthProvider = ({ children }: any) => {
 						// 로그인 성공시 user를 넘겨줌
 						console.log(res.data);
 						userStore.info = res.data;
-						setUser({ ...user, userAccessState: true });
+						console.log("1", user);
+						setUser({ ...defaultHeaders, userAccessState: true });
 
+						console.log("2", user);
 						// setUser(user);
 						modalStore.signInState = false;
 					})

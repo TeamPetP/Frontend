@@ -48,7 +48,7 @@ export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 
 export const SearchDetailPost = (user: any, postId: number) => {
 	axios
-		.post(`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`, {
+		.get(`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -56,17 +56,20 @@ export const SearchDetailPost = (user: any, postId: number) => {
 		});
 };
 
-export const SearchPost = (user: any, page: number, tag: string) => {
-	axios
-		.post(
-			`${process.env.REACT_APP_SERVER_API_URL}/posts/?page=${page}&tag=${tag}`,
-			{
-				headers: user,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+export const SearchPost = (user: any, page: number, tag?: string) => {
+	return new Promise((resolve, reject) => {
+		console.log("aaa", user);
+		axios
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/posts/?page=${page}&tag=${tag}`,
+				{
+					headers: user,
+				}
+			)
+			.then((e) => {
+				resolve(e);
+			});
+	});
 };
 
 export const LikePost = (user: any, postId: number) => {

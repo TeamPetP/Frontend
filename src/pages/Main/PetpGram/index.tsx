@@ -4,11 +4,13 @@ import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
 
 import searchIcon from "../../../assets/images/search.png";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import pencil from "../../../assets/images/pencil.png";
 
 import Board from "../../../components/Main/PetpGram/Board";
+import { SearchPost } from "../../../services/postApi";
+import { UserContext } from "../../../contexts/UserContext";
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -101,6 +103,8 @@ const BoardList = styled.div`
 `;
 const IndexPage = observer(() => {
 	const { modalStore } = useStores();
+	const [data, setData] = useState([]);
+	const { user } = useContext(UserContext);
 
 	function createBoard() {
 		modalStore.createPetpGramState = true;
@@ -109,9 +113,21 @@ const IndexPage = observer(() => {
 		modalStore.petpGramPostId = postId;
 		modalStore.editPetpGramState = true;
 	}
+
+	useEffect(() => {
+		async function fetchData() {
+			console.log(user);
+			if (user != {}) {
+				const postData: any = await SearchPost(user, 0, "");
+				console.log(postData);
+				setData(postData);
+			}
+		}
+		fetchData();
+	}, [user]);
 	return (
 		<Wrapper>
-			<SearchBar>
+			<SearchBar onClick={() => console.log(user)}>
 				<SearchInput />
 				<SearchButton>
 					<img src={searchIcon} alt="serach" />
@@ -137,6 +153,7 @@ const IndexPage = observer(() => {
 						"https://ewhagift.ewha.ac.kr/ezstock/035434400_1534729386.jpg",
 					],
 				}}
+				EditEvent={(postId: number) => EditEvent(postId)}
 			/>
 			<CreateButton
 				onClick={() => {

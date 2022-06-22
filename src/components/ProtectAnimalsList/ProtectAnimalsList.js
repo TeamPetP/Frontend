@@ -57,7 +57,7 @@ const ProtectAnimalsList = () => {
 
 	useEffect(() => {
 		async function fetchData() {
-			const response = await await AbandonedAnimals();
+			const response = await AbandonedAnimals();
 			setAbandonedAnimalsData(response);
 		}
 		fetchData();

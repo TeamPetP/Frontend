@@ -44,6 +44,7 @@ export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 			)
 			.then((e) => {
 				console.log(e);
+				resolve(e);
 			});
 	});
 };
@@ -73,7 +74,7 @@ export const SearchPost = (user: any, page: number, tag?: string) => {
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e);
+				console.log(e.response);
 				reject(e);
 			});
 	});

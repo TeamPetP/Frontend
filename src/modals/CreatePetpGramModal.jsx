@@ -9,6 +9,7 @@ import { InfoData } from "../services/authApi";
 import { CreatePost } from "../services/postApi";
 import Modal from "../components/common/Modal";
 import { UserContext } from "../contexts/UserContext";
+import { useStores } from "../hooks/useStores";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -128,6 +129,7 @@ function CreatePetpGramModal(props) {
 	const [image, setImage] = useState([]);
 	const [imageFile, setImageFile] = useState([]);
 	const { user } = useContext(UserContext);
+	const { modalStore } = useStores();
 
 	const uploadPhoto = useRef("");
 	async function Create() {
@@ -152,15 +154,20 @@ function CreatePetpGramModal(props) {
 					""
 				);
 			}
-			console.log(tag);
+			console.log(tag, {
+				content: cText,
+				tagList: tag,
+				imgUrlList: data,
+			});
 
 			const createPostData = await CreatePost(user, {
 				content: cText,
 				tagList: tag,
 				imgUrlList: data,
 			});
-
-			console.log(createPostData);
+			if (createPostData.status == 201) {
+				window.location.href = "/";
+			}
 		}
 	}
 	function PhotoUpdate() {

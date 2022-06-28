@@ -22,6 +22,12 @@ export class UserStore implements IUserStore {
 	@computed get getName(): string {
 		return this.info.name;
 	}
+	@computed get getNickname(): string{
+		return this.info.nickname;
+	}
+	@computed get getIntroduce(): string{
+		return this.info.introduce;
+	}
 	@action setInfo = (info: string): void => {
 		this.info = info;
 	};

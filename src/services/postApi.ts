@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const DeletePost = (user: any, postId: number) => {
 	axios
-		.delete(`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`, {
+		.delete(`/posts/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -21,7 +21,7 @@ export const EditPost = (
 ) => {
 	axios
 		.put(
-			`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`,
+			`/posts/${postId}`,
 			postRequestData,
 			{
 				headers: user,
@@ -36,7 +36,7 @@ export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 	return new Promise((resolve, reject) => {
 		axios
 			.post(
-				`${process.env.REACT_APP_SERVER_API_URL}/posts/`,
+				`/posts/`,
 				postRequestData,
 				{
 					headers: user,
@@ -51,7 +51,7 @@ export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 
 export const SearchDetailPost = (user: any, postId: number) => {
 	axios
-		.get(`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`, {
+		.get(`/posts/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -64,7 +64,7 @@ export const SearchPost = (user: any, page: number, tag?: string) => {
 		console.log("aaa", user);
 		axios
 			.get(
-				`${process.env.REACT_APP_SERVER_API_URL}/posts/?page=${page}&tag=${tag}&size=10`,
+				`/posts/?page=${page}&tag=${tag}&size=10`,
 				{
 					headers: user,
 				}
@@ -82,7 +82,7 @@ export const SearchPost = (user: any, page: number, tag?: string) => {
 
 export const LikePost = (user: any, postId: number) => {
 	axios
-		.patch(`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}`, {
+		.patch(`/posts/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -92,7 +92,7 @@ export const LikePost = (user: any, postId: number) => {
 
 export const BookmarkPost = (user: any, postId: number) => {
 	axios
-		.patch(`${process.env.REACT_APP_SERVER_API_URL}/bookmarks/${postId}`, {
+		.patch(`/bookmarks/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -101,7 +101,7 @@ export const BookmarkPost = (user: any, postId: number) => {
 };
 export const BookmarkDelete = (user: any, postId: number) => {
 	axios
-		.delete(`${process.env.REACT_APP_SERVER_API_URL}/bookmarks/${postId}`, {
+		.delete(`/bookmarks/${postId}`, {
 			headers: user,
 		})
 		.then((e) => {

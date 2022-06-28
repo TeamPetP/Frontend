@@ -11,7 +11,7 @@ export const SignUp = (
 ) => {
 	axios
 		.post(
-			`${process.env.REACT_APP_SERVER_API_URL}/members`,
+			`/members`,
 			{
 				nickname: nickname,
 				introduce: introduce,
@@ -31,7 +31,7 @@ export const SignUp = (
 export const EditProfile = (user: any, nickname: string, introduce: string) => {
 	axios
 		.patch(
-			`${process.env.REACT_APP_SERVER_API_URL}/members/me`,
+			`/members/me`,
 			{
 				nickname: nickname,
 				introduce: introduce,
@@ -47,7 +47,7 @@ export const EditProfile = (user: any, nickname: string, introduce: string) => {
 
 export const DeleteAuth = (user: any) => {
 	axios
-		.delete(`"${process.env.REACT_APP_SERVER_API_URL}/members/me`, {
+		.delete(`/members/me`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -58,7 +58,7 @@ export const DeleteAuth = (user: any) => {
 export const InfoData = (user: any) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`${process.env.REACT_APP_SERVER_API_URL}/members/me/info`, {
+			.get(`/members/me/info`, {
 				headers: user,
 			})
 			.then((e) => {
@@ -71,7 +71,7 @@ export const InfoData = (user: any) => {
 export const MyPost = (user: any, page: number, size: number) => {
 	axios
 		.get(
-			`${process.env.REACT_APP_SERVER_API_URL}/members/me/post?page=${page}&size=${size}`,
+			`/members/me/post?page=${page}&size=${size}`,
 			{
 				headers: user,
 			}
@@ -84,7 +84,7 @@ export const MyPost = (user: any, page: number, size: number) => {
 export const MyMeeting = (user: any, page: number, size: number) => {
 	axios
 		.get(
-			`${process.env.REACT_APP_SERVER_API_URL}/members/me/meeting?page=${page}&size=${size}`,
+			`/members/me/meeting?page=${page}&size=${size}`,
 			{
 				headers: user,
 			}

@@ -36,7 +36,10 @@ const IndexPage = observer(() => {
 			<Padding>
 				<MyInfo>
 					<ProfileWrap>
+					{
+						userStore.info.imgUrl ? <ProfileImg src={userStore.info.imgUrl} alt="프로필이미지" />:
 						<ProfileImg src={user_profile} alt="프로필이미지" />
+					}
 						<MyActivity
 							count={4}
 							title="알림"
@@ -53,8 +56,8 @@ const IndexPage = observer(() => {
 							onPageChange={MoveAttentionMeetPage}
 						/>
 					</ProfileWrap>
-					<NickName>{userStore.getName}</NickName>
-					<Intro>안녕하세요.</Intro>
+					<NickName>{userStore.getNickname}</NickName>
+					<Intro>{userStore.getIntroduce}</Intro>
 				</MyInfo>
 				<EditProfile onClick={() => (modalStore.editProfile = true)}>
 					프로필 편집
@@ -160,6 +163,8 @@ const ProfileWrap = styled.div`
 
 const ProfileImg = styled.img`
 	width: 90px;
+
+	border-radius:100%;
 
 	@media screen and (max-width: 600px) {
 		width: 60px;

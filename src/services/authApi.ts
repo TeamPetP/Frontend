@@ -9,6 +9,10 @@ export const SignUp = (
 	closeEvent: any,
 	setUserInfo: any
 ) => {
+	console.log({
+				nickname: nickname,
+				introduce: introduce,
+			},user)
 	axios
 		.post(
 			`/members`,
@@ -25,6 +29,8 @@ export const SignUp = (
 			console.log("test", e.data);
 			setUserInfo(e.data);
 			closeEvent();
+		}).catch(e=>{
+			console.log(e)
 		});
 };
 

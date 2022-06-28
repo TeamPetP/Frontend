@@ -48,6 +48,8 @@ export const AuthProvider = ({ children }: any) => {
 						console.log("test2dtest",e.response?.data);
 
 						if (e.response?.data.code === "USER_NOT_FOUND") {
+							setUser({ ...defaultHeaders, userAccessState: false });
+
 							modalStore.signUpState = true;
 							modalStore.signInState = false;
 						}

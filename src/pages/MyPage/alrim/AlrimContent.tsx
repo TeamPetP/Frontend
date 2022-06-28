@@ -6,9 +6,10 @@ import close_btn from "../../../assets/images/close-btn.png";
 interface IAlrimType {
   data: any;
   deleteAlrim: any;
+  ReadAlrim: any;
 }
 
-const AlrimContent = ({ data, deleteAlrim }: IAlrimType) => {
+const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
   // notificationType에 따른 알림타입, 메세지 구분
   let notiType = "";
   let notiMsg = "";
@@ -36,9 +37,9 @@ const AlrimContent = ({ data, deleteAlrim }: IAlrimType) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper isChecked={data.isChecked}>
       <Thumbnail src={data.thumbnail} alt={data.postTitle} />
-      <Info>
+      <Info onClick={() => ReadAlrim(data.notificationId)}>
         <Top>
           <Type>{notiType}</Type>
           <Message>{notiMsg}</Message>
@@ -48,7 +49,7 @@ const AlrimContent = ({ data, deleteAlrim }: IAlrimType) => {
           <Date>{data.createDate}</Date>
         </Bottom>
       </Info>
-      <DeleteBtn></DeleteBtn>
+      <DeleteBtn onClick={() => deleteAlrim(data.notificationId)}></DeleteBtn>
     </Wrapper>
   );
 };
@@ -65,6 +66,8 @@ const Wrapper = styled.div`
   align-items: top;
   margin-bottom: 10px;
   position: relative;
+  background-color: ${(props: { isChecked: boolean }) =>
+    props.isChecked ? "#f0f0f0" : "#ffffff"};
 `;
 
 const Thumbnail = styled.img`

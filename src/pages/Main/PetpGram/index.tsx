@@ -118,7 +118,11 @@ const IndexPage = observer(() => {
 	const { user } = useContext(UserContext);
 
 	function createBoard() {
-		modalStore.createPetpGramState = true;
+		if (user != null && user.userAccessState) {
+			modalStore.createPetpGramState = true;
+		} else {
+			modalStore.signInState = true;
+		}
 	}
 	function EditEvent(postId: number) {
 		modalStore.petpGramPostId = postId;
@@ -151,7 +155,7 @@ const IndexPage = observer(() => {
 						/>
 					);
 				})}
-			{postData.content != null && postData.content.length === 0 ? (
+			{postData.content == null || postData.content.length === 0 ? (
 				<NullWrapper>
 					<img src={nullIcon} />
 					<div>게시물이 존재하지 않습니다.</div>

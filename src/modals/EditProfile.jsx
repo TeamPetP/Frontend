@@ -148,8 +148,8 @@ function EditProfileModal(props) {
 					)}
 				</label>
 				<InputWrapper>
-					<InputTitle>이름</InputTitle>
-					<Input placeholder="이름을 입력해주세요."></Input>
+					<InputTitle>닉네임</InputTitle>
+					<Input placeholder="닉네임을 입력해주세요."></Input>
 				</InputWrapper>
 				<InputWrapper>
 					<InputTitle>내 소개</InputTitle>

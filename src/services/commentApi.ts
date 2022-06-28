@@ -3,7 +3,7 @@ import axios from "axios";
 export const CreateComment = (user: any, postId: number, content: string) => {
 	axios
 		.post(
-			`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}/comments`,
+			`/posts/${postId}/comments`,
 			{
 				content: content,
 			},
@@ -23,7 +23,7 @@ export const CreateCommentReply = (
 ) => {
 	axios
 		.post(
-			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
+			`/comments/${commentId}`,
 			{
 				content: content,
 			},
@@ -39,7 +39,7 @@ export const CreateCommentReply = (
 export const EditComment = (user: any, commentId: number, content: string) => {
 	axios
 		.put(
-			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
+			`/comments/${commentId}`,
 			{
 				content: content,
 			},
@@ -55,7 +55,7 @@ export const EditComment = (user: any, commentId: number, content: string) => {
 export const DeleteComment = (user: any, commentId: number) => {
 	axios
 		.delete(
-			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
+			`/comments/${commentId}`,
 			{
 				headers: user,
 			}
@@ -68,7 +68,7 @@ export const DeleteComment = (user: any, commentId: number) => {
 export const SearchComment = (user: any, postId: number) => {
 	axios
 		.get(
-			`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}/comments`,
+			`/posts/${postId}/comments`,
 			{
 				headers: user,
 			}
@@ -81,7 +81,7 @@ export const SearchComment = (user: any, postId: number) => {
 export const LikeComment = (user: any, commentId: number) => {
 	axios
 		.patch(
-			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
+			`/comments/${commentId}`,
 			{
 				headers: user,
 			}

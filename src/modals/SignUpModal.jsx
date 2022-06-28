@@ -126,6 +126,14 @@ function SignUpModal(props) {
 		}
 	}
 
+	function onChangeNickName(e){
+		setNickname(e.target.result)
+	}
+
+	function onChangeIntroduce(e){
+		setIntroduce(e.target.result)
+	}
+
 	return (
 		<Modal
 			visible={props.visibility}
@@ -156,12 +164,12 @@ function SignUpModal(props) {
 					)}
 				</label> */}
 				<InputWrapper>
-					<InputTitle>이름</InputTitle>
-					<Input placeholder="이름을 입력해주세요."></Input>
+					<InputTitle>닉네임</InputTitle>
+					<Input placeholder="닉네임을 입력해주세요." onChange={e=> onChangeNickName(e)}></Input>
 				</InputWrapper>
 				<InputWrapper>
 					<InputTitle>내 소개</InputTitle>
-					<TextArea placeholder="나를 소개해주세요."></TextArea>
+					<TextArea placeholder="나를 소개해주세요." onChange={e=> onChangeIntroduce(e)}></TextArea>
 				</InputWrapper>
 				<Button
 					onClick={() =>

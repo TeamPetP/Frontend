@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: any) => {
 				defaultHeaders.userAccessState = false;
 				// 로그인 시도 (백엔드 API 구현 필요)
 				axios
-					.get("http://3.39.122.247:8080/members/me", {
+					.get("/members/me", {
 						headers: defaultHeaders,
 					})
 					.then(async (res: any) => {
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: any) => {
 						modalStore.signInState = false;
 					})
 					.catch((e) => {
-						console.log("test2dtest");
+						console.log("test2dtest",e.response?.data);
 
 						if (e.response?.data.code === "USER_NOT_FOUND") {
 							modalStore.signUpState = true;

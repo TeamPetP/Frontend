@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import withMain from "../../hocs/ui/withMain";
 import { useNavigate } from "react-router";
 import { useStores } from "../../hooks/useStores";
+import { UserContext } from "../../contexts/UserContext";
 import { observer } from "mobx-react";
+import { MyPost, MyBookmark } from "../../services/authApi";
 import * as theme from "../../styles/theme";
 import user_profile from "../../assets/images/user_profile.png";
 import Feed from "./index/Feed";
@@ -13,7 +15,29 @@ import { signOut } from "../../services/firebaseAuth";
 
 const IndexPage = observer(() => {
   const { modalStore, userStore } = useStores();
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [feedData, setFeedData] = useState([]);
+  const [bookmarkData, setBookmarkData] = useState([]);
+
+  useEffect(() => {
+    console.log(`마이페이지 user`, user);
+    fetcFeedhData();
+    fetchBookmarkData();
+  }, [feedData, bookmarkData]);
+
+  async function fetcFeedhData() {
+    const feed: any = await MyPost(user, 1, 20);
+    console.log("feed", feed);
+    setFeedData(feed.data);
+  }
+
+  async function fetchBookmarkData() {
+    const bookmark: any = await MyBookmark(user, 1, 20);
+    console.log("bookmark", bookmark);
+    setBookmarkData(bookmark.data);
+  }
 
   const MoveAlrimPage = () => {
     navigate("/mypage/alrim");
@@ -80,14 +104,14 @@ const IndexPage = observer(() => {
         </Tab>
       </TabsWrap>
       <div>
-        {selectedTabs === "feed" && <Feed />}
-        {selectedTabs === "bookmark" && <Bookmark />}
+        {selectedTabs === "feed" && <Feed data={feedData} />}
+        {selectedTabs === "bookmark" && <Bookmark data={bookmarkData} />}
       </div>
-      <input
+      {/* <input
         onChange={(value) => {
           userStore.setName(value.target.value);
         }}
-      />
+      /> */}
     </Wrapper>
   );
 });

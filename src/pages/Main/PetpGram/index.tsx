@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
 import nullIcon from "../../../assets/images/null.png";
 import searchIcon from "../../../assets/images/search.png";
-import { useEffect, useState, useContext } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 
 import pencil from "../../../assets/images/pencil.png";
 
@@ -116,6 +116,9 @@ const IndexPage = observer(() => {
 	const { modalStore } = useStores();
 	const [postData, setPostData] = useState<any>([]);
 	const { user } = useContext(UserContext);
+	const [serachInput, setSearchInput] = useState<string>("")
+	const searchInputRef = useRef<any>(null)
+	const [pageNumber, setPageNumber] = useState<number>(1)
 
 	function createBoard() {
 		if (user != null && user.userAccessState) {
@@ -128,20 +131,42 @@ const IndexPage = observer(() => {
 		modalStore.petpGramPostId = postId;
 		modalStore.editPetpGramState = true;
 	}
+	function SerachInputRegex(e: React.ChangeEvent<HTMLInputElement>){
+		let value = e.target.value;
+		let tagIndex = value.indexOf("#");
+		console.log(value, tagIndex, value.indexOf(" ", tagIndex +1))
+		if ( tagIndex != -1) {
+			if ( value.indexOf(" ", tagIndex +1) != -1){
+				console.log("검색")
+				let k = value.slice( 0, value.indexOf(" ", tagIndex +1) + 1)
+				setSearchInput(() => {return k})
+			}else{
+				setSearchInput(() => {return value})
+			}
+		}else {
+			if(e.target.value == ""){
+				setSearchInput(() => {return value})
+			}
+			e.target.placeholder = "태그를 #로 시작해주세요. EX) #강아지";
+		}
+	}
 	useEffect(() => {
+		console.log(user)
 		async function fetchData() {
 			console.log("test", user);
-			const d: any = await SearchPost(user, 0, "");
+
+			let k: string = serachInput;
+			const d: any = await SearchPost(user,pageNumber, k.replace("#", ""));
 			console.log("Daata", d);
 			setPostData(d.data);
 		}
 		fetchData();
-	}, []);
+	}, [user]);
 
 	return (
 		<Wrapper>
 			<SearchBar>
-				<SearchInput />
+				<SearchInput ref={searchInputRef} value={serachInput} placeholder="검색할 태그를 입력해주세요. EX) #강아지" onChange={(e) => SerachInputRegex(e)} />
 				<SearchButton>
 					<img src={searchIcon} alt="serach" />
 				</SearchButton>

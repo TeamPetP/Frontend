@@ -40,6 +40,8 @@ function EditProfileModal(props) {
 
   const EditMyProfile = () => {
     EditProfile(user, nickname, introduce);
+    userStore.info.nickname = nickname;
+    userStore.info.introduce = introduce;
     props.EditProfileModalState();
   };
 

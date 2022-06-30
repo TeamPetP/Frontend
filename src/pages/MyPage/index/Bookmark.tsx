@@ -6,17 +6,13 @@ import nullIcon from "../../../assets/images/null.png";
 
 const Bookmark = observer(({ data }: any) => {
   const { userStore } = useStores();
-
   return (
     <Wrapper>
-      {data.map((data: any) => (
-        <Img src={SampleImg} alt="활동사진" />
-      ))}
-      {data != null &&
-        data.map((data: any) => {
+      {data.content != null &&
+        data.content.map((data: any) => {
           return <Img key={data.id} src={SampleImg} alt="활동사진" />;
         })}
-      {data == null || data.length === 0 ? (
+      {data.content == null || data.content.length === 0 ? (
         <NullWrapper>
           <img src={nullIcon} />
           <div>게시물이 존재하지 않습니다.</div>

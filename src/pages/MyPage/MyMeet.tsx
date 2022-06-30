@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { UserContext } from "../../contexts/UserContext";
-import { MyMeeting } from "../../services/authApi";
+import { MyMeeting, MyMeetingWait } from "../../services/authApi";
 import withMain from "../../hocs/ui/withMain";
 import { observer } from "mobx-react";
 import * as theme from "../../styles/theme";
@@ -11,16 +11,23 @@ import nullIcon from "../../assets/images/null.png";
 
 const MyMeetPage = observer(() => {
   const { user } = useContext(UserContext);
-  const [data, setData] = useState<any>([]);
+  const [meetData, setMeetData] = useState<any>([]);
+  const [waitData, setWaitData] = useState<any>([]);
   const [selectedTabs, setSelectedTabs] = useState("participating");
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchMeetData() {
       const d: any = await MyMeeting(user, 0, 20);
-      console.log("내 모임 정보", d);
-      setData(d.data.content);
+      console.log("내 참여중 모임 정보", d);
+      setMeetData(d.data.content);
     }
-    fetchData();
+    async function fetchWaitData() {
+      const d: any = await MyMeetingWait(user, 0, 20);
+      console.log("내 신청중 모임 정보", d);
+      setWaitData(d.data.content);
+    }
+    fetchMeetData();
+    fetchWaitData();
   }, [user]);
 
   // 클릭한 탭 구별
@@ -53,11 +60,11 @@ const MyMeetPage = observer(() => {
 
       {selectedTabs === "participating" && (
         <ContentArea>
-          {data != null &&
-            data.map((data: any) => {
+          {meetData != null &&
+            meetData.map((data: any) => {
               return <MyMeetList data={data} key={data.gatheringId} />;
             })}
-          {data == null || data.length === 0 ? (
+          {meetData == null || meetData.length === 0 ? (
             <NullWrapper>
               <img src={nullIcon} />
               <div>참여중인 모임이 없습니다.</div>
@@ -69,11 +76,11 @@ const MyMeetPage = observer(() => {
       )}
       {selectedTabs === "Applying" && (
         <ContentArea>
-          {data != null &&
-            data.map((data: any) => {
+          {waitData != null &&
+            waitData.map((data: any) => {
               return <MyMeetList data={data} key={data.gatheringId} />;
             })}
-          {data == null || data.length === 0 ? (
+          {waitData == null || waitData.length === 0 ? (
             <NullWrapper>
               <img src={nullIcon} />
               <div>신청중인 모임이 없습니다.</div>

@@ -119,6 +119,24 @@ export const MyMeeting = (user: any, page: number, size: number) => {
   });
 };
 
+// 회원이 가입신청한 모임 조회
+export const MyMeetingWait = (user: any, page: number, size: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/members/me/meetings/apply?page=${page}&size=${size}`, {
+        headers: user,
+      })
+      .then((e) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
 // 내 모임에 신청 대기자 조회
 export const MyMeetingWaitList = (user: any, meetingId: number) => {
   axios

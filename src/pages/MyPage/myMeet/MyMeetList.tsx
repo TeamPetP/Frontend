@@ -1,5 +1,8 @@
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
+import { useStores } from "../../../hooks/useStores";
+import { UserContext } from "../../../contexts/UserContext";
 import * as theme from "../../../styles/theme";
 import Tag from "../../../components/common/Tag";
 import crown from "../../../assets/images/crown.png";
@@ -7,9 +10,9 @@ import user_profile from "../../../assets/images/user_profile.png";
 
 const MyMeetList = ({ data }: any) => {
   const navigate = useNavigate();
-  let memberId = 4321;
-  let myNickName = "고양이좋아";
-  const isParticipants = data.members.includes(myNickName);
+  const { userStore } = useStores();
+  const { user } = useContext(UserContext);
+  const isParticipants = data.members.includes(userStore.getNickname);
 
   const editMeet = (data: any) => {
     navigate(`/meeting/edit`, {
@@ -46,7 +49,7 @@ const MyMeetList = ({ data }: any) => {
         <Progress Isprogress={data.status === "모집중"}>
           {data.status === "모집중" ? "모집중" : "모집완료"}
         </Progress>
-        <Title crown={memberId === data.memberId}>{data.title}</Title>
+        <Title crown={user.memberId === data.memberId}>{data.title}</Title>
       </Top>
       <Content>{data.content}</Content>
       <Participate>
@@ -58,7 +61,7 @@ const MyMeetList = ({ data }: any) => {
         <Profile src={user_profile} alt="참여자 프로필" />
       </Participate>
       {/* 모임 개설자일 때 */}
-      {memberId === data.memberId && (
+      {user.memberId === data.memberId && (
         <SpaceBetween>
           <Button width="calc(50% - 5px)" onClick={() => editMeet(data)}>
             수정하기
@@ -69,7 +72,7 @@ const MyMeetList = ({ data }: any) => {
         </SpaceBetween>
       )}
       {/* 일반 모임 참여자일 때 */}
-      {memberId !== data.memberId && isParticipants && (
+      {user.memberId !== data.memberId && isParticipants && (
         <SpaceBetween>
           <Button width="calc(50% - 5px)" onClick={() => goMeetInfo(1)}>
             모임으로 이동
@@ -80,7 +83,7 @@ const MyMeetList = ({ data }: any) => {
         </SpaceBetween>
       )}
       {/* 모임 참여신청자일 때 (승인 전) */}
-      {memberId !== data.memberId && !isParticipants && (
+      {user.memberId !== data.memberId && !isParticipants && (
         <Button width="100%" onClick={() => cancleParticipation(1)}>
           참여 취소
         </Button>

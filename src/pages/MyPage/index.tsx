@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { useStores } from "../../hooks/useStores";
 import { UserContext } from "../../contexts/UserContext";
 import { observer } from "mobx-react";
-import { MyPost, MyBookmark } from "../../services/authApi";
+import { InfoData, MyPost, MyBookmark } from "../../services/authApi";
 import * as theme from "../../styles/theme";
 import user_profile from "../../assets/images/user_profile.png";
 import Feed from "./index/Feed";
@@ -17,27 +17,34 @@ const IndexPage = observer(() => {
   const { modalStore, userStore } = useStores();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [feedData, setFeedData] = useState([]);
-  const [bookmarkData, setBookmarkData] = useState([]);
+  const [loading, setLoading] = useState<Boolean>(false);
+  const [info, setInfo] = useState<any>([]);
+  const [feedData, setFeedData] = useState<any>([]);
+  const [bookmarkData, setBookmarkData] = useState<any>([]);
 
   useEffect(() => {
-    console.log(`마이페이지 user`, user);
+    async function fetchInfoData() {
+      const info: any = await InfoData(user);
+      console.log("마이페이지의 info", info);
+      setInfo(info.data);
+    }
+
+    async function fetcFeedhData() {
+      const feed: any = await MyPost(user, 1, 20);
+      console.log("feed", feed);
+      setFeedData(feed.data);
+    }
+
+    async function fetchBookmarkData() {
+      const bookmark: any = await MyBookmark(user, 1, 20);
+      console.log("bookmark", bookmark);
+      setBookmarkData(bookmark.data);
+    }
+
+    fetchInfoData();
     fetcFeedhData();
     fetchBookmarkData();
-  }, [feedData, bookmarkData]);
-
-  async function fetcFeedhData() {
-    const feed: any = await MyPost(user, 1, 20);
-    console.log("feed", feed);
-    setFeedData(feed.data);
-  }
-
-  async function fetchBookmarkData() {
-    const bookmark: any = await MyBookmark(user, 1, 20);
-    console.log("bookmark", bookmark);
-    setBookmarkData(bookmark.data);
-  }
+  }, [user]);
 
   const MoveAlrimPage = () => {
     navigate("/mypage/alrim");
@@ -65,14 +72,18 @@ const IndexPage = observer(() => {
             ) : (
               <ProfileImg src={user_profile} alt="프로필이미지" />
             )}
-            <MyActivity count={4} title="알림" onPageChange={MoveAlrimPage} />
             <MyActivity
-              count={2}
+              count={info.notificationCnt}
+              title="알림"
+              onPageChange={MoveAlrimPage}
+            />
+            <MyActivity
+              count={info.meetingCnt}
               title="내모임"
               onPageChange={MoveMyMeetPage}
             />
             <MyActivity
-              count={3}
+              count={info.meetingBookCnt}
               title="관심모임"
               onPageChange={MoveAttentionMeetPage}
             />

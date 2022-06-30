@@ -65,7 +65,7 @@ export const DeleteAuth = (user: any) => {
     });
 };
 
-// 회원의 한줄 소개 조회
+// 회원의 알림, 내 모임, 관심모임 갯수
 export const InfoData = (user: any) => {
   return new Promise((resolve, reject) => {
     axios
@@ -73,42 +73,50 @@ export const InfoData = (user: any) => {
         headers: user,
       })
       .then((e) => {
-        console.log(e);
+        console.log("/members/me/info", e);
         resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
       });
   });
 };
 
 // 회원이 작성한 게시글 조회
 export const MyPost = (user: any, page: number, size: number) => {
-  console.log(
-    {
-      user: user,
-    },
-    user
-  );
-  axios
-    .get(`/members/me/posts?page=${page}&size=${size}`, {
-      headers: user,
-    })
-    .then(function (response) {
-      console.log(`게시글 조회 성공인가?`, response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(`게시글 조회 에러다`, user, error);
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/members/me/posts?page=${page}&size=${size}`, {
+        headers: user,
+      })
+      .then((e) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
 };
 
 // 회원이 가입한 모임 조회
 export const MyMeeting = (user: any, page: number, size: number) => {
-  axios
-    .get(`/members/me/meeting?page=${page}&size=${size}`, {
-      headers: user,
-    })
-    .then((e) => {
-      console.log(e);
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/members/me/meetings?page=${page}&size=${size}`, {
+        headers: user,
+      })
+      .then((e) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
 };
 
 // 내 모임에 신청 대기자 조회
@@ -124,17 +132,20 @@ export const MyMeetingWaitList = (user: any, meetingId: number) => {
 
 // 회원의 북마크 조회
 export const MyBookmark = (user: any, page: number, size: number) => {
-  axios
-    .get(`/members/me/bookmark?page=${page}&size=${size}`, {
-      headers: user,
-    })
-    .then(function (response) {
-      console.log(`북마크 조회 성공인가?`, response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(`북마크 조회 에러다`, user, error);
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/members/me/bookmark?page=${page}&size=${size}`, {
+        headers: user,
+      })
+      .then((e) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
 };
 
 // 회원이 작성한 모임 게시글 조회

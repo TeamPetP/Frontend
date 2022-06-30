@@ -62,9 +62,11 @@ export const SearchDetailPost = (user: any, postId: number) => {
 export const SearchPost = (user: any, page: number, tag: string) => {
 	return new Promise((resolve, reject) => {
 		console.log("aaa", user,page, tag);
+
+		console.log(`/posts/?pageNumber=${page}${tag ? `&tag=${tag}`: ''}&size=10`)
 		axios
 			.get(
-				`/posts/?pageNumber=${page}&tag=${tag}&pageSize=10`,
+				`/posts/?pageNumber=${page}${tag ? `&tag=${tag}`: ''}&size=10`,
 				{
 					headers: user,
 				}

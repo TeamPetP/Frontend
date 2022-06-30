@@ -11,7 +11,7 @@ import bookmark2 from "../../../assets/images/bookmark2.png";
 import bookmark2__fill from "../../../assets/images/bookmark2__fill.png";
 import Comment from "../../../components/common/Comment";
 import { EditPost } from "../../../services/postApi";
-
+import {timeBefore} from "../../../lib/timeBefore"
 const BoardWrapper = styled.div`
 	width: 100%;
 	max-height: 865px;
@@ -185,7 +185,7 @@ const BoardTime = styled.div`
 `;
 const BoardText = styled.div`
 	margin-top: 12px;
-
+	word-break:break-all;
 	width: 100%;
 `;
 
@@ -234,7 +234,7 @@ function Board(props) {
 						src={user_profile}
 						alt="profile_image"
 					/>
-					<BoardUserName>{props.info.username}</BoardUserName>
+					<BoardUserName>{props.info.nickname}</BoardUserName>
 				</BoardUserInfo>
 				<BoardOnwerSetting>
 					<span onClick={() => EditPost()}>수정</span>
@@ -250,7 +250,7 @@ function Board(props) {
 			</SliderWrap>
 			<BoardNav>
 				<IconWrapper>
-					{true ? (
+					{props.info.isLiked ? (
 						<HeartIconImage src={heart__fill} />
 					) : (
 						<HeartIconImage src={heart} />
@@ -258,12 +258,12 @@ function Board(props) {
 					<IconImage src={speech_bubble} />
 				</IconWrapper>
 				<SwiperToggle>
-					{sliderDot.map((value, index) => (
+					{props.info.imgUrlList.length != 0 ? sliderDot.map((value, index) => (
 						<SwiperToggleDot
 							state={value}
 							onClick={() => DotClickEvent(index)}
 						/>
-					))}
+					)): ''}
 				</SwiperToggle>
 				<BookMarkWrapper>
 					{false ? (
@@ -274,13 +274,11 @@ function Board(props) {
 				</BookMarkWrapper>
 			</BoardNav>
 			<BoardSubNav>
-				<BoardLike>좋아요 56개</BoardLike>
-				<BoardTime>9시간 전</BoardTime>
+				<BoardLike>좋아요 {props.info.likeCnt}개</BoardLike>
+				<BoardTime>{timeBefore(props.info.lastModifiedDate)}</BoardTime>
 			</BoardSubNav>
 			<BoardText>
-				강아지랑 산책하기 딱 좋은 날이네요.
-				<br />
-				같이 보내는 첫봄! 같이 걸어요!
+				{props.info.content}
 			</BoardText>
 			<Comment />
 		</BoardWrapper>

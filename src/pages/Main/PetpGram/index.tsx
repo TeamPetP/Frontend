@@ -150,6 +150,13 @@ const IndexPage = observer(() => {
 			e.target.placeholder = "태그를 #로 시작해주세요. EX) #강아지";
 		}
 	}
+	async function PostSearch(){
+		let k: string = serachInput;
+		console.log("now",user,pageNumber, k.replace("#", ""))
+		const d: any = await SearchPost(user,pageNumber, k.replace("#", ""));
+		console.log("Daata", d);
+		setPostData(d.data);
+	}
 	useEffect(() => {
 		console.log(user)
 		async function fetchData() {
@@ -166,8 +173,8 @@ const IndexPage = observer(() => {
 	return (
 		<Wrapper>
 			<SearchBar>
-				<SearchInput ref={searchInputRef} value={serachInput} placeholder="검색할 태그를 입력해주세요. EX) #강아지" onChange={(e) => SerachInputRegex(e)} />
-				<SearchButton>
+				<SearchInput onKeyPress={() => PostSearch()} ref={searchInputRef} value={serachInput} placeholder="검색할 태그를 입력해주세요. EX) #강아지" onChange={(e) => SerachInputRegex(e)} />
+				<SearchButton onClick={()=> PostSearch()}>
 					<img src={searchIcon} alt="serach" />
 				</SearchButton>
 			</SearchBar>

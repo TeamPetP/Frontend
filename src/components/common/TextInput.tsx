@@ -11,6 +11,8 @@ interface IInputType {
   marginBottom?: string;
   marginRight?: string;
   marginLeft?: string;
+  setData?: any;
+  data?: string | undefined | null;
 }
 function TextInput({
   width = "100%",
@@ -20,30 +22,26 @@ function TextInput({
   marginBottom = "8px",
   marginRight = "0",
   marginLeft = "0",
+  setData,
+  data,
 }: IInputType) {
-  const [text, setText] = useState("");
-
-  const inputChangeHandler = (e: any) => {
-    console.log(e.target.value);
-    setText(e.target.value);
-  };
   return (
     <>
       <Input
         type="text"
         width={width}
         placeholder={placeholder}
-        value={text}
+        value={data ? data : ""}
         marginTop={marginTop}
         marginBottom={marginBottom}
         marginRight={marginRight}
         marginLeft={marginLeft}
-        onChange={inputChangeHandler}
+        onChange={(e: any) => setData(e.target.value)}
         maxLength={maxLength}
       />
       {maxLength && (
         <TextLength>
-          <span>{text.length}</span>/{maxLength}
+          <span>{data?.length}</span>/{maxLength}
         </TextLength>
       )}
     </>
@@ -57,24 +55,20 @@ export function TextArea({
   marginBottom = "8px",
   marginRight = "0",
   marginLeft = "0",
+  setData,
+  data,
 }: IInputType) {
-  const [text, setText] = useState("");
-
-  const inputChangeHandler = (e: any) => {
-    console.log(e.target.value);
-    setText(e.target.value);
-  };
   return (
     <InputArea
       height={height}
       placeholder={placeholder}
-      onChange={inputChangeHandler}
+      onChange={(e: any) => setData(e.target.value)}
       marginTop={marginTop}
       marginBottom={marginBottom}
       marginRight={marginRight}
       marginLeft={marginLeft}
     >
-      {text}
+      {data ? data : ""}
     </InputArea>
   );
 }

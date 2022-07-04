@@ -5,9 +5,10 @@ import backBtn from "../../assets/images/back_btn.png";
 
 interface IButtonType {
   text: string;
+  onClick?: any;
 }
-function SubmitButton({ text }: IButtonType) {
-  return <SubmitBtn>{text}</SubmitBtn>;
+function SubmitButton({ text, onClick }: IButtonType) {
+  return <SubmitBtn onClick={() => onClick()}>{text}</SubmitBtn>;
 }
 
 export default SubmitButton;

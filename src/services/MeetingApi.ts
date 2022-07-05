@@ -16,6 +16,30 @@ interface IPostRequestData {
   title: string;
 }
 
+// 모임목록 전체조회
+export const SearchMeetList = (
+  user: any,
+  page: number,
+  size: number,
+  urlParams: any
+) => {
+  //console.log(`api안이예요 urlParams = ${urlParams}`);
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/meetings?page=${page}&size=${size}&${urlParams}`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
 // 모임등록
 export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
   return new Promise((resolve, reject) => {

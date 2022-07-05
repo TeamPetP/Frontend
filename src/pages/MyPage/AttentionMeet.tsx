@@ -35,7 +35,7 @@ const AttentionMeetPage = observer(() => {
           <MeetCondition
             status={status}
             meetTitle="수제간식 원데이클래스 같이 하실 분!"
-            age="20~30대만"
+            conditions="20~30대만"
             date="5월 7일 오후 2시"
             personnel={2}
           />

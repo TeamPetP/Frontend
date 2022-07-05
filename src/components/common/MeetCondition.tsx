@@ -7,14 +7,14 @@ import condition3 from "../../assets/images/condition3.png";
 interface IConditionType {
   status: boolean;
   meetTitle: string;
-  age?: string;
+  conditions?: string;
   date?: string;
   personnel?: number;
 }
 const MeetCondition = ({
   status,
   meetTitle,
-  age,
+  conditions,
   date,
   personnel,
 }: IConditionType) => {
@@ -34,8 +34,8 @@ const MeetCondition = ({
       </Top>
       <div>
         <List>
-          <img src={condition1} alt="나이조건" />
-          {age}
+          <img src={condition1} alt="조건" />
+          {conditions}
         </List>
         <List>
           <img src={condition2} alt="시간 및 장소" />

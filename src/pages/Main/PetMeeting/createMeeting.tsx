@@ -21,7 +21,7 @@ const CreateMeeting = observer(() => {
   const uploadPhoto = useRef<any>("");
 
   const [title, setTitle] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>("PICTURE");
   const [intro, setIntro] = useState<string>("");
   const [address, setAddress] = useState({
     doNm: "전체",
@@ -143,6 +143,21 @@ const CreateMeeting = observer(() => {
 
     if (validation === true) {
       const data = await AwsS3(imageFile);
+      console.log({
+        category: category,
+        conditions: condition,
+        content: intro,
+        doName: address.doNm,
+        imgUrlList: data,
+        location: place,
+        maxPeople: maxpeople,
+        meetingType: checkedMeetingType,
+        period: period,
+        sex: sex,
+        sigungu: address.sigunguNm,
+        title: title,
+      });
+
       const createMeetData: any = await CreateMeet(user, {
         category: category,
         conditions: condition,
@@ -157,6 +172,8 @@ const CreateMeeting = observer(() => {
         sigungu: address.sigunguNm,
         title: title,
       });
+      console.log("createMeetData", createMeetData);
+
       if (createMeetData.status == 201) {
         window.location.href = "/meeting";
       }

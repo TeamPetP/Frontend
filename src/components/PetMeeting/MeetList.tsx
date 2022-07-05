@@ -1,82 +1,77 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
 import Tag from "../../components/common/Tag";
 import BookmarkButton from "../../components/common/BookmarkButton";
 import MeetCondition from "../../components/common/MeetCondition";
-import SelectBox from "../../components/common/SelectBox";
-import Submit from "../../components/common/Submit";
-import sido from "../common/AddressData";
+import { timeBefore } from "../../lib/timeBefore";
 
 interface IMeetType {
-  moveDetailPage: any;
+  data: any;
 }
-const MeetList = ({ moveDetailPage }: IMeetType) => {
+const MeetList = ({ data }: IMeetType) => {
+  const navigate = useNavigate();
   const [isBookmark, setIsBookmark] = useState(false);
   const [status, setStatus] = useState(false);
 
-  const meetState = [
-    { name: "모집중", value: "true" },
-    { name: "모집완료", value: "false" },
-  ];
+  const moveDetailPage = (id: number) => {
+    navigate(`/meeting/detail/${id}`);
+  };
 
-  const filter = [
-    { name: "키워드", value: "keyword" },
-    { name: "모임장명", value: "creator" },
-  ];
+  const getDateDiff = (d1: string, d2: string) => {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    const diffDate = date1.getTime() - date2.getTime();
+
+    return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리세컨 * 초 * 분 * 시 = 일
+  };
+
+  let meetingOpenDueDate = getDateDiff(new Date().toString(), data.period)
+    .toString()
+    .split(".");
 
   return (
-    <>
-      <form>
-        <SpaceBetween>
-          <SelectBox width="calc(50% - 5px)" options={sido} />
-          <SelectBox width="calc(50% - 5px)" options={meetState} />
-        </SpaceBetween>
-        <SpaceBetween>
-          <SelectBox width="calc(30% - 5px)" options={filter} />
-          <Submit width="calc(70% - 5px)" />
-        </SpaceBetween>
-      </form>
-      <Meeting onClick={() => moveDetailPage()}>
-        <Options>
-          <Tags>
-            <Tag color={theme.PrimaryColor} text="D-3" />
-            <Tag text="공예/만들기" />
-          </Tags>
-          <BookmarkButton isBookmark={isBookmark} />
-        </Options>
-        <MeetCondition
-          status={status}
-          meetTitle="수제간식 원데이클래스 같이 하실 분!"
-          age="20~30대만"
-          date="5월 7일 오후 2시"
-          personnel={2}
-        />
-        <Content>
-          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          <br />
-          aaaaaaa
-        </Content>
-        <Bottom>
-          <div>
-            <Nickname>User</Nickname>
-            <Place>서울시 마포구</Place>
-          </div>
-          <CreateTime>3시간전</CreateTime>
-        </Bottom>
-      </Meeting>
-    </>
+    <Meeting onClick={() => moveDetailPage(data.meetingId)}>
+      <Options>
+        <Tags>
+          {data.isOpened === true && (
+            <Tag
+              color={theme.PrimaryColor}
+              text={
+                data.meetingType === "REGULAR"
+                  ? "상시"
+                  : `D-${meetingOpenDueDate[0]}`
+              }
+            />
+          )}
+          <Tag text={data.category} />
+        </Tags>
+        <BookmarkButton isBookmark={isBookmark} />
+      </Options>
+      <MeetCondition
+        status={data.isOpened}
+        meetTitle={data.title}
+        conditions={data.conditions}
+        date={data.period}
+        personnel={data.joinPeople}
+      />
+      <Content>{data.content}</Content>
+      <Bottom>
+        <div>
+          <Nickname>{data.nickname}</Nickname>
+          <Place>
+            {data.doName} {data.doName !== "전체" && data.sigungu}
+          </Place>
+        </div>
+        <CreateTime>{timeBefore(data.createDate)}</CreateTime>
+      </Bottom>
+    </Meeting>
   );
 };
 
 export default MeetList;
-
-const SpaceBetween = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`;
 
 const Meeting = styled.div`
   padding: 20px;

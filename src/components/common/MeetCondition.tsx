@@ -1,3 +1,4 @@
+import { useStores } from "../../hooks/useStores";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
 import condition1 from "../../assets/images/condition1.png";
@@ -10,6 +11,7 @@ interface IConditionType {
   conditions?: string;
   date?: string;
   personnel?: number;
+  memberId?: number;
 }
 const MeetCondition = ({
   status,
@@ -17,7 +19,10 @@ const MeetCondition = ({
   conditions,
   date,
   personnel,
+  memberId,
 }: IConditionType) => {
+  const { userStore } = useStores();
+
   return (
     <>
       <Top>
@@ -27,10 +32,12 @@ const MeetCondition = ({
           </Progress>
           <div>{meetTitle}</div>
         </Title>
-        <div>
-          <Button>수정</Button>
-          <Button>삭제</Button>
-        </div>
+        {memberId === userStore.getMemberId && (
+          <div>
+            <Button>수정</Button>
+            <Button>삭제</Button>
+          </div>
+        )}
       </Top>
       <div>
         <List>

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react";
 import { useStores } from "../../../../hooks/useStores";
+import { UserContext } from "../../../../contexts/UserContext";
 import withMain from "../../../../hocs/ui/withMain";
 import styled from "styled-components";
+import { timeBefore } from "../../../../lib/timeBefore";
 import * as theme from "../../../../styles/theme";
 import user_profile from "../../../../assets/images/user_profile.png";
 import DefaultImg from "../../../../components/common/DefaultImg";
@@ -10,59 +12,108 @@ import Tag from "../../../../components/common/Tag";
 import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
 
-const MeetInfo = observer(() => {
+const MeetInfo = observer(({ data }: any) => {
   const { userStore } = useStores();
+  const { user } = useContext(UserContext);
   const [isBookmark, setIsBookmark] = useState(false);
   const [status, setStatus] = useState(false);
+
+  const getDateDiff = (d1: string, d2: string) => {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    const diffDate = date1.getTime() - date2.getTime();
+
+    return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리세컨 * 초 * 분 * 시 = 일
+  };
+
+  let meetingOpenDueDate = getDateDiff(new Date().toString(), data.period)
+    .toString()
+    .split(".");
+
+  useEffect(() => {
+    console.log("MeetInfo data = ", data);
+  }, [user]);
 
   return (
     <Meeting>
       <Options>
         <Tags>
-          <Tag color={theme.PrimaryColor} text="D-3" />
-          <Tag text="공예/만들기" />
+          {data.isOpened === true && (
+            <Tag
+              color={theme.PrimaryColor}
+              text={
+                data.meetingType === "REGULAR"
+                  ? "상시"
+                  : `D-${meetingOpenDueDate[0]}`
+              }
+            />
+          )}
+          <Tag text={data.category} />
         </Tags>
-        <BookmarkButton isBookmark={isBookmark} />
+        <BookmarkButton isBookmark={data.isBookmarked} />
       </Options>
       <Creator>
         <CreatorThumbnail src={user_profile} />
         <div>
           <Nickname>{userStore.getName}</Nickname>
           <div>
-            <Place>서울시 마포구</Place>
-            <CreateTime>3시간전</CreateTime>
+            <Place>
+              {data.doName} {data.doName !== "전체" && data.sigungu}
+            </Place>
+            <CreateTime>{timeBefore(data.createDate)}</CreateTime>
           </div>
         </div>
       </Creator>
       <MeetCondition
-        status={status}
-        meetTitle="수제간식 원데이클래스 같이 하실 분!"
-        conditions="20~30대만"
-        date="5월 7일 오후 2시"
-        personnel={2}
+        status={data.isOpened}
+        meetTitle={data.title}
+        conditions={data.conditions}
+        date={data.period}
+        personnel={data.joinPeople}
+        memberId={data.memberId}
       />
-      {/* <MeetThumbnail src={}/> */}
-      <DefaultImg />
-      <Content>
-        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        <br />
-        aaaaaaa
-      </Content>
+      {data.imgUrlList !== "" ||
+      data.imgUrlList !== null ||
+      data.imgUrlList !== undefined ? (
+        <MeetThumbnail src={data.imgUrlList} alt="활동소개사진" />
+      ) : (
+        <DefaultImg />
+      )}
+      <Content>{data.content}</Content>
       <Line />
       <Member>
         <Members>
           참여중인 친구
-          <MemberLength>2/3</MemberLength>
+          <MemberLength>
+            {data.joinMembers.length}
+            {data.maxPeople === 999999 ? "명" : `/${data.maxPeople}`}
+          </MemberLength>
         </Members>
         <div>
           <MemberThumbnail src={user_profile} />
           <MemberThumbnail src={user_profile} />
         </div>
       </Member>
-      <ButtonWrap>
-        <SubmitBtn>관심 꾸-욱</SubmitBtn>
-        <SubmitBtn>참여 신청</SubmitBtn>
-      </ButtonWrap>
+      {data.memberId === userStore.getMemberId ? (
+        <ButtonWrap>
+          <SubmitBtn>모임 수정</SubmitBtn>
+        </ButtonWrap>
+      ) : (
+        <>
+          {data.isJoined === false && data.isOpened === true && (
+            <ButtonWrap>
+              <SubmitBtn>참여 신청</SubmitBtn>
+            </ButtonWrap>
+          )}
+          {data.isJoined === true && (
+            <ButtonWrap>
+              <SubmitBtn dark>모임탈퇴</SubmitBtn>
+            </ButtonWrap>
+          )}
+          {data.isOpened === false && <div>현재 모집완료된 모임입니다</div>}
+        </>
+      )}
     </Meeting>
   );
 });
@@ -98,6 +149,13 @@ const Creator = styled.div`
   padding: 20px 0;
   border-bottom: 2px solid ${theme.SecondaryColor};
   box-sizing: border-box;
+`;
+
+const MeetThumbnail = styled.img`
+  width: 100%;
+  height: 80px;
+  display: block;
+  margin: 20px 0;
 `;
 
 const CreatorThumbnail = styled.img`
@@ -192,14 +250,20 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
   margin-top: 20px;
 `;
-const SubmitBtn = styled.button`
-  background-color: ${theme.PrimaryColor};
+
+interface IBtn {
+  dark?: boolean;
+}
+
+const SubmitBtn = styled.button<IBtn>`
+  background-color: ${({ dark }: any) =>
+    dark ? theme.TextSubColor : theme.PrimaryColor};
   color: #fff;
   border-radius: 5px;
   font-size: 26px;
   font-family: ${theme.jalnan};
   display: block;
-  width: calc(50% - 5px);
+  width: 100%;
   padding: 8px;
 
   @media screen and (max-width: 600px) {

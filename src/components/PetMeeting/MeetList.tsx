@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
@@ -12,11 +11,8 @@ interface IMeetType {
 }
 const MeetList = ({ data }: IMeetType) => {
   const navigate = useNavigate();
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [status, setStatus] = useState(false);
-
   const moveDetailPage = (id: number) => {
-    navigate(`/meeting/detail/${id}`);
+    navigate(`/meeting/detail?id=${id}`, { state: data });
   };
 
   const getDateDiff = (d1: string, d2: string) => {
@@ -48,7 +44,7 @@ const MeetList = ({ data }: IMeetType) => {
           )}
           <Tag text={data.category} />
         </Tags>
-        <BookmarkButton isBookmark={isBookmark} />
+        <BookmarkButton isBookmark={data.isBookmarked} />
       </Options>
       <MeetCondition
         status={data.isOpened}
@@ -56,6 +52,7 @@ const MeetList = ({ data }: IMeetType) => {
         conditions={data.conditions}
         date={data.period}
         personnel={data.joinPeople}
+        memberId={data.memberId}
       />
       <Content>{data.content}</Content>
       <Bottom>

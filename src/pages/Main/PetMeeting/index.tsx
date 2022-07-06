@@ -1,13 +1,11 @@
-import { useRef, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import MeetList from "../../../components/PetMeeting/MeetList";
 import styled from "styled-components";
 import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
-import * as theme from "../../../styles/theme";
 import pencil from "../../../assets/images/pencil.png";
 import nullIcon from "../../../assets/images/null.png";
 import { useNavigate } from "react-router";
-import { useStores } from "../../../hooks/useStores";
 import { UserContext } from "../../../contexts/UserContext";
 import { SearchMeetList } from "../../../services/MeetingApi";
 import Submit from "../../../components/common/Submit";
@@ -27,10 +25,8 @@ const IndexPage = observer(() => {
   useEffect(() => {
     console.log(user);
     async function fetchData() {
-      console.log("test", user);
       let paramsString = `dosi=${dosi}&isOpened=${isOpened}`;
       const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
-      console.log("Daata", d);
       setMeetData(d.data);
     }
     fetchData();
@@ -48,12 +44,7 @@ const IndexPage = observer(() => {
     if (meetingHost == "" || meetingHost === null) {
       paramsString = paramsString.replace(/&meetingHost=/g, "").trim();
     }
-
-    console.log("urlParams2", paramsString);
-
     const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
-
-    console.log("Daata", d);
     setMeetData(d.data);
   }
 
@@ -85,7 +76,11 @@ const IndexPage = observer(() => {
   };
 
   const moveCreatePage = () => {
-    navigate(`/meeting/create`);
+    if (user != null && user.userAccessState) {
+      navigate(`/meeting/create`);
+    } else {
+      alert("로그인한 회원만 모임을 개설할 수 있습니다!");
+    }
   };
   return (
     <Wrapper>

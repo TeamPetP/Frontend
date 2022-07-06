@@ -23,7 +23,6 @@ export const SearchMeetList = (
   size: number,
   urlParams: any
 ) => {
-  //console.log(`api안이예요 urlParams = ${urlParams}`);
   return new Promise((resolve, reject) => {
     axios
       .get(`/meetings?page=${page}&size=${size}&${urlParams}`, {
@@ -45,6 +44,24 @@ export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
   return new Promise((resolve, reject) => {
     axios
       .post(`/meetings`, postRequestData, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 단건 조회
+export const SearchMeet = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/meetings/${meetingId}`, {
         headers: user,
       })
       .then((e: any) => {

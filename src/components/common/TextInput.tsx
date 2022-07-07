@@ -41,7 +41,7 @@ function TextInput({
       />
       {maxLength && (
         <TextLength>
-          <span>{data?.length}</span>/{maxLength}
+          <span>{data?.length ? data?.length : 0}</span>/{maxLength}
         </TextLength>
       )}
     </>

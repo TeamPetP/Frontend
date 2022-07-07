@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react";
+import { useNavigate } from "react-router";
 import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
 import withMain from "../../../../hocs/ui/withMain";
@@ -13,10 +14,12 @@ import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
 
 const MeetInfo = observer(({ data }: any) => {
+  const navigate = useNavigate();
   const { userStore } = useStores();
   const { user } = useContext(UserContext);
   const [isBookmark, setIsBookmark] = useState(false);
   const [status, setStatus] = useState(false);
+  const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
     const date1 = new Date(d1);
@@ -33,8 +36,43 @@ const MeetInfo = observer(({ data }: any) => {
 
   useEffect(() => {
     console.log("MeetInfo data = ", data);
-  }, [user]);
+  }, [data]);
 
+  const editMeet = () => {
+    navigate(`/meeting/edit`, {
+      state: { data },
+    });
+  };
+
+  useEffect(() => {
+    console.log(data.category);
+
+    switch (data.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [data]);
   return (
     <Meeting>
       <Options>
@@ -49,7 +87,7 @@ const MeetInfo = observer(({ data }: any) => {
               }
             />
           )}
-          <Tag text={data.category} />
+          <Tag text={category} />
         </Tags>
         <BookmarkButton isBookmark={data.isBookmarked} />
       </Options>
@@ -73,12 +111,8 @@ const MeetInfo = observer(({ data }: any) => {
         personnel={data.joinPeople}
         memberId={data.memberId}
       />
-      {data.imgUrlList !== "" ||
-      data.imgUrlList !== null ||
-      data.imgUrlList !== undefined ? (
+      {data.imgUrlList?.length > 0 && (
         <MeetThumbnail src={data.imgUrlList} alt="활동소개사진" />
-      ) : (
-        <DefaultImg />
       )}
       <Content>{data.content}</Content>
       <Line />
@@ -86,7 +120,7 @@ const MeetInfo = observer(({ data }: any) => {
         <Members>
           참여중인 친구
           <MemberLength>
-            {data.joinMembers.length}
+            {data.joinMembers?.length}
             {data.maxPeople === 999999 ? "명" : `/${data.maxPeople}`}
           </MemberLength>
         </Members>
@@ -97,7 +131,7 @@ const MeetInfo = observer(({ data }: any) => {
       </Member>
       {data.memberId === userStore.getMemberId ? (
         <ButtonWrap>
-          <SubmitBtn>모임 수정</SubmitBtn>
+          <SubmitBtn onClick={() => editMeet()}>모임 수정</SubmitBtn>
         </ButtonWrap>
       ) : (
         <>
@@ -153,7 +187,7 @@ const Creator = styled.div`
 
 const MeetThumbnail = styled.img`
   width: 100%;
-  height: 80px;
+  height: auto;
   display: block;
   margin: 20px 0;
 `;

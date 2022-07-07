@@ -14,6 +14,7 @@ interface IPostRequestData {
   sex: string;
   sigungu: string;
   title: string;
+  isOpened?: boolean;
 }
 
 // 모임목록 전체조회
@@ -29,7 +30,7 @@ export const SearchMeetList = (
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
+        //console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -62,6 +63,30 @@ export const SearchMeet = (user: any, meetingId: number) => {
   return new Promise((resolve, reject) => {
     axios
       .get(`/meetings/${meetingId}`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임수정
+export const EditMeet = (
+  user: any,
+  meetingId: number,
+  postRequestData: IPostRequestData
+) => {
+  return new Promise((resolve, reject) => {
+    console.log("API 안이다. meetingId=", meetingId);
+
+    axios
+      .put(`/meetings/${meetingId}`, postRequestData, {
         headers: user,
       })
       .then((e: any) => {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
@@ -28,6 +29,38 @@ const MeetList = ({ data }: IMeetType) => {
     .toString()
     .split(".");
 
+  const [category, setCategory] = useState("");
+
+  useEffect(() => {
+    console.log(data.category);
+
+    switch (data.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [data]);
+
   return (
     <Meeting onClick={() => moveDetailPage(data.meetingId)}>
       <Options>
@@ -42,7 +75,7 @@ const MeetList = ({ data }: IMeetType) => {
               }
             />
           )}
-          <Tag text={data.category} />
+          <Tag text={category} />
         </Tags>
         <BookmarkButton isBookmark={data.isBookmarked} />
       </Options>

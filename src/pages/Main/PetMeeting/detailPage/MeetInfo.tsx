@@ -3,19 +3,18 @@ import { observer } from "mobx-react";
 import { useNavigate } from "react-router";
 import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
-import withMain from "../../../../hocs/ui/withMain";
+import { JoinMeet, ResignMeet } from "../../../../services/MeetingApi";
 import styled from "styled-components";
 import { timeBefore } from "../../../../lib/timeBefore";
 import * as theme from "../../../../styles/theme";
 import user_profile from "../../../../assets/images/user_profile.png";
-import DefaultImg from "../../../../components/common/DefaultImg";
 import Tag from "../../../../components/common/Tag";
 import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
 
 const MeetInfo = observer(({ data }: any) => {
   const navigate = useNavigate();
-  const { userStore } = useStores();
+  const { modalStore, userStore } = useStores();
   const { user } = useContext(UserContext);
   const [isBookmark, setIsBookmark] = useState(false);
   const [status, setStatus] = useState(false);
@@ -44,9 +43,32 @@ const MeetInfo = observer(({ data }: any) => {
     });
   };
 
-  useEffect(() => {
-    console.log(data.category);
+  // 모임 참여
+  const JoinMeeting = () => {
+    async function fetchJoin() {
+      const dd: any = await JoinMeet(user, data.meetingId);
+      console.log("join, ", dd);
+    }
+    fetchJoin();
+  };
 
+  // 모임 탈퇴
+  const ResignMeeting = () => {
+    async function fetchJoin() {
+      const dd: any = await ResignMeet(user, data.meetingId);
+      console.log("Resign, ", dd);
+    }
+    fetchJoin();
+  };
+
+  // 참여자 목록 보기
+  const ViewMembers = () => {
+    navigate(`/meeting/joinMembers`, {
+      state: { data },
+    });
+  };
+
+  useEffect(() => {
     switch (data.category) {
       case "PICTURE":
         setCategory("사진 공유");
@@ -121,13 +143,12 @@ const MeetInfo = observer(({ data }: any) => {
           참여중인 친구
           <MemberLength>
             {data.joinMembers?.length}
-            {data.maxPeople === 999999 ? "명" : `/${data.maxPeople}`}
+            {data.maxPeople === 999999 ? "명" : `/${data.maxPeople}명`}
           </MemberLength>
         </Members>
-        <div>
-          <MemberThumbnail src={user_profile} />
-          <MemberThumbnail src={user_profile} />
-        </div>
+        <ViewJoinMembers onClick={() => ViewMembers()}>
+          목록보기
+        </ViewJoinMembers>
       </Member>
       {data.memberId === userStore.getMemberId ? (
         <ButtonWrap>
@@ -137,12 +158,14 @@ const MeetInfo = observer(({ data }: any) => {
         <>
           {data.isJoined === false && data.isOpened === true && (
             <ButtonWrap>
-              <SubmitBtn>참여 신청</SubmitBtn>
+              <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
             </ButtonWrap>
           )}
           {data.isJoined === true && (
             <ButtonWrap>
-              <SubmitBtn dark>모임탈퇴</SubmitBtn>
+              <SubmitBtn onClick={ResignMeeting} dark>
+                모임탈퇴
+              </SubmitBtn>
             </ButtonWrap>
           )}
           {data.isOpened === false && <div>현재 모집완료된 모임입니다</div>}
@@ -245,17 +268,21 @@ const CreateTime = styled.span`
 `;
 
 const Member = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
   & img {
     margin-right: 8px;
   }
 `;
 
-const MemberThumbnail = styled.img`
-  width: 40px;
+const ViewJoinMembers = styled.button`
+  width: 80px;
   height: 40px;
-  border-radius: 50%;
-  margin-right: 15px;
-  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid gray;
+  border-radius: 4px;
+  color: gray;
 `;
 
 const Line = styled.div`

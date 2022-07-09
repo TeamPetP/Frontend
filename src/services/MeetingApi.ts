@@ -83,10 +83,44 @@ export const EditMeet = (
   postRequestData: IPostRequestData
 ) => {
   return new Promise((resolve, reject) => {
-    console.log("API 안이다. meetingId=", meetingId);
-
     axios
       .put(`/meetings/${meetingId}`, postRequestData, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 가입 요청
+export const JoinMeet = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/meetings/${meetingId}`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 탈퇴 요청
+export const ResignMeet = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}`, {
         headers: user,
       })
       .then((e: any) => {

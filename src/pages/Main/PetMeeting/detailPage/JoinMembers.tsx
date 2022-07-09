@@ -13,12 +13,14 @@ const JoinMembers = observer(() => {
     <Wrapper>
       <PageTitle title="모임 참여자 목록" />
       <ContentWrap>
-        {data.map((d: any) => (
-          <FlexStart key={d.memberId}>
-            <Profile src={d.memberImgUrl} alt={`${d.nickname}의 프로필`} />
-            <div>{d.nickname}</div>
-          </FlexStart>
-        ))}
+        <FlexStart>
+          {data.map((d: any) => (
+            <Cell key={d.memberId}>
+              <Profile src={d.memberImgUrl} alt={`${d.nickname}의 프로필`} />
+              <Nickname>{d.nickname}</Nickname>
+            </Cell>
+          ))}
+        </FlexStart>
       </ContentWrap>
     </Wrapper>
   );
@@ -33,23 +35,25 @@ const Wrapper = styled.div`
 `;
 
 const ContentWrap = styled.div`
-padding: 40px;
-background-color: #fff;
-}
+  padding: 40px;
+  background-color: #fff;
 `;
 
 const FlexStart = styled.div`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin-bottom: 8px;
+  width: 100%;
 `;
 
+const Cell = styled.div`
+  width: 20%;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 15px;
+`;
 const Profile = styled.img`
-  width: 80px;
-  margin-right: 14px;
+  width: 60px;
+  margin: 0;
+`;
 
-  &:last-child {
-    margin-right: 0;
-  }
+const Nickname = styled.div`
+  text-align: center;
 `;

@@ -65,7 +65,7 @@ const DetailPage = observer(() => {
       </TabsWrap>
       <div>
         {selectedTabs === "info" && <MeetInfo data={meetData} />}
-        {selectedTabs === "board" && <Board />}
+        {selectedTabs === "board" && <Board meetingId={meetingId} />}
         {selectedTabs === "gallery" && <Gallery />}
       </div>
     </>

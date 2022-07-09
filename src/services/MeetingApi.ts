@@ -133,3 +133,49 @@ export const ResignMeet = (user: any, meetingId: number) => {
       });
   });
 };
+
+// 모임 게시글 전체 조회
+export const GetBoardList = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/meetings/${meetingId}/meetingPosts`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+interface IPostRequestData {
+  content: string;
+  title: string;
+  imgUrlList: Array<string>;
+}
+
+// 모임 게시글 등록
+export const CreateBoardPost = (
+  user: any,
+  meetingId: number,
+  postRequestData: IPostRequestData
+) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/meetings/${meetingId}/meetingPosts`, postRequestData, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

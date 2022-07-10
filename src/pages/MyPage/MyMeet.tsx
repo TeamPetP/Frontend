@@ -1,51 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import { UserContext } from "../../contexts/UserContext";
+import { MyMeeting, MyMeetingWait } from "../../services/authApi";
 import withMain from "../../hocs/ui/withMain";
 import { observer } from "mobx-react";
 import * as theme from "../../styles/theme";
 import PageTitle from "../../components/common/PageTitle";
 import MyMeetList from "./myMeet/MyMeetList";
+import nullIcon from "../../assets/images/null.png";
 
 const MyMeetPage = observer(() => {
+  const { user } = useContext(UserContext);
+  const [meetData, setMeetData] = useState<any>([]);
+  const [waitData, setWaitData] = useState<any>([]);
   const [selectedTabs, setSelectedTabs] = useState("participating");
+
+  useEffect(() => {
+    async function fetchMeetData() {
+      const d: any = await MyMeeting(user, 0, 20);
+      console.log("내 참여중 모임 정보", d);
+      setMeetData(d.data.content);
+    }
+    async function fetchWaitData() {
+      const d: any = await MyMeetingWait(user, 0, 20);
+      console.log("내 신청중 모임 정보", d);
+      setWaitData(d.data.content);
+    }
+    fetchMeetData();
+    fetchWaitData();
+  }, [user]);
+
   // 클릭한 탭 구별
   function setClickedTabs(e: any) {
     const role = e.target.dataset.role;
     setSelectedTabs(role);
   }
 
-  const data = [
-    {
-      gatheringId: 1234,
-      memberId: 4321,
-      status: "모집중",
-      endDate: "2022-05-22T22:40:01.0001",
-      category: "공예/만들기",
-      title: "수제 간식 원데이클래스 같이 하실 분!",
-      content: "강아지를 위한 수제 간식 원데이 클래스 같이 하실 분 구합니다~~",
-      members: ["고양이좋아", "커여운댕댕이", "신림동따발주먹"],
-    },
-    {
-      gatheringId: 1235,
-      memberId: 4321,
-      status: "모집완료",
-      endDate: "2022-05-22T22:40:01.0001",
-      category: "공예/만들기",
-      title: "수제 간식 원데이클래스 같이 하실 분!",
-      content: "강아지를 위한 수제 간식 원데이 클래스 같이 하실 분 구합니다~~",
-      members: ["고양이좋아", "커여운댕댕이", "신림동따발주먹"],
-    },
-    {
-      gatheringId: 1236,
-      memberId: 1234,
-      status: "모집중",
-      endDate: "2022-05-22T22:40:01.0001",
-      category: "공예/만들기",
-      title: "수제 간식 원데이클래스 같이 하실 분!",
-      content: "강아지를 위한 수제 간식 원데이 클래스 같이 하실 분 구합니다~~",
-      members: ["고양이좋아", "커여운댕댕이", "신림동따발주먹"],
-    },
-  ];
   return (
     <Wrapper>
       <PageTitle title="내모임" />
@@ -70,16 +60,34 @@ const MyMeetPage = observer(() => {
 
       {selectedTabs === "participating" && (
         <ContentArea>
-          {data.map((data) => (
-            <MyMeetList data={data} key={data.gatheringId} />
-          ))}
+          {meetData != null &&
+            meetData.map((data: any) => {
+              return <MyMeetList data={data} key={data.gatheringId} />;
+            })}
+          {meetData == null || meetData.length === 0 ? (
+            <NullWrapper>
+              <img src={nullIcon} />
+              <div>참여중인 모임이 없습니다.</div>
+            </NullWrapper>
+          ) : (
+            <></>
+          )}
         </ContentArea>
       )}
       {selectedTabs === "Applying" && (
         <ContentArea>
-          {data.map((data) => (
-            <MyMeetList data={data} key={data.gatheringId} />
-          ))}
+          {waitData != null &&
+            waitData.map((data: any) => {
+              return <MyMeetList data={data} key={data.gatheringId} />;
+            })}
+          {waitData == null || waitData.length === 0 ? (
+            <NullWrapper>
+              <img src={nullIcon} />
+              <div>신청중인 모임이 없습니다.</div>
+            </NullWrapper>
+          ) : (
+            <></>
+          )}
         </ContentArea>
       )}
     </Wrapper>
@@ -131,5 +139,25 @@ const Tab = styled.div`
   @media screen and (max-width: 600px) {
     padding: 14px;
     font-size: 16px;
+  }
+`;
+
+const NullWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: calc(100% - 180px);
+  margin: 20px 0px;
+  & > div {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-family: "yg-jalnan";
+
+    font-size: 28px;
+  }
+  & > img {
+    width: 100%;
   }
 `;

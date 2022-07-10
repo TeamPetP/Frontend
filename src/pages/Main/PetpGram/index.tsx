@@ -4,13 +4,21 @@ import { observer } from "mobx-react";
 import withMain from "../../../hocs/ui/withMain";
 import nullIcon from "../../../assets/images/null.png";
 import searchIcon from "../../../assets/images/search.png";
-import { useEffect, useState, useContext } from "react";
+import {
+	Fragment,
+	useRef,
+	useEffect,
+	useState,
+	useContext,
+	useCallback,
+} from "react";
 
 import pencil from "../../../assets/images/pencil.png";
 
 import Board from "../../../components/Main/PetpGram/Board";
 import { SearchPost } from "../../../services/postApi";
 import { UserContext } from "../../../contexts/UserContext";
+import { useInView } from "react-intersection-observer";
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -116,6 +124,78 @@ const IndexPage = observer(() => {
 	const { modalStore } = useStores();
 	const [postData, setPostData] = useState<any>([]);
 	const { user } = useContext(UserContext);
+	const [serachInput, setSearchInput] = useState<string>("");
+	const searchInputRef = useRef<any>(null);
+
+	const [pageNumber, setPageNumber] = useState<number>(0);
+	const [ref, inView] = useInView();
+	const [loading, setLoading] = useState(false);
+
+	const getItems = useCallback(
+		async (state: boolean, userToken?: any) => {
+			setLoading(true);
+			let k: string = serachInput;
+
+			if (pageNumber === 0 && state == true) {
+				console.log("aaa", userToken);
+				await SearchPost(
+					userToken,
+					pageNumber,
+					k.replace("#", "")
+				).then((res: any) => {
+					if (Math.floor(postData.length / 10) < pageNumber + 1) {
+						setPostData([...res.data.content]);
+						setLoading(false);
+					}
+					if (res.data.content.length === 0) {
+						setLoading(true);
+					}
+					console.log("klkkk", postData);
+				});
+			} else {
+				await SearchPost(user, pageNumber, k.replace("#", "")).then(
+					(res: any) => {
+						console.log(
+							"mmm",
+							res.data,
+							Math.floor(postData.length / 10) < pageNumber,
+							Math.floor(postData.length / 10),
+							pageNumber
+						);
+						if (Math.floor(postData.length / 10) < pageNumber + 1) {
+							setPostData((prevState: any) => [
+								...prevState,
+								...res.data.content,
+							]);
+							setLoading(false);
+						}
+						if (res.data.content.length === 0) {
+							setLoading(true);
+						}
+						console.log("klkkk", postData);
+					}
+				);
+			}
+		},
+		[pageNumber]
+	);
+
+	useEffect(() => {
+		console.log("test");
+		getItems(false);
+	}, [getItems]);
+
+	useEffect(() => {
+		console.log("test", user);
+		getItems(true, user);
+	}, [user]);
+
+	useEffect(() => {
+		// 사용자가 마지막 요소를 보고 있고, 로딩 중이 아니라면
+		if (inView && !loading) {
+			setPageNumber((prevState) => prevState + 1);
+		}
+	}, [inView, loading]);
 
 	function createBoard() {
 		if (user != null && user.userAccessState) {
@@ -128,34 +208,98 @@ const IndexPage = observer(() => {
 		modalStore.petpGramPostId = postId;
 		modalStore.editPetpGramState = true;
 	}
-	useEffect(() => {
-		async function fetchData() {
-			console.log("test", user);
-			const d: any = await SearchPost(user, 0, "");
-			console.log("Daata", d);
-			setPostData(d.data);
+	function SerachInputRegex(e: React.ChangeEvent<HTMLInputElement>) {
+		let value = e.target.value;
+		let tagIndex = value.indexOf("#");
+		console.log(value, tagIndex, value.indexOf(" ", tagIndex + 1));
+		if (tagIndex != -1) {
+			if (value.indexOf(" ", tagIndex + 1) != -1) {
+				console.log("검색");
+				let k = value.slice(0, value.indexOf(" ", tagIndex + 1) + 1);
+				setSearchInput(() => {
+					return k;
+				});
+			} else {
+				setSearchInput(() => {
+					return value;
+				});
+			}
+		} else {
+			if (e.target.value == "") {
+				setSearchInput(() => {
+					return value;
+				});
+			}
+			e.target.placeholder = "태그를 #로 시작해주세요. EX) #강아지";
 		}
-		fetchData();
-	}, []);
+	}
+	async function PostSearch() {
+		let k: string = serachInput;
+		console.log("now", user, pageNumber, k.replace("#", ""));
+		const d: any = await SearchPost(user, pageNumber, k.replace("#", ""));
+		console.log("Daata", d);
+		setPostData(d.data);
+	}
+	// useEffect(() => {
+	// 	console.log(user);
+	// 	async function fetchData() {
+	// 		console.log("test", user);
+
+	// 		let k: string = serachInput;
+	// 		const d: any = await SearchPost(
+	// 			user,
+	// 			pageNumber,
+	// 			k.replace("#", "")
+	// 		);
+	// 		console.log("Daata", d);
+	// 		setPostData(d.data);
+	// 	}
+	// 	fetchData();
+	// }, [user]);
 
 	return (
 		<Wrapper>
 			<SearchBar>
-				<SearchInput />
-				<SearchButton>
+				<SearchInput
+					onKeyPress={() => PostSearch()}
+					ref={searchInputRef}
+					value={serachInput}
+					placeholder="검색할 태그를 입력해주세요. EX) #강아지"
+					onChange={(e) => SerachInputRegex(e)}
+				/>
+				<SearchButton onClick={() => PostSearch()}>
 					<img src={searchIcon} alt="serach" />
 				</SearchButton>
 			</SearchBar>
-			{postData.content != null &&
-				postData.content.map((e: any) => {
+			{postData != null &&
+				postData.map((e: any, idx: any) => {
 					return (
-						<Board
-							info={e}
-							EditEvent={(postId: number) => EditEvent(postId)}
-						/>
+						<Fragment key={idx}>
+							{postData.length - 1 == idx ? (
+								<div ref={ref}>
+									<Board
+										key={e.lastModifiedDate}
+										info={e}
+										EditEvent={(postId: number) =>
+											EditEvent(postId)
+										}
+									/>
+								</div>
+							) : (
+								<div>
+									<Board
+										key={e.lastModifiedDate}
+										info={e}
+										EditEvent={(postId: number) =>
+											EditEvent(postId)
+										}
+									/>
+								</div>
+							)}
+						</Fragment>
 					);
 				})}
-			{postData.content == null || postData.content.length === 0 ? (
+			{postData == null || postData.length === 0 ? (
 				<NullWrapper>
 					<img src={nullIcon} />
 					<div>게시물이 존재하지 않습니다.</div>

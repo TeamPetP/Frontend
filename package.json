@@ -1,81 +1,83 @@
 {
-	"name": "web-react-v1",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@babel/plugin-proposal-class-properties": "^7.16.7",
-		"@babel/plugin-proposal-decorators": "^7.17.9",
-		"@testing-library/jest-dom": "^5.16.4",
-		"@testing-library/react": "^13.2.0",
-		"@testing-library/user-event": "^13.5.0",
-		"@types/jest": "^27.5.0",
-		"@types/node": "^16.11.33",
-		"@types/react": "^18.0.9",
-		"@types/react-dom": "^18.0.3",
-		"@types/react-slick": "^0.23.8",
-		"@types/styled-components": "^5.1.25",
-		"aws-sdk": "^2.1159.0",
-		"axios": "^0.27.2",
-		"core-decorators": "^0.20.0",
-		"customize-cra": "^1.0.0",
-		"firebase": "8.10.0",
-		"mobx": "^6.5.0",
-		"mobx-react": "^7.4.0",
-		"react": "^18.1.0",
-		"react-app-rewired": "^2.2.1",
-		"react-dom": "^18.1.0",
-		"react-router": "^6.3.0",
-		"react-router-dom": "^6.3.0",
-		"react-scripts": "5.0.1",
-		"react-slick": "^0.29.0",
-		"react-xml-parser": "^1.1.8",
-		"styled-components": "^5.3.5",
-		"typescript": "^4.6.4",
-		"uuid": "^8.3.2",
-		"web-vitals": "^2.1.4"
-	},
-	"scripts": {
-		"start": "react-app-rewired start",
-		"build": "react-app-rewired build",
-		"test": "react-app-rewired test",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"babel": {
-		"presets": [
-			"react-app"
-		],
-		"plugins": [
-			[
-				"@babel/plugin-proposal-decorators",
-				{
-					"legacy": true
-				}
-			],
-			[
-				"@babel/plugin-proposal-class-properties",
-				{
-					"loose": true
-				}
-			]
-		]
-	},
-	"proxy": "http://3.39.122.247:8080"
+  "name": "web-react-v1",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-decorators": "^7.17.9",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.0",
+    "@types/node": "^16.11.33",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.3",
+    "@types/react-slick": "^0.23.8",
+    "@types/styled-components": "^5.1.25",
+    "aws-sdk": "^2.1159.0",
+    "axios": "^0.27.2",
+    "core-decorators": "^0.20.0",
+    "customize-cra": "^1.0.0",
+    "firebase": "8.10.0",
+    "mobx": "^6.5.0",
+    "mobx-react": "^7.4.0",
+    "react": "^18.1.0",
+    "react-app-rewired": "^2.2.1",
+    "react-dom": "^18.1.0",
+    "react-intersection-observer": "^9.3.5",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
+    "react-xml-parser": "^1.1.8",
+    "styled-components": "^5.3.5",
+    "typescript": "^4.6.4",
+    "util": "^0.12.4",
+    "uuid": "^8.3.2",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  },
+  "proxy": "http://3.39.122.247:8080"
 }

@@ -127,11 +127,11 @@ function SignUpModal(props) {
 	}
 
 	function onChangeNickName(e){
-		setNickname(e.target.result)
+		setNickname(e.target.value)
 	}
 
 	function onChangeIntroduce(e){
-		setIntroduce(e.target.result)
+		setIntroduce(e.target.value)
 	}
 
 	return (

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react";
+import { useLocation } from "react-router";
+import { UserContext } from "../../../contexts/UserContext";
+import { SearchMeet } from "../../../services/MeetingApi";
 import withMain from "../../../hocs/ui/withMain";
 import styled from "styled-components";
 import * as theme from "../../../styles/theme";
@@ -8,12 +11,30 @@ import Board from "./detailPage/Board";
 import Gallery from "./detailPage/Gallery";
 
 const DetailPage = observer(() => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const meetingId = Number(params.get("id"));
+  const [meetData, setMeetData] = useState<any>([]);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    async function fetchData() {
+      const d: any = await SearchMeet(user, meetingId);
+      console.log("ddata", d);
+
+      setMeetData(d.data);
+    }
+    fetchData();
+  }, [user]);
+
   const [selectedTabs, setSelectedTabs] = useState("info");
   // 클릭한 탭 구별
   function setClickedTabs(e: any) {
     const role = e.target.dataset.role;
     setSelectedTabs(role);
   }
+
+  useEffect(() => {}, []);
   return (
     <>
       <TabsWrap>
@@ -43,8 +64,8 @@ const DetailPage = observer(() => {
         </Tab>
       </TabsWrap>
       <div>
-        {selectedTabs === "info" && <MeetInfo />}
-        {selectedTabs === "board" && <Board />}
+        {selectedTabs === "info" && <MeetInfo data={meetData} />}
+        {selectedTabs === "board" && <Board meetingId={meetingId} />}
         {selectedTabs === "gallery" && <Gallery />}
       </div>
     </>

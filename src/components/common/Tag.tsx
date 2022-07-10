@@ -3,7 +3,7 @@ import * as theme from "../../styles/theme";
 
 interface IInputType {
   color?: string;
-  text: string;
+  text: string | string[];
 }
 const Tags = ({ color = theme.TextConentColor, text }: IInputType) => {
   return <Tag color={color}>{text}</Tag>;

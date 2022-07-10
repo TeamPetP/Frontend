@@ -20,13 +20,9 @@ export const EditPost = (
 	postRequestData: IPostRequestData
 ) => {
 	axios
-		.put(
-			`/posts/${postId}`,
-			postRequestData,
-			{
-				headers: user,
-			}
-		)
+		.put(`/posts/${postId}`, postRequestData, {
+			headers: user,
+		})
 		.then((e) => {
 			console.log(e);
 		});
@@ -35,13 +31,9 @@ export const EditPost = (
 export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.post(
-				`/posts/`,
-				postRequestData,
-				{
-					headers: user,
-				}
-			)
+			.post(`/posts/`, postRequestData, {
+				headers: user,
+			})
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -59,16 +51,17 @@ export const SearchDetailPost = (user: any, postId: number) => {
 		});
 };
 
-export const SearchPost = (user: any, page: number, tag?: string) => {
+export const SearchPost = (user: any, page: number, tag: string) => {
 	return new Promise((resolve, reject) => {
-		console.log("aaa", user);
+		console.log("aaa", user, page, tag);
+
+		console.log(
+			`/posts/?pageNumber=${page}${tag ? `&tag=${tag}` : ""}&size=10`
+		);
 		axios
-			.get(
-				`/posts/?page=${page}&tag=${tag}&size=10`,
-				{
-					headers: user,
-				}
-			)
+			.get(`/posts/?page=${page}${tag ? `&tag=${tag}` : ""}&size=10`, {
+				headers: user,
+			})
 			.then((e) => {
 				console.log("tesaat", e);
 				resolve(e);
@@ -81,13 +74,21 @@ export const SearchPost = (user: any, page: number, tag?: string) => {
 };
 
 export const LikePost = (user: any, postId: number) => {
-	axios
-		.patch(`/posts/${postId}`, {
-			headers: user,
-		})
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve, reject) => {
+		console.log(user, postId);
+		axios
+			.patch(
+				`/posts/${postId}`,
+				{},
+				{
+					headers: user,
+				}
+			)
+			.then((e) => {
+				console.log(e);
+				resolve(e.data);
+			});
+	});
 };
 
 export const BookmarkPost = (user: any, postId: number) => {

@@ -16,16 +16,16 @@ const root = ReactDOM.createRoot(
 const rootstore = new RootStore();
 
 root.render(
-	<React.StrictMode>
-		<Router>
-			<StoreProvider store={rootstore}>
-				<AuthProvider>
-					<App />
-				</AuthProvider>
-				<GlobalStyle />
-			</StoreProvider>
-		</Router>
-	</React.StrictMode>
+	// <React.StrictMode>
+	<Router>
+		<StoreProvider store={rootstore}>
+			<AuthProvider>
+				<App />
+			</AuthProvider>
+			<GlobalStyle />
+		</StoreProvider>
+	</Router>
+	// </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,11 +1,12 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useStores } from "../../../hooks/useStores";
 import { observer } from "mobx-react";
+import { useLocation, useNavigate } from "react-router";
 import withMain from "../../../hocs/ui/withMain";
 import { AwsS3 } from "../../../services/Aws";
 import { UserContext } from "../../../contexts/UserContext";
-import { CreateMeet } from "../../../services/MeetingApi";
+import { EditMeet } from "../../../services/MeetingApi";
 import { sido, sigungu } from "../../../components/common/AddressData";
 import PageTitle from "../../../components/common/PageTitle";
 import ContentName from "../../../components/common/ContentName";
@@ -16,30 +17,37 @@ import checkmark_outline from "../../../assets/images/checkmark_outline.png";
 import imgIcon from "../../../assets/images/img-icon.png";
 import deleteBtn from "../../../assets/images/delete_btn.png";
 
-const CreateMeeting = observer(() => {
+const EditMeeting = observer(() => {
   const { userStore } = useStores();
   const { user } = useContext(UserContext);
-  const uploadPhoto = useRef<any>("");
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const originState: any = { state }.state;
+  const [data, setData] = useState(originState.data);
 
-  const [title, setTitle] = useState<string>("");
-  const [category, setCategory] = useState<string>("PICTURE");
-  const [intro, setIntro] = useState<string>("");
+  const uploadPhoto = useRef<any>("");
+  const [meetingId, setMeetingId] = useState<number>(data.meetingId);
+  const [title, setTitle] = useState<string>(data.title);
+  const [category, setCategory] = useState<string>(data.category);
+  const [intro, setIntro] = useState<string>(data.content);
   const [address, setAddress] = useState({
-    doNm: "전체",
-    sigunguNm: "전체",
+    doNm: data.doName,
+    sigunguNm: data.sigungu,
   });
-  const [place, setPlace] = useState<string>("");
-  const [condition, setCondition] = useState<string>("");
-  const [period, setPeriod] = useState<string>("");
-  const [maxpeople, setMaxpeople] = useState<number>(999999);
-  const [checkedMeetingType, setCheckedMeetingType] =
-    useState<string>("REGULAR");
-  const [checkedPersonnel, setCheckedPersonnel] =
-    useState<string>("personnel1");
-  const [sex, setSex] = useState<string>("ALL");
-  const [checkedAge, setCheckedAge] = useState<string>("age0");
-  const [image, setImage] = useState<any[]>([]);
-  const [imageFile, setImageFile] = useState<any[]>([]);
+  const [place, setPlace] = useState<string>(data.location);
+  const [condition, setCondition] = useState<string>(data.conditions);
+  const [period, setPeriod] = useState<string>(data.period);
+  const [maxpeople, setMaxpeople] = useState<number>(data.maxPeople);
+  const [checkedMeetingType, setCheckedMeetingType] = useState<string>(
+    data.meetingType
+  );
+  const [checkedPersonnel, setCheckedPersonnel] = useState<string>(
+    data.maxPeople === 999999 ? "personnel1" : "personnel2"
+  );
+  const [sex, setSex] = useState<string>(data.sex);
+  const [image, setImage] = useState<any[]>(data.imgUrlList);
+  const [imageFile, setImageFile] = useState<any[]>(data.imgUrlList);
+  const [isOpened, setIsOpened] = useState<boolean>(data.isOpened);
 
   const meetCategory = [
     { name: "사진 공유", value: "PICTURE" },
@@ -57,11 +65,10 @@ const CreateMeeting = observer(() => {
       const reader = new FileReader();
       // 이미지가 로드가 된 경우
       reader.onload = (e: any) => {
-        setImage([...image, e.target.result]);
+        setImage([e.target.result]);
       };
       // reader가 이미지 읽도록 하기
-      setImageFile([...imageFile, uploadPhoto.current.files[0]]);
-      //console.log(uploadPhoto.current.files[0]);
+      setImageFile([uploadPhoto.current.files[0]]);
       reader.readAsDataURL(uploadPhoto.current.files[0]);
     }
   }
@@ -72,16 +79,19 @@ const CreateMeeting = observer(() => {
     setImageFile([]);
   };
 
+  // 모임상태 변경
+  const changeState = (value: boolean) => {
+    setIsOpened(value);
+  };
+
   // 카테고리 변경
   const changeCategory = (value: string) => {
-    console.log(value);
     setCategory(value);
   };
 
   // 지역 도 변경
   const changedoNm = (value: string) => {
     setAddress((address: any) => {
-      console.log(value);
       return { ...address, doNm: value };
     });
 
@@ -127,6 +137,11 @@ const CreateMeeting = observer(() => {
     setSex(e.target.defaultValue);
   };
 
+  const meetingState = [
+    { state: true, value: "모집 중" },
+    { state: false, value: "모집 종료" },
+  ];
+
   const meetingType = [
     { id: "REGULAR", value: "정기모임" },
     { id: "ONCE", value: "1회 모임" },
@@ -141,7 +156,7 @@ const CreateMeeting = observer(() => {
     { id: "FEMALE", value: "여성만" },
   ];
 
-  async function Create() {
+  async function Edit() {
     if (title === "") alert("제목을 입력해주세요");
     if (maxpeople === null) alert("모임인원을 입력해주세요");
     if (period === "") alert("모임날짜 및 시간을 입력해주세요");
@@ -150,7 +165,7 @@ const CreateMeeting = observer(() => {
 
     if (validation === true) {
       const data = await AwsS3(imageFile);
-      console.log({
+      const editMeetData: any = await EditMeet(user, meetingId, {
         category: category,
         conditions: condition,
         content: intro,
@@ -163,33 +178,40 @@ const CreateMeeting = observer(() => {
         sex: sex,
         sigungu: address.sigunguNm,
         title: title,
+        isOpened: isOpened,
       });
 
-      const createMeetData: any = await CreateMeet(user, {
-        category: category,
-        conditions: condition,
-        content: intro,
-        doName: address.doNm,
-        imgUrlList: data,
-        location: place,
-        maxPeople: maxpeople,
-        meetingType: checkedMeetingType,
-        period: period,
-        sex: sex,
-        sigungu: address.sigunguNm,
-        title: title,
-      });
-      console.log("createMeetData", createMeetData);
-
-      if (createMeetData.status == 201) {
-        window.location.href = "/meeting";
+      if (editMeetData.status == 200) {
+        navigate(-1);
       }
     }
   }
   return (
     <Wrapper>
-      <PageTitle title="모임 만들기" />
+      <PageTitle title="모임정보 수정" />
       <CreateContent>
+        <Distance top={0} bottom={30}>
+          <ContentName inputTitle="참여자 모집" />
+          <RadioWrap>
+            {meetingState.map((value) => (
+              <>
+                <Radio
+                  type="radio"
+                  name="meetState"
+                  id={value.value}
+                  defaultValue={value.value}
+                  onClick={() => changeState(value.state)}
+                />
+                <RadioLabel
+                  htmlFor={value.value}
+                  Ischecked={isOpened === value.state}
+                >
+                  {value.state ? "모집중" : "모집완료"}
+                </RadioLabel>
+              </>
+            ))}
+          </RadioWrap>
+        </Distance>
         <Distance top={0} bottom={20}>
           <ContentName inputTitle="제목" />
           <TextInput
@@ -206,6 +228,7 @@ const CreateMeeting = observer(() => {
               placeholder="카테고리"
               width="100%"
               onChange={(e) => changeCategory(e.target.value)}
+              value={category}
             >
               {meetCategory.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -258,6 +281,7 @@ const CreateMeeting = observer(() => {
               placeholder="시/도"
               width="calc(50% - 5px)"
               onChange={(e) => changedoNm(e.target.value)}
+              value={address.doNm}
             >
               {sido.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -269,6 +293,7 @@ const CreateMeeting = observer(() => {
               placeholder="시/군/구"
               width="calc(50% - 5px)"
               onChange={(e) => changesigunguNm(e.target.value)}
+              value={address.sigunguNm}
             >
               {address.doNm ? (
                 sigungu[address.doNm].map((sigunguNm: string, index: any) => (
@@ -387,13 +412,13 @@ const CreateMeeting = observer(() => {
             ))}
           </RadioWrap>
         </Distance>
-        <SubmitButton text="모임 만들기" onClick={() => Create()} />
+        <SubmitButton text="수정 완료" onClick={() => Edit()} />
       </CreateContent>
     </Wrapper>
   );
 });
 
-export default withMain(CreateMeeting, "펫미팅");
+export default withMain(EditMeeting, "펫미팅");
 
 const Wrapper = styled.div`
   width: 100%;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import styled from "styled-components";
 import user_profile from "../../../assets/images/user_profile.png";
 
@@ -6,12 +6,13 @@ import Slider from "react-slick";
 import speech_bubble from "../../../assets/images/speech_bubble.png";
 import heart from "../../../assets/images/heart.png";
 import heart__fill from "../../../assets/images/heart__fill.png";
+import { UserContext } from "../../../contexts/UserContext";
 
 import bookmark2 from "../../../assets/images/bookmark2.png";
 import bookmark2__fill from "../../../assets/images/bookmark2__fill.png";
 import Comment from "../../../components/common/Comment";
-import { EditPost } from "../../../services/postApi";
-import {timeBefore} from "../../../lib/timeBefore"
+import { LikePost } from "../../../services/postApi";
+import { timeBefore } from "../../../lib/timeBefore";
 const BoardWrapper = styled.div`
 	width: 100%;
 	max-height: 865px;
@@ -185,25 +186,45 @@ const BoardTime = styled.div`
 `;
 const BoardText = styled.div`
 	margin-top: 12px;
-	word-break:break-all;
+	word-break: break-all;
 	width: 100%;
 `;
 
 function Board(props) {
+	const { user } = useContext(UserContext);
+
 	const slider = useRef();
 	const [sliderDot, setSliderDot] = useState([]);
+	const [like, setLike] = useState(false);
+	const [likeCount, setLikeCount] = useState(0);
+
 	useEffect(() => {
 		let arr;
-		(arr = []).length = slider.current.props.children.length;
+
+		(arr = []).length = slider.current.props.children
+			? slider.current.props.children.length
+			: 0;
 		arr.fill(false);
 		arr[0] = true;
 
 		setSliderDot(arr);
 	}, []);
 
+	useEffect(() => {
+		console.log(props.info.isLiked);
+		if (props.info.isLiked == null) {
+			setLike(false);
+		} else {
+			setLike(props.info.isLiked);
+		}
+		setLikeCount(props.info.likeCnt);
+	}, [props.info, user]);
+
 	function setActiveSlide(data) {
 		let arr;
-		(arr = []).length = slider.current.props.children.length;
+		(arr = []).length = slider.current.props.children
+			? slider.current.props.children.length
+			: 0;
 		arr.fill(false);
 		arr[data] = true;
 		setSliderDot(arr);
@@ -213,6 +234,16 @@ function Board(props) {
 	}
 	function EditPost() {
 		props.EditEvent(props.info.postId);
+	}
+
+	async function Like(postId, state) {
+		if (user != null && user.userAccessState === true) {
+			await LikePost(user, postId).then((e) => {
+				setLike(state);
+				console.log(e);
+				setLikeCount(e);
+			});
+		}
 	}
 
 	const settings = {
@@ -231,7 +262,7 @@ function Board(props) {
 			<BoardHeader>
 				<BoardUserInfo>
 					<BoardUserProfileImage
-						src={user_profile}
+						src={props.info.imgUrl}
 						alt="profile_image"
 					/>
 					<BoardUserName>{props.info.nickname}</BoardUserName>
@@ -243,43 +274,52 @@ function Board(props) {
 			</BoardHeader>
 			<SliderWrap>
 				<Slider {...settings} ref={slider}>
-					{props.info.imgUrlList.map((image) => (
-						<BoardListImage src={image} alt="image" />
-					))}
+					{props.info.imgUrlList != null &&
+						props.info.imgUrlList.map((image) => (
+							<BoardListImage src={image} alt="image" />
+						))}
 				</Slider>
 			</SliderWrap>
 			<BoardNav>
 				<IconWrapper>
-					{props.info.isLiked ? (
-						<HeartIconImage src={heart__fill} />
+					{like ? (
+						<HeartIconImage
+							src={heart__fill}
+							onClick={() => Like(props.info.postId, false)}
+						/>
 					) : (
-						<HeartIconImage src={heart} />
+						<HeartIconImage
+							src={heart}
+							onClick={() => Like(props.info.postId, true)}
+						/>
 					)}
 					<IconImage src={speech_bubble} />
 				</IconWrapper>
 				<SwiperToggle>
-					{props.info.imgUrlList.length != 0 ? sliderDot.map((value, index) => (
-						<SwiperToggleDot
-							state={value}
-							onClick={() => DotClickEvent(index)}
-						/>
-					)): ''}
+					{props.info.imgUrlList != null &&
+					props.info.imgUrlList.length != 0
+						? sliderDot.map((value, index) => (
+								<SwiperToggleDot
+									key={index}
+									state={value}
+									onClick={() => DotClickEvent(index)}
+								/>
+						  ))
+						: ""}
 				</SwiperToggle>
 				<BookMarkWrapper>
-					{false ? (
+					{/* {false ? (
 						<IconImage src={bookmark2__fill} />
 					) : (
 						<IconImage src={bookmark2} />
-					)}
+					)} */}
 				</BookMarkWrapper>
 			</BoardNav>
 			<BoardSubNav>
-				<BoardLike>좋아요 {props.info.likeCnt}개</BoardLike>
+				<BoardLike>좋아요 {likeCount}개</BoardLike>
 				<BoardTime>{timeBefore(props.info.lastModifiedDate)}</BoardTime>
 			</BoardSubNav>
-			<BoardText>
-				{props.info.content}
-			</BoardText>
+			<BoardText>{props.info.content}</BoardText>
 			<Comment />
 		</BoardWrapper>
 	);

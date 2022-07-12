@@ -5,6 +5,7 @@ import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
 import { JoinMeet, ResignMeet } from "../../../../services/MeetingApi";
 import styled from "styled-components";
+import axios from "axios";
 import { timeBefore } from "../../../../lib/timeBefore";
 import * as theme from "../../../../styles/theme";
 import user_profile from "../../../../assets/images/user_profile.png";
@@ -44,12 +45,22 @@ const MeetInfo = observer(({ data }: any) => {
   };
 
   // 모임 참여
-  const JoinMeeting = () => {
-    async function fetchJoin() {
-      const dd: any = await JoinMeet(user, data.meetingId);
-      console.log("join, ", dd);
-    }
-    fetchJoin();
+  const JoinMeeting = (user: any, meetingId: number) => {
+    return new Promise((resolve, reject) => {
+      console.log("JoinMeeting", user, meetingId);
+      axios
+        .post(`/meetings/${meetingId}`, {
+          headers: user,
+        })
+        .then((e) => {
+          console.log(e);
+          resolve(e.data);
+        })
+        .catch((e) => {
+          console.log(e.response);
+          reject(e);
+        });
+    });
   };
 
   // 모임 탈퇴
@@ -158,7 +169,9 @@ const MeetInfo = observer(({ data }: any) => {
         <>
           {data.isJoined === false && data.isOpened === true && (
             <ButtonWrap>
-              <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
+              <SubmitBtn onClick={() => JoinMeeting(user, data.meetingId)}>
+                참여 신청
+              </SubmitBtn>
             </ButtonWrap>
           )}
           {data.isJoined === true && (

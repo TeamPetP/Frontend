@@ -25,7 +25,7 @@ const IndexPage = observer(() => {
   useEffect(() => {
     console.log(user);
     async function fetchData() {
-      let paramsString = `dosi=${dosi}&isOpened=${isOpened}`;
+      let paramsString = `isOpened=${isOpened}`;
       const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
       setMeetData(d.data);
     }
@@ -35,7 +35,9 @@ const IndexPage = observer(() => {
   async function PostSearch(e: any) {
     e.preventDefault();
 
-    let paramsString = `dosi=${dosi}&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
+    let paramsString = `${
+      dosi !== "전체" ? `&dosi=${dosi}` : ""
+    }&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
 
     // 필요없는 조회조건 제거
     if (content == "" || content === null) {

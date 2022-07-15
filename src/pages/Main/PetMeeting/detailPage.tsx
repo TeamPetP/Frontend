@@ -33,8 +33,6 @@ const DetailPage = observer(() => {
     const role = e.target.dataset.role;
     setSelectedTabs(role);
   }
-
-  useEffect(() => {}, []);
   return (
     <>
       <TabsWrap>
@@ -64,7 +62,9 @@ const DetailPage = observer(() => {
         </Tab>
       </TabsWrap>
       <div>
-        {selectedTabs === "info" && <MeetInfo data={meetData} />}
+        {selectedTabs === "info" && (
+          <MeetInfo data={meetData} setMeetData={setMeetData} />
+        )}
         {selectedTabs === "board" && <Board meetingId={meetingId} />}
         {selectedTabs === "gallery" && <Gallery />}
       </div>

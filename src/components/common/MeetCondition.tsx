@@ -12,6 +12,7 @@ interface IConditionType {
   date?: string;
   personnel?: number;
   memberId?: number;
+  sex: string;
 }
 const MeetCondition = ({
   status,
@@ -20,6 +21,7 @@ const MeetCondition = ({
   date,
   personnel,
   memberId,
+  sex,
 }: IConditionType) => {
   const { userStore } = useStores();
 
@@ -32,12 +34,6 @@ const MeetCondition = ({
           </Progress>
           <div>{meetTitle}</div>
         </Title>
-        {memberId === userStore.getMemberId && (
-          <div>
-            <Button>수정</Button>
-            <Button>삭제</Button>
-          </div>
-        )}
       </Top>
       <div>
         <List>
@@ -47,6 +43,12 @@ const MeetCondition = ({
         <List>
           <img src={condition2} alt="시간 및 장소" />
           {date}
+        </List>
+        <List>
+          <img src={condition1} alt="성별" />
+          {sex === "FEMALE" && "여성만 참여"}
+          {sex === "MALE" && "남성만 참여"}
+          {sex === "ALL" && "성별에 관계없이 누구나"}
         </List>
         <List>
           <img src={condition3} alt="현재 참여인원" />

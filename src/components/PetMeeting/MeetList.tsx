@@ -32,8 +32,6 @@ const MeetList = ({ data }: IMeetType) => {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    console.log(data.category);
-
     switch (data.category) {
       case "PICTURE":
         setCategory("사진 공유");
@@ -86,6 +84,7 @@ const MeetList = ({ data }: IMeetType) => {
         date={data.period}
         personnel={data.joinPeople}
         memberId={data.memberId}
+        sex={data.sex}
       />
       <Content>{data.content}</Content>
       <Bottom>

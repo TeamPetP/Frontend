@@ -3,7 +3,11 @@ import { observer } from "mobx-react";
 import { useNavigate } from "react-router";
 import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
-import { JoinMeet, ResignMeet } from "../../../../services/MeetingApi";
+import {
+  JoinMeet,
+  ResignMeet,
+  CancleJoinMeet,
+} from "../../../../services/MeetingApi";
 import styled from "styled-components";
 import axios from "axios";
 import { timeBefore } from "../../../../lib/timeBefore";
@@ -13,7 +17,7 @@ import Tag from "../../../../components/common/Tag";
 import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
 
-const MeetInfo = observer(({ data }: any) => {
+const MeetInfo = observer(({ data, setMeetData }: any) => {
   const navigate = useNavigate();
   const { modalStore, userStore } = useStores();
   const { user } = useContext(UserContext);
@@ -34,10 +38,6 @@ const MeetInfo = observer(({ data }: any) => {
     .toString()
     .split(".");
 
-  useEffect(() => {
-    console.log("MeetInfo data = ", data);
-  }, [data]);
-
   const editMeet = () => {
     navigate(`/meeting/edit`, {
       state: { data },
@@ -45,21 +45,30 @@ const MeetInfo = observer(({ data }: any) => {
   };
 
   // 모임 참여
-  const JoinMeeting = (user: any, meetingId: number) => {
-    return new Promise((resolve, reject) => {
-      console.log("JoinMeeting", user, meetingId);
-      axios
-        .post(`/meetings/${meetingId}`, {
-          headers: user,
-        })
-        .then((e) => {
-          console.log(e);
-          resolve(e.data);
-        })
-        .catch((e) => {
-          console.log(e.response);
-          reject(e);
-        });
+  const JoinMeeting = () => {
+    async function fetchJoin() {
+      const dd: any = await JoinMeet(user, data.meetingId);
+      console.log("dd", dd);
+    }
+    fetchJoin();
+    setMeetData((data: any) => {
+      return { ...data, joinStatus: "대기중" };
+    });
+  };
+
+  // 모임 참여 신청 취소
+  const CancleJoinMeeting = () => {
+    async function fetchCancleJoin() {
+      const dd: any = await CancleJoinMeet(
+        user,
+        data.meetingId,
+        userStore.getMemberId
+      );
+      console.log("dd", dd);
+    }
+    fetchCancleJoin();
+    setMeetData((data: any) => {
+      return { ...data, joinStatus: null };
     });
   };
 
@@ -127,7 +136,7 @@ const MeetInfo = observer(({ data }: any) => {
       <Creator>
         <CreatorThumbnail src={user_profile} />
         <div>
-          <Nickname>{userStore.getName}</Nickname>
+          <Nickname>{data.nickname}</Nickname>
           <div>
             <Place>
               {data.doName} {data.doName !== "전체" && data.sigungu}
@@ -143,6 +152,7 @@ const MeetInfo = observer(({ data }: any) => {
         date={data.period}
         personnel={data.joinPeople}
         memberId={data.memberId}
+        sex={data.sex}
       />
       {data.imgUrlList?.length > 0 && (
         <MeetThumbnail src={data.imgUrlList} alt="활동소개사진" />
@@ -167,18 +177,25 @@ const MeetInfo = observer(({ data }: any) => {
         </ButtonWrap>
       ) : (
         <>
-          {data.isJoined === false && data.isOpened === true && (
-            <ButtonWrap>
-              <SubmitBtn onClick={() => JoinMeeting(user, data.meetingId)}>
-                참여 신청
-              </SubmitBtn>
-            </ButtonWrap>
-          )}
-          {data.isJoined === true && (
+          {data.isJoined === false &&
+            data.isOpened === true &&
+            data.joinStatus !== "승인" &&
+            data.joinStatus !== "대기중" && (
+              <ButtonWrap>
+                <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
+              </ButtonWrap>
+            )}
+
+          {data.isJoined === true && data.joinStatus === "승인" && (
             <ButtonWrap>
               <SubmitBtn onClick={ResignMeeting} dark>
                 모임탈퇴
               </SubmitBtn>
+            </ButtonWrap>
+          )}
+          {data.isJoined === false && data.joinStatus === "대기중" && (
+            <ButtonWrap>
+              <SubmitBtn onClick={CancleJoinMeeting}>참여 신청 취소</SubmitBtn>
             </ButtonWrap>
           )}
           {data.isOpened === false && <div>현재 모집완료된 모임입니다</div>}

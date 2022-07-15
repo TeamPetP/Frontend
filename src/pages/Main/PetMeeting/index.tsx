@@ -36,7 +36,7 @@ const IndexPage = observer(() => {
     e.preventDefault();
 
     let paramsString = `${
-      dosi !== "전체" ? `&dosi=${dosi}` : ""
+      dosi !== "전체" ? `dosi=${dosi}` : ""
     }&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
 
     // 필요없는 조회조건 제거

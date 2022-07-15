@@ -38,6 +38,7 @@ const AttentionMeetPage = observer(() => {
             conditions="20~30대만"
             date="5월 7일 오후 2시"
             personnel={2}
+            sex="누구나"
           />
           <Content>
             aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

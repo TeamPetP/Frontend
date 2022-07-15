@@ -30,7 +30,6 @@ export const SearchMeetList = (
         headers: user,
       })
       .then((e: any) => {
-        //console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -48,7 +47,6 @@ export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -66,7 +64,6 @@ export const SearchMeet = (user: any, meetingId: number) => {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -102,7 +99,7 @@ export const EditMeet = (
 export const JoinMeet = (user: any, meetingId: number) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/meetings/${meetingId}`, {
+      .post(`/meetings/${meetingId}`, null, {
         headers: user,
       })
       .then((e: any) => {
@@ -114,6 +111,21 @@ export const JoinMeet = (user: any, meetingId: number) => {
         reject(e);
       });
   });
+};
+
+// 모임 가입취소 요청
+export const CancleJoinMeet = (
+  user: any,
+  meetingId: number,
+  memberId: number
+) => {
+  axios
+    .delete(`/meetings/${meetingId}/members/${memberId}/cancel`, {
+      headers: user,
+    })
+    .then((e) => {
+      console.log(e);
+    });
 };
 
 // 모임 탈퇴 요청
@@ -142,7 +154,6 @@ export const GetBoardList = (user: any, meetingId: number) => {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -170,7 +181,6 @@ export const CreateBoardPost = (
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {

@@ -60,20 +60,21 @@ const MyMeetPage = observer(() => {
 
       {selectedTabs === "participating" && (
         <ContentArea>
-          {meetData != null &&
-            meetData.map((data: any) => {
-              return <MyMeetList data={data} key={data.gatheringId} />;
-            })}
           {meetData == null || meetData.length === 0 ? (
             <NullWrapper>
               <img src={nullIcon} />
               <div>참여중인 모임이 없습니다.</div>
             </NullWrapper>
           ) : (
-            <></>
+            <>
+              {meetData.map((data: any) => (
+                <MyMeetList data={data} key={data.gatheringId} />
+              ))}
+            </>
           )}
         </ContentArea>
       )}
+      {/*
       {selectedTabs === "Applying" && (
         <ContentArea>
           {waitData != null &&
@@ -89,7 +90,7 @@ const MyMeetPage = observer(() => {
             <></>
           )}
         </ContentArea>
-      )}
+      )} */}
     </Wrapper>
   );
 });

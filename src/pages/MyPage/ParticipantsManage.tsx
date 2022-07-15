@@ -1,19 +1,89 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import withMain from "../../hocs/ui/withMain";
 import * as theme from "../../styles/theme";
+import { UserContext } from "../../contexts/UserContext";
 import PageTitle from "../../components/common/PageTitle";
 import Tag from "../../components/common/Tag";
 import user_profile from "../../assets/images/user_profile.png";
 import checkmark_full from "../../assets/images/checkmark_full.png";
 import checkmark_outline from "../../assets/images/checkmark_outline.png";
+import { MyMeetWaitPartiList } from "../../services/authApi";
+import { SearchMeet } from "../../services/MeetingApi";
+import { useStores } from "../../hooks/useStores";
+import nullIcon from "../../assets/images/null.png";
 
 const ParticipantsManagePage = () => {
+  const { userStore } = useStores();
+  const { user } = useContext(UserContext);
   const [isSelect, setIsSelect] = useState(false);
   type checkList = { id: string; nickname: string };
   const [checkedInputs, setCheckedInputs] = useState([] as any);
+  const { meetingId } = useParams();
+  const [meetData, setMeetData] = useState<any>([]);
+  const [partiData, setPartiData] = useState([]);
+  const [category, setCategory] = useState("");
 
-  const data = [
+  const getDateDiff = (d1: string, d2: string) => {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    const diffDate = date1.getTime() - date2.getTime();
+
+    return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리세컨 * 초 * 분 * 시 = 일
+  };
+
+  let meetingOpenDueDate = getDateDiff(new Date().toString(), meetData.period)
+    .toString()
+    .split(".");
+
+  useEffect(() => {
+    async function fetchData() {
+      const d: any = await SearchMeet(user, Number(meetingId));
+      console.log("ddata", d);
+
+      setMeetData(d.data);
+    }
+    async function fetchPartiListData() {
+      const d: any = await MyMeetWaitPartiList(user, Number(meetingId));
+      console.log("partiData =", d);
+
+      setPartiData(d.data);
+    }
+    fetchData();
+    fetchPartiListData();
+  }, [user]);
+
+  useEffect(() => {
+    switch (meetData.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [meetData]);
+
+  const userdata = [
     { id: "1", nickname: "user1" },
     { id: "2", nickname: "user2" },
     { id: "3", nickname: "user3" },
@@ -55,23 +125,30 @@ const ParticipantsManagePage = () => {
         <Content>
           <Options>
             <Tags>
-              <Tag color={theme.PrimaryColor} text="D-3" />
-              <Tag text="공예/만들기" />
+              <Tag
+                color={theme.PrimaryColor}
+                text={
+                  meetData.meetingType === "REGULAR"
+                    ? "상시"
+                    : `D-${meetingOpenDueDate[0]}`
+                }
+              />
+              <Tag text={category} />
             </Tags>
           </Options>
           <Top>
-            <Progress Isprogress={true}>모집중</Progress>
-            <Title>
-              수제간식 원데이클래스 같이 하실 분!제간식 원데이클래스 같이 하실
-              분!
-            </Title>
+            <Progress Isprogress={meetData.isOpened}>
+              {meetData.isOpened ? "모집중" : "모집완료"}
+            </Progress>
+            <Title>{meetData.title}</Title>
           </Top>
         </Content>
         {/* 참여 요청 중인 친구 */}
         <Participate>
           <SubTitle>
             <div>
-              참여 요청 중인 친구 <span className="Primary">1</span>
+              참여 요청 중인 친구
+              <span className="Primary">{partiData?.length}</span>
             </div>
           </SubTitle>
           <List>
@@ -95,37 +172,57 @@ const ParticipantsManagePage = () => {
             <div>
               참여 중인 친구
               <span>
-                <span className="Primary">1</span>/4
+                방장 포함
+                <span className="Primary">{meetData.joinPeople}</span>
+                {meetData.maxPeople === 999999
+                  ? "명"
+                  : `/${meetData.maxPeople}명`}
               </span>
             </div>
           </SubTitle>
-          {data.map((data) => (
-            <div key={data.id}>
-              <Checkbox
-                type="checkbox"
-                id={data.id}
-                name={data.nickname}
-                checked={checkedInputs.includes(data.id) ? true : false}
-                onChange={(e) => {
-                  changeHandler(e.currentTarget.checked, data.id);
-                }}
-              />
-              <ParticipantsList
-                htmlFor={data.id}
-                checked={checkedInputs.includes(data.id) ? true : false}
-              >
-                <FlexStart>
-                  <Profile src={user_profile} alt="참여자 프로필" />
-                  <div>{data.nickname}</div>
-                </FlexStart>
-                <SpaceBetween width="100px">
-                  <Button width="100px" onClick={() => exileParticipation(1)}>
-                    추방
-                  </Button>
-                </SpaceBetween>
-              </ParticipantsList>
-            </div>
-          ))}
+          {meetData.joinPeople === 1 ? (
+            <NullWrapper>
+              <img src={nullIcon} />
+              <div>참여중인 친구가 없습니다.</div>
+            </NullWrapper>
+          ) : (
+            <>
+              {meetData.joinMembers
+                ?.filter((data: any) => data.memberId !== userStore.getMemberId)
+                .map((data: any) => (
+                  <div key={data.memberId}>
+                    <Checkbox
+                      type="checkbox"
+                      id={data.memberId}
+                      name={data.nickname}
+                      checked={checkedInputs.includes(data.id) ? true : false}
+                      onChange={(e) => {
+                        changeHandler(e.currentTarget.checked, data.id);
+                      }}
+                    />
+                    <ParticipantsList
+                      htmlFor={data.memberId}
+                      checked={
+                        checkedInputs.includes(data.memberId) ? true : false
+                      }
+                    >
+                      <FlexStart>
+                        <Profile src={data.memberImgUrl} alt="참여자 프로필" />
+                        <div>{data.nickname}</div>
+                      </FlexStart>
+                      <SpaceBetween width="100px">
+                        <Button
+                          width="100px"
+                          onClick={() => exileParticipation(data.memberId)}
+                        >
+                          추방
+                        </Button>
+                      </SpaceBetween>
+                    </ParticipantsList>
+                  </div>
+                ))}
+            </>
+          )}
           <SpaceBetween width="100%">
             <ExileBtn onClick={() => exileselectMember(checkedInputs)}>
               선택 목록 추방
@@ -292,4 +389,24 @@ const ExileBtn = styled.button`
   font-family: "yg-jalnan";
   border-radius: 5px;
   margin: 20px;
+`;
+
+const NullWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: calc(100% - 180px);
+  margin: 20px 0px;
+  & > div {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-family: "yg-jalnan";
+
+    font-size: 28px;
+  }
+  & > img {
+    width: 100%;
+  }
 `;

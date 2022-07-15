@@ -176,3 +176,20 @@ export const MyMeetingBoard = (user: any, page: number, size: number) => {
       console.log(e);
     });
 };
+
+// 내 모임에 신청 대기자 조회
+export const MyMeetWaitPartiList = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/members/me/meetings/${meetingId}`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

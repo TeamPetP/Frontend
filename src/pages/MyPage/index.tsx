@@ -30,13 +30,13 @@ const IndexPage = observer(() => {
     }
 
     async function fetcFeedhData() {
-      const feed: any = await MyPost(user, 1, 20);
+      const feed: any = await MyPost(user, 0, 20);
       console.log("feed", feed);
       setFeedData(feed.data);
     }
 
     async function fetchBookmarkData() {
-      const bookmark: any = await MyBookmark(user, 1, 20);
+      const bookmark: any = await MyBookmark(user, 0, 20);
       console.log("bookmark", bookmark);
       setBookmarkData(bookmark.data);
     }

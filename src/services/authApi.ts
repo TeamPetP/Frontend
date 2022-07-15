@@ -215,3 +215,25 @@ export const AcceptJoinMeet = (
       });
   });
 };
+
+// 모임 가입 거절
+export const RefuseJoinMeet = (
+  user: any,
+  meetingId: number,
+  memberId: number
+) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}/members/${memberId}/decline`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

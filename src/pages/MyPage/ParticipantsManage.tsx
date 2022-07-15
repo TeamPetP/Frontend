@@ -9,7 +9,11 @@ import Tag from "../../components/common/Tag";
 import user_profile from "../../assets/images/user_profile.png";
 import checkmark_full from "../../assets/images/checkmark_full.png";
 import checkmark_outline from "../../assets/images/checkmark_outline.png";
-import { MyMeetWaitPartiList, AcceptJoinMeet } from "../../services/authApi";
+import {
+  MyMeetWaitPartiList,
+  AcceptJoinMeet,
+  RefuseJoinMeet,
+} from "../../services/authApi";
 import { SearchMeet } from "../../services/MeetingApi";
 import { useStores } from "../../hooks/useStores";
 import nullIcon from "../../assets/images/null.png";
@@ -40,21 +44,17 @@ const ParticipantsManagePage = () => {
 
   async function fetchData() {
     const d: any = await SearchMeet(user, Number(meetingId));
-    console.log("ddata", d);
-
     setMeetData(d.data);
   }
   async function fetchPartiListData() {
     const d: any = await MyMeetWaitPartiList(user, Number(meetingId));
-    console.log("partiData =", d);
-
     setWaitData(d.data);
   }
 
   useEffect(() => {
     fetchData();
     fetchPartiListData();
-  }, [meetData, waitData]);
+  }, [user]);
 
   useEffect(() => {
     switch (meetData.category) {
@@ -82,13 +82,7 @@ const ParticipantsManagePage = () => {
       default:
         setCategory("");
     }
-  }, [meetData]);
-
-  const userdata = [
-    { id: "1", nickname: "user1" },
-    { id: "2", nickname: "user2" },
-    { id: "3", nickname: "user3" },
-  ];
+  }, [meetData.category]);
 
   // 참여 중인 친구 개별 선택
   const changeHandler = useCallback(
@@ -116,14 +110,19 @@ const ParticipantsManagePage = () => {
   };
 
   // 가입 거절
-  const refuseParticipation = (id: Number) => {
-    console.log(`참여거절`);
-    fetchData();
-    fetchPartiListData();
+  const refuseParticipation = (memberId: Number) => {
+    async function fetchRefuse() {
+      const dd: any = await RefuseJoinMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+    }
+    fetchRefuse();
   };
 
   // 추방
-  const exileParticipation = (id: Number) => {
+  const exileParticipation = (memberId: Number) => {
     console.log(`추방`);
     fetchData();
     fetchPartiListData();

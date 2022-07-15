@@ -193,3 +193,25 @@ export const MyMeetWaitPartiList = (user: any, meetingId: number) => {
       });
   });
 };
+
+// 모임 가입 승인
+export const AcceptJoinMeet = (
+  user: any,
+  meetingId: number,
+  memberId: number
+) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/meetings/${meetingId}/members/${memberId}/approve`, null, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

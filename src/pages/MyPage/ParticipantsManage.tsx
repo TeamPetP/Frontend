@@ -9,7 +9,7 @@ import Tag from "../../components/common/Tag";
 import user_profile from "../../assets/images/user_profile.png";
 import checkmark_full from "../../assets/images/checkmark_full.png";
 import checkmark_outline from "../../assets/images/checkmark_outline.png";
-import { MyMeetWaitPartiList } from "../../services/authApi";
+import { MyMeetWaitPartiList, AcceptJoinMeet } from "../../services/authApi";
 import { SearchMeet } from "../../services/MeetingApi";
 import { useStores } from "../../hooks/useStores";
 import nullIcon from "../../assets/images/null.png";
@@ -22,7 +22,7 @@ const ParticipantsManagePage = () => {
   const [checkedInputs, setCheckedInputs] = useState([] as any);
   const { meetingId } = useParams();
   const [meetData, setMeetData] = useState<any>([]);
-  const [partiData, setPartiData] = useState([]);
+  const [waitData, setWaitData] = useState([]);
   const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
@@ -38,22 +38,23 @@ const ParticipantsManagePage = () => {
     .toString()
     .split(".");
 
+  async function fetchData() {
+    const d: any = await SearchMeet(user, Number(meetingId));
+    console.log("ddata", d);
+
+    setMeetData(d.data);
+  }
+  async function fetchPartiListData() {
+    const d: any = await MyMeetWaitPartiList(user, Number(meetingId));
+    console.log("partiData =", d);
+
+    setWaitData(d.data);
+  }
+
   useEffect(() => {
-    async function fetchData() {
-      const d: any = await SearchMeet(user, Number(meetingId));
-      console.log("ddata", d);
-
-      setMeetData(d.data);
-    }
-    async function fetchPartiListData() {
-      const d: any = await MyMeetWaitPartiList(user, Number(meetingId));
-      console.log("partiData =", d);
-
-      setPartiData(d.data);
-    }
     fetchData();
     fetchPartiListData();
-  }, [user]);
+  }, [meetData, waitData]);
 
   useEffect(() => {
     switch (meetData.category) {
@@ -102,16 +103,30 @@ const ParticipantsManagePage = () => {
     [checkedInputs]
   );
 
-  const acceptParticipation = (id: Number) => {
-    console.log(`참여수락`);
+  // 가입 승인
+  const acceptParticipation = (memberId: Number) => {
+    async function fetchAccept() {
+      const dd: any = await AcceptJoinMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+    }
+    fetchAccept();
   };
 
+  // 가입 거절
   const refuseParticipation = (id: Number) => {
     console.log(`참여거절`);
+    fetchData();
+    fetchPartiListData();
   };
 
+  // 추방
   const exileParticipation = (id: Number) => {
     console.log(`추방`);
+    fetchData();
+    fetchPartiListData();
   };
 
   const exileselectMember = (list: any) => {
@@ -148,23 +163,31 @@ const ParticipantsManagePage = () => {
           <SubTitle>
             <div>
               참여 요청 중인 친구
-              <span className="Primary">{partiData?.length}</span>
+              <span className="Primary">{waitData?.length}</span>
             </div>
           </SubTitle>
-          <List>
-            <FlexStart>
-              <Profile src={user_profile} alt="참여자 프로필" />
-              <div>User-1</div>
-            </FlexStart>
-            <SpaceBetween width="210px">
-              <Button width="100px" onClick={() => acceptParticipation(1)}>
-                수락
-              </Button>
-              <Button width="100px" onClick={() => refuseParticipation(1)}>
-                거절
-              </Button>
-            </SpaceBetween>
-          </List>
+          {waitData.map((data: any) => (
+            <List key={data.memberId}>
+              <FlexStart>
+                <Profile src={data.memberImgUrl} alt="참여자 프로필" />
+                <div>{data.nickname}</div>
+              </FlexStart>
+              <SpaceBetween width="210px">
+                <Button
+                  width="100px"
+                  onClick={() => acceptParticipation(data.memberId)}
+                >
+                  수락
+                </Button>
+                <Button
+                  width="100px"
+                  onClick={() => refuseParticipation(data.memberId)}
+                >
+                  거절
+                </Button>
+              </SpaceBetween>
+            </List>
+          ))}
         </Participate>
         {/* 참여중인 친구 */}
         <Participate>
@@ -352,6 +375,7 @@ const Allchecked = styled.label`
 const Profile = styled.img`
   width: 40px;
   margin-right: 14px;
+  border-radius: 50%;
 
   &:last-child {
     margin-right: 0;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -13,6 +13,7 @@ const MyMeetList = ({ data }: any) => {
   const navigate = useNavigate();
   const { userStore } = useStores();
   const { user } = useContext(UserContext);
+  const [category, setCategory] = useState("");
 
   const editMeet = () => {
     navigate(`/meeting/edit`, {
@@ -42,6 +43,34 @@ const MyMeetList = ({ data }: any) => {
       state: { data },
     });
   };
+
+  useEffect(() => {
+    switch (data.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [data]);
   return (
     <Wrapper>
       <Options>
@@ -49,7 +78,7 @@ const MyMeetList = ({ data }: any) => {
           {data.status === "모집중" && (
             <Tag color={theme.PrimaryColor} text="D-3" />
           )}
-          <Tag text={data.category} />
+          <Tag text={category} />
         </Tags>
       </Options>
       <Top>

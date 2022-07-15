@@ -78,7 +78,7 @@ const IndexPage = observer(() => {
               onPageChange={MoveAlrimPage}
             />
             <MyActivity
-              count={info.meetingCnt}
+              count={info.joinedMeetingCnt}
               title="내모임"
               onPageChange={MoveMyMeetPage}
             />

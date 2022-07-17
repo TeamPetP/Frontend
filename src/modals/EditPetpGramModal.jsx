@@ -142,8 +142,12 @@ function EditPetpGramModal(props) {
 	}
 
 	useEffect(() => {
-		SearchDetailPost(user, modalStore.getPetPGramPostIdState);
-	}, []);
+		SearchDetailPost(user, modalStore.getPetPGramPostIdState).then((e) => {
+			console.log("Test", e);
+			setText(e.data.content);
+			setImage(e.data.imgUrlList);
+		});
+	}, [props.visibility]);
 
 	return (
 		<Modal

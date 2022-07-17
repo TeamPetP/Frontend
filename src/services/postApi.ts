@@ -42,13 +42,15 @@ export const CreatePost = (user: any, postRequestData: IPostRequestData) => {
 };
 
 export const SearchDetailPost = (user: any, postId: number) => {
-	axios
-		.get(`/posts/${postId}`, {
-			headers: user,
-		})
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve, reject) => {
+		axios
+			.get(`/posts/${postId}`, {
+				headers: user,
+			})
+			.then((e) => {
+				resolve(e);
+			});
+	});
 };
 
 export const SearchPost = (user: any, page: number, tag: string) => {

@@ -54,38 +54,32 @@ export const EditComment = (user: any, commentId: number, content: string) => {
 
 export const DeleteComment = (user: any, commentId: number) => {
 	axios
-		.delete(
-			`/comments/${commentId}`,
-			{
-				headers: user,
-			}
-		)
+		.delete(`/comments/${commentId}`, {
+			headers: user,
+		})
 		.then((e) => {
 			console.log(e);
 		});
 };
 
 export const SearchComment = (user: any, postId: number) => {
-	axios
-		.get(
-			`/posts/${postId}/comments`,
-			{
+	console.log(user, postId);
+	return new Promise((resolve) => {
+		axios
+			.get(`/posts/${postId}/comments`, {
 				headers: user,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+			})
+			.then((e) => {
+				resolve(e);
+			});
+	});
 };
 
 export const LikeComment = (user: any, commentId: number) => {
 	axios
-		.patch(
-			`/comments/${commentId}`,
-			{
-				headers: user,
-			}
-		)
+		.patch(`/comments/${commentId}`, {
+			headers: user,
+		})
 		.then((e) => {
 			console.log(e);
 		});

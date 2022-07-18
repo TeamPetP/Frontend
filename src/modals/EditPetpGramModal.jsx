@@ -4,10 +4,12 @@ import LogoImg from "../logo.png";
 import { SearchDetailPost } from "../services/postApi";
 import Back from "../assets/images/back.png";
 import PhotoAddIcon from "../assets/images/photoadd.png";
+import { AwsS3 } from "../services/Aws";
 
 import Modal from "../components/common/Modal";
 import { UserContext } from "../contexts/UserContext";
 import { useStores } from "../hooks/useStores";
+import { EditPost } from "../services/postApi";
 
 const ModalWrapper = styled.div`
 	width: 100%;
@@ -125,26 +127,78 @@ const Input = styled.input`
 function EditPetpGramModal(props) {
 	const [text, setText] = useState("");
 	const [image, setImage] = useState([]);
+	const [imageFile, setImageFile] = useState([]);
+
 	const uploadPhoto = useRef("");
 	const { user } = useContext(UserContext);
+	const { modal } = useContext(UserContext);
+
 	const { modalStore } = useStores();
 
-	function PhotoUpdate() {
+	async function PhotoUpdate() {
 		if (uploadPhoto.current.files.length !== 0) {
 			const reader = new FileReader();
-			// 이미지가 로드가 된 경우
-			reader.onload = (e) => {
-				setImage([...image, e.target.result]);
-			};
 			// reader가 이미지 읽도록 하기
+			reader.onload = (e) => {
+				console.log(e, e.target.type);
+			};
+			setImageFile([...imageFile, uploadPhoto.current.files[0]]);
+			const data = await AwsS3([uploadPhoto.current.files[0]]);
+			setImage([...image, ...data]);
+
 			reader.readAsDataURL(uploadPhoto.current.files[0]);
+		}
+	}
+
+	async function Update() {
+		if (text != "") {
+			let cText = text;
+
+			let tag = [];
+			while (cText.indexOf("#") != -1) {
+				let index = cText.indexOf("#") + 1;
+				let tagText = "";
+				while (index < cText.length && cText[index] != " ") {
+					tagText += cText[index];
+					index++;
+				}
+				tag = [...tag, tagText];
+
+				cText = cText.replace(
+					cText.slice(cText.indexOf("#"), index + 1),
+					""
+				);
+			}
+			console.log(tag, {
+				content: cText,
+				tagList: tag,
+				imgUrlList: [...image],
+			});
+
+			const editPostData = await EditPost(
+				user,
+				modalStore.getPetPGramPostIdState,
+				{
+					content: cText,
+					tagList: tag,
+					imgUrlList: image,
+				}
+			);
+			console.log(editPostData);
+			if (editPostData.status == 200) {
+				window.location.href = "/";
+			}
 		}
 	}
 
 	useEffect(() => {
 		SearchDetailPost(user, modalStore.getPetPGramPostIdState).then((e) => {
 			console.log("Test", e);
-			setText(e.data.content);
+			let regexText = "";
+			for (let i = 0; i < e.data.tagList.length; i++) {
+				regexText += "#" + e.data.tagList[i] + " ";
+			}
+			setText(e.data.content + regexText);
 			setImage(e.data.imgUrlList);
 		});
 	}, [props.visibility]);
@@ -193,7 +247,7 @@ function EditPetpGramModal(props) {
 						);
 					})}
 				</PhotoWrapper>
-				<Button>게시글 수정</Button>
+				<Button onClick={Update}>게시글 수정</Button>
 			</ModalWrapper>
 
 			<BackIcon

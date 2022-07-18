@@ -22,13 +22,13 @@ const IndexPage = observer(() => {
   const { user } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState<number>(0);
 
+  async function fetchData() {
+    let paramsString = `isOpened=${isOpened}`;
+    const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
+    setMeetData(d.data);
+  }
+
   useEffect(() => {
-    console.log(user);
-    async function fetchData() {
-      let paramsString = `isOpened=${isOpened}`;
-      const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
-      setMeetData(d.data);
-    }
     fetchData();
   }, [user]);
 
@@ -133,7 +133,7 @@ const IndexPage = observer(() => {
       </form>
       {meetData.content != null &&
         meetData.content.map((e: any) => {
-          return <MeetList key={e.meetingId} data={e} />;
+          return <MeetList key={e.meetingId} data={e} fetchData={fetchData} />;
         })}
       {meetData.content == null || meetData.content.length === 0 ? (
         <NullWrapper>

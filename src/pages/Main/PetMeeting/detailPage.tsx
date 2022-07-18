@@ -36,39 +36,45 @@ const DetailPage = observer(() => {
   }
   return (
     <>
-      <TabsWrap>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="info"
-          page="info"
-          selectedTabs={selectedTabs}
-        >
-          모임정보
-        </Tab>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="board"
-          page="board"
-          selectedTabs={selectedTabs}
-        >
-          게시판
-        </Tab>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="gallery"
-          page="gallery"
-          selectedTabs={selectedTabs}
-        >
-          사진첩
-        </Tab>
-      </TabsWrap>
-      <div>
-        {selectedTabs === "info" && (
-          <MeetInfo data={meetData} fetchData={fetchData} />
-        )}
-        {selectedTabs === "board" && <Board meetingId={meetingId} />}
-        {selectedTabs === "gallery" && <Gallery />}
-      </div>
+      {meetData.isJoined ? (
+        <>
+          <TabsWrap>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="info"
+              page="info"
+              selectedTabs={selectedTabs}
+            >
+              모임정보
+            </Tab>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="board"
+              page="board"
+              selectedTabs={selectedTabs}
+            >
+              게시판
+            </Tab>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="gallery"
+              page="gallery"
+              selectedTabs={selectedTabs}
+            >
+              사진첩
+            </Tab>
+          </TabsWrap>
+          <div>
+            {selectedTabs === "info" && (
+              <MeetInfo data={meetData} fetchData={fetchData} />
+            )}
+            {selectedTabs === "board" && <Board meetingId={meetingId} />}
+            {selectedTabs === "gallery" && <Gallery />}
+          </div>
+        </>
+      ) : (
+        <MeetInfo data={meetData} fetchData={fetchData} />
+      )}
     </>
   );
 });

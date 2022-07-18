@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
+import styled from "styled-components";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router";
 import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
+import { timeBefore } from "../../../../lib/timeBefore";
+import * as theme from "../../../../styles/theme";
+import Tag from "../../../../components/common/Tag";
+import BookmarkButton from "../../../../components/common/BookmarkButton";
+import MeetCondition from "../../../../components/common/MeetCondition";
 import {
   JoinMeet,
   ResignMeet,
@@ -10,18 +16,10 @@ import {
   AddBookmark,
   CancleBookmark,
 } from "../../../../services/MeetingApi";
-import styled from "styled-components";
-import axios from "axios";
-import { timeBefore } from "../../../../lib/timeBefore";
-import * as theme from "../../../../styles/theme";
-import user_profile from "../../../../assets/images/user_profile.png";
-import Tag from "../../../../components/common/Tag";
-import BookmarkButton from "../../../../components/common/BookmarkButton";
-import MeetCondition from "../../../../components/common/MeetCondition";
 
 const MeetInfo = observer(({ data, fetchData }: any) => {
   const navigate = useNavigate();
-  const { modalStore, userStore } = useStores();
+  const { userStore } = useStores();
   const { user } = useContext(UserContext);
   const [category, setCategory] = useState("");
 
@@ -38,6 +36,7 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     .toString()
     .split(".");
 
+  // 모임 수정
   const editMeet = () => {
     navigate(`/meeting/edit`, {
       state: { data },
@@ -48,7 +47,6 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
   const JoinMeeting = () => {
     async function fetchJoin() {
       const dd: any = await JoinMeet(user, data.meetingId);
-      console.log("dd", dd);
       if (dd.status === 204) fetchData();
     }
     fetchJoin();
@@ -58,7 +56,6 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
   const CancleJoinMeeting = () => {
     async function fetchCancleJoin() {
       const dd: any = await CancleJoinMeet(user, data.meetingId);
-      console.log("dd", dd);
       if (dd.status === 204) fetchData();
     }
     fetchCancleJoin();
@@ -68,7 +65,6 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
   const ResignMeeting = () => {
     async function fetchResign() {
       const dd: any = await ResignMeet(user, data.meetingId);
-      console.log("Resign, ", dd);
       if (dd.status === 204) fetchData();
     }
     fetchResign();
@@ -79,6 +75,24 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     navigate(`/meeting/joinMembers`, {
       state: { data },
     });
+  };
+
+  // 북마크
+  const ChangeBookmarkState = () => {
+    async function fetchBookmark() {
+      const dd: any = await AddBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+    async function fetchBookmarkCancle() {
+      const dd: any = await CancleBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+
+    if (data.isBookmarked === true) {
+      fetchBookmarkCancle();
+    } else {
+      fetchBookmark();
+    }
   };
 
   useEffect(() => {
@@ -109,22 +123,6 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     }
   }, [data]);
 
-  const ChangeBookmarkState = () => {
-    async function fetchBookmark() {
-      const dd: any = await AddBookmark(user, data.meetingId);
-      if (dd.status === 204) fetchData();
-    }
-    async function fetchBookmarkCancle() {
-      const dd: any = await CancleBookmark(user, data.meetingId);
-      if (dd.status === 204) fetchData();
-    }
-
-    if (data.isBookmarked === true) {
-      fetchBookmarkCancle();
-    } else {
-      fetchBookmark();
-    }
-  };
   return (
     <Meeting>
       <Options>

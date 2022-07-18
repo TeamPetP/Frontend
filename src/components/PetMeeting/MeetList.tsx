@@ -16,9 +16,7 @@ interface IMeetType {
 const MeetList = ({ data, fetchData }: IMeetType) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const moveDetailPage = (id: number) => {
-    navigate(`/meeting/detail?id=${id}`, { state: data });
-  };
+  const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
     const date1 = new Date(d1);
@@ -33,7 +31,28 @@ const MeetList = ({ data, fetchData }: IMeetType) => {
     .toString()
     .split(".");
 
-  const [category, setCategory] = useState("");
+  // 상세페이지 이동
+  const moveDetailPage = (id: number) => {
+    navigate(`/meeting/detail?id=${id}`, { state: data });
+  };
+
+  // 북마크
+  const ChangeBookmarkState = () => {
+    async function fetchBookmark() {
+      const dd: any = await AddBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+    async function fetchBookmarkCancle() {
+      const dd: any = await CancleBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+
+    if (data.isBookmarked === true) {
+      fetchBookmarkCancle();
+    } else {
+      fetchBookmark();
+    }
+  };
 
   useEffect(() => {
     switch (data.category) {
@@ -62,23 +81,6 @@ const MeetList = ({ data, fetchData }: IMeetType) => {
         setCategory("");
     }
   }, [data]);
-
-  const ChangeBookmarkState = () => {
-    async function fetchBookmark() {
-      const dd: any = await AddBookmark(user, data.meetingId);
-      if (dd.status === 204) fetchData();
-    }
-    async function fetchBookmarkCancle() {
-      const dd: any = await CancleBookmark(user, data.meetingId);
-      if (dd.status === 204) fetchData();
-    }
-
-    if (data.isBookmarked === true) {
-      fetchBookmarkCancle();
-    } else {
-      fetchBookmark();
-    }
-  };
 
   return (
     <Meeting>

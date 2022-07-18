@@ -106,6 +106,10 @@ const ParticipantsManagePage = () => {
         Number(meetingId),
         Number(memberId)
       );
+      if (dd.status === 204) {
+        fetchPartiListData();
+        fetchData();
+      }
     }
     fetchAccept();
   };
@@ -118,6 +122,7 @@ const ParticipantsManagePage = () => {
         Number(meetingId),
         Number(memberId)
       );
+      if (dd.status === 204) fetchPartiListData();
     }
     fetchRefuse();
   };
@@ -130,6 +135,7 @@ const ParticipantsManagePage = () => {
         Number(meetingId),
         Number(memberId)
       );
+      if (dd.status === 204) fetchData();
     }
     fetchExile();
   };

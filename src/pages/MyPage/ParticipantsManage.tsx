@@ -22,8 +22,6 @@ import nullIcon from "../../assets/images/null.png";
 const ParticipantsManagePage = () => {
   const { userStore } = useStores();
   const { user } = useContext(UserContext);
-  const [isSelect, setIsSelect] = useState(false);
-  type checkList = { id: string; nickname: string };
   const [checkedInputs, setCheckedInputs] = useState([] as any);
   const { meetingId } = useParams();
   const [meetData, setMeetData] = useState<any>([]);
@@ -140,10 +138,6 @@ const ParticipantsManagePage = () => {
     fetchExile();
   };
 
-  const exileselectMember = (list: any) => {
-    console.log(`선택한 친구의 id : ${list}`);
-  };
-
   return (
     <>
       <PageTitle title="참여자 관리" />
@@ -225,21 +219,7 @@ const ParticipantsManagePage = () => {
                 ?.filter((data: any) => data.memberId !== userStore.getMemberId)
                 .map((data: any) => (
                   <div key={data.memberId}>
-                    <Checkbox
-                      type="checkbox"
-                      id={data.memberId}
-                      name={data.nickname}
-                      checked={checkedInputs.includes(data.id) ? true : false}
-                      onChange={(e) => {
-                        changeHandler(e.currentTarget.checked, data.id);
-                      }}
-                    />
-                    <ParticipantsList
-                      htmlFor={data.memberId}
-                      checked={
-                        checkedInputs.includes(data.memberId) ? true : false
-                      }
-                    >
+                    <ParticipantsList>
                       <FlexStart>
                         <Profile src={data.memberImgUrl} alt="참여자 프로필" />
                         <div>{data.nickname}</div>
@@ -257,11 +237,6 @@ const ParticipantsManagePage = () => {
                 ))}
             </>
           )}
-          <SpaceBetween width="100%">
-            <ExileBtn onClick={() => exileselectMember(checkedInputs)}>
-              선택 목록 추방
-            </ExileBtn>
-          </SpaceBetween>
         </Participate>
       </Wrapper>
     </>
@@ -361,13 +336,11 @@ const List = styled.div`
   cursor: pointer;
 `;
 
-const ParticipantsList = styled.label<{ checked: boolean }>`
+const ParticipantsList = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 28px;
-  cursor: pointer;
-  background-color: ${(props) => (props.checked ? "#F9F9F9" : "#fff")};
 `;
 
 const Checkbox = styled.input`

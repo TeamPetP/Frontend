@@ -7,6 +7,8 @@ import {
   JoinMeet,
   ResignMeet,
   CancleJoinMeet,
+  AddBookmark,
+  CancleBookmark,
 } from "../../../../services/MeetingApi";
 import styled from "styled-components";
 import axios from "axios";
@@ -17,12 +19,11 @@ import Tag from "../../../../components/common/Tag";
 import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
 
-const MeetInfo = observer(({ data, setMeetData }: any) => {
+const MeetInfo = observer(({ data, fetchData }: any) => {
   const navigate = useNavigate();
   const { modalStore, userStore } = useStores();
   const { user } = useContext(UserContext);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [status, setStatus] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(data.isBookmarked);
   const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
@@ -51,34 +52,27 @@ const MeetInfo = observer(({ data, setMeetData }: any) => {
       console.log("dd", dd);
     }
     fetchJoin();
-    setMeetData((data: any) => {
-      return { ...data, joinStatus: "대기중" };
-    });
+    fetchData();
   };
 
   // 모임 참여 신청 취소
   const CancleJoinMeeting = () => {
     async function fetchCancleJoin() {
-      const dd: any = await CancleJoinMeet(
-        user,
-        data.meetingId,
-        userStore.getMemberId
-      );
+      const dd: any = await CancleJoinMeet(user, data.meetingId);
       console.log("dd", dd);
     }
     fetchCancleJoin();
-    setMeetData((data: any) => {
-      return { ...data, joinStatus: null };
-    });
+    fetchData();
   };
 
   // 모임 탈퇴
   const ResignMeeting = () => {
-    async function fetchJoin() {
+    async function fetchResign() {
       const dd: any = await ResignMeet(user, data.meetingId);
       console.log("Resign, ", dd);
     }
-    fetchJoin();
+    fetchResign();
+    fetchData();
   };
 
   // 참여자 목록 보기
@@ -115,6 +109,28 @@ const MeetInfo = observer(({ data, setMeetData }: any) => {
         setCategory("");
     }
   }, [data]);
+
+  const ChangeBookmarkState = () => {
+    console.log("북마크 버튼 클릭", data.isBookmarked);
+    async function fetchBookmark() {
+      const dd: any = await AddBookmark(user, data.meetingId);
+      console.log("AddBookmark, ", dd);
+      if (dd.status === 204) fetchData();
+    }
+    async function fetchBookmarkCancle() {
+      const dd: any = await CancleBookmark(user, data.meetingId);
+      console.log("CancleBookmark, ", dd);
+      if (dd.status === 204) fetchData();
+    }
+
+    if (data.isBookmarked === true) {
+      console.log("bookmark true? : ", data.isBookmarked);
+      fetchBookmarkCancle();
+    } else {
+      console.log("bookmark false? : ", data.isBookmarked);
+      fetchBookmark();
+    }
+  };
   return (
     <Meeting>
       <Options>
@@ -131,7 +147,10 @@ const MeetInfo = observer(({ data, setMeetData }: any) => {
           )}
           <Tag text={category} />
         </Tags>
-        <BookmarkButton isBookmark={data.isBookmarked} />
+        <BookmarkButton
+          isBookmark={data.isBookmarked}
+          onClick={ChangeBookmarkState}
+        />
       </Options>
       <Creator>
         <CreatorThumbnail src={user_profile} />
@@ -179,14 +198,14 @@ const MeetInfo = observer(({ data, setMeetData }: any) => {
         <>
           {data.isJoined === false &&
             data.isOpened === true &&
-            data.joinStatus !== "승인" &&
+            data.joinStatus !== "승인됨" &&
             data.joinStatus !== "대기중" && (
               <ButtonWrap>
                 <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
               </ButtonWrap>
             )}
 
-          {data.isJoined === true && data.joinStatus === "승인" && (
+          {data.isJoined === true && data.joinStatus === "승인됨" && (
             <ButtonWrap>
               <SubmitBtn onClick={ResignMeeting} dark>
                 모임탈퇴

@@ -17,13 +17,14 @@ const DetailPage = observer(() => {
   const [meetData, setMeetData] = useState<any>([]);
   const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    async function fetchData() {
-      const d: any = await SearchMeet(user, meetingId);
-      console.log("ddata", d);
+  async function fetchData() {
+    const d: any = await SearchMeet(user, meetingId);
+    console.log("ddata", d);
 
-      setMeetData(d.data);
-    }
+    setMeetData(d.data);
+  }
+
+  useEffect(() => {
     fetchData();
   }, [user]);
 
@@ -63,7 +64,7 @@ const DetailPage = observer(() => {
       </TabsWrap>
       <div>
         {selectedTabs === "info" && (
-          <MeetInfo data={meetData} setMeetData={setMeetData} />
+          <MeetInfo data={meetData} fetchData={fetchData} />
         )}
         {selectedTabs === "board" && <Board meetingId={meetingId} />}
         {selectedTabs === "gallery" && <Gallery />}

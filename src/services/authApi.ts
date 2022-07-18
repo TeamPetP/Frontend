@@ -237,3 +237,21 @@ export const RefuseJoinMeet = (
       });
   });
 };
+
+// 모임 추방
+export const ExileMeet = (user: any, meetingId: number, memberId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}/members/${memberId}/expel`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

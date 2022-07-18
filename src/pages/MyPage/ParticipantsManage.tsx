@@ -13,6 +13,7 @@ import {
   MyMeetWaitPartiList,
   AcceptJoinMeet,
   RefuseJoinMeet,
+  ExileMeet,
 } from "../../services/authApi";
 import { SearchMeet } from "../../services/MeetingApi";
 import { useStores } from "../../hooks/useStores";
@@ -123,9 +124,14 @@ const ParticipantsManagePage = () => {
 
   // 추방
   const exileParticipation = (memberId: Number) => {
-    console.log(`추방`);
-    fetchData();
-    fetchPartiListData();
+    async function fetchExile() {
+      const dd: any = await ExileMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+    }
+    fetchExile();
   };
 
   const exileselectMember = (list: any) => {

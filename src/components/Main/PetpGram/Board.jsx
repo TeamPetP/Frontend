@@ -189,7 +189,7 @@ const BoardText = styled.div`
 	word-break: break-all;
 	width: 100%;
 `;
-
+const TagText = styled.div``;
 function Board(props) {
 	const { user } = useContext(UserContext);
 
@@ -267,10 +267,14 @@ function Board(props) {
 					/>
 					<BoardUserName>{props.info.nickname}</BoardUserName>
 				</BoardUserInfo>
-				<BoardOnwerSetting>
-					<span onClick={() => EditPost()}>수정</span>
-					<span>삭제</span>
-				</BoardOnwerSetting>
+				{props.info.owner ? (
+					<BoardOnwerSetting>
+						<span onClick={() => EditPost()}>수정</span>
+						<span>삭제</span>
+					</BoardOnwerSetting>
+				) : (
+					""
+				)}
 			</BoardHeader>
 			<SliderWrap>
 				<Slider {...settings} ref={slider}>
@@ -320,7 +324,15 @@ function Board(props) {
 				<BoardTime>{timeBefore(props.info.lastModifiedDate)}</BoardTime>
 			</BoardSubNav>
 			<BoardText>{props.info.content}</BoardText>
-			<Comment />
+			<TagText>
+				{props.info.tagList.map((e) => {
+					return <span>#{e} </span>;
+				})}
+			</TagText>
+			<Comment
+				length={props.info.commentCnt}
+				postId={props.info.postId}
+			/>
 		</BoardWrapper>
 	);
 }

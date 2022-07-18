@@ -14,9 +14,11 @@ export class ModalStore implements IModalStore {
   @observable createPetpGramState = false;
   @observable editPetpGramState = false;
   @observable createPetMeetingBoardState = false;
+  @observable viewPetMeetingGalleryState = false;
 
   @observable petpGramPostId = 0;
   @observable petMeetingId = 0;
+  @observable galleryImg = "";
 
   @observable editProfile = false;
 
@@ -43,5 +45,11 @@ export class ModalStore implements IModalStore {
   }
   @computed get getPetMeetingIdState(): number {
     return this.petMeetingId;
+  }
+  @computed get getViewPetMeetingGalleryState(): boolean {
+    return this.viewPetMeetingGalleryState;
+  }
+  @computed get getPetMeetingImgUrl(): string {
+    return this.galleryImg;
   }
 }

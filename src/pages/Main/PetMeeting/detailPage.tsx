@@ -69,7 +69,7 @@ const DetailPage = observer(() => {
               <MeetInfo data={meetData} fetchData={fetchData} />
             )}
             {selectedTabs === "board" && <Board meetingId={meetingId} />}
-            {selectedTabs === "gallery" && <Gallery />}
+            {selectedTabs === "gallery" && <Gallery meetingId={meetingId} />}
           </div>
         </>
       ) : (

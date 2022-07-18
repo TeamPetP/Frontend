@@ -52,6 +52,7 @@ const Cell = styled.div`
 const Profile = styled.img`
   width: 60px;
   margin: 0;
+  border-radius: 50%;
 `;
 
 const Nickname = styled.div`

@@ -226,3 +226,20 @@ export const CancleBookmark = (user: any, meetingId: number) => {
       });
   });
 };
+
+// 모임 사진첩 조회
+export const GetGallery = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/meetings/${meetingId}/images`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};

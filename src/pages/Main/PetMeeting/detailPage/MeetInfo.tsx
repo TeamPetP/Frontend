@@ -23,7 +23,6 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
   const navigate = useNavigate();
   const { modalStore, userStore } = useStores();
   const { user } = useContext(UserContext);
-  const [isBookmark, setIsBookmark] = useState(data.isBookmarked);
   const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
@@ -111,23 +110,18 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
   }, [data]);
 
   const ChangeBookmarkState = () => {
-    console.log("북마크 버튼 클릭", data.isBookmarked);
     async function fetchBookmark() {
       const dd: any = await AddBookmark(user, data.meetingId);
-      console.log("AddBookmark, ", dd);
       if (dd.status === 204) fetchData();
     }
     async function fetchBookmarkCancle() {
       const dd: any = await CancleBookmark(user, data.meetingId);
-      console.log("CancleBookmark, ", dd);
       if (dd.status === 204) fetchData();
     }
 
     if (data.isBookmarked === true) {
-      console.log("bookmark true? : ", data.isBookmarked);
       fetchBookmarkCancle();
     } else {
-      console.log("bookmark false? : ", data.isBookmarked);
       fetchBookmark();
     }
   };
@@ -153,7 +147,7 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
         />
       </Options>
       <Creator>
-        <CreatorThumbnail src={user_profile} />
+        <CreatorThumbnail src={data.memberImgUrl} />
         <div>
           <Nickname>{data.nickname}</Nickname>
           <div>

@@ -115,13 +115,20 @@ export const JoinMeet = (user: any, meetingId: number) => {
 
 // 모임 가입취소 요청
 export const CancleJoinMeet = (user: any, meetingId: number) => {
-  axios
-    .delete(`/meetings/${meetingId}/cancel`, {
-      headers: user,
-    })
-    .then((e) => {
-      console.log(e);
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}/cancel`, {
+        headers: user,
+      })
+      .then((e) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
 };
 
 // 모임 탈퇴 요청

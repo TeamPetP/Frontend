@@ -49,9 +49,9 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     async function fetchJoin() {
       const dd: any = await JoinMeet(user, data.meetingId);
       console.log("dd", dd);
+      if (dd.status === 204) fetchData();
     }
     fetchJoin();
-    fetchData();
   };
 
   // 모임 참여 신청 취소
@@ -59,9 +59,9 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     async function fetchCancleJoin() {
       const dd: any = await CancleJoinMeet(user, data.meetingId);
       console.log("dd", dd);
+      if (dd.status === 204) fetchData();
     }
     fetchCancleJoin();
-    fetchData();
   };
 
   // 모임 탈퇴
@@ -69,9 +69,9 @@ const MeetInfo = observer(({ data, fetchData }: any) => {
     async function fetchResign() {
       const dd: any = await ResignMeet(user, data.meetingId);
       console.log("Resign, ", dd);
+      if (dd.status === 204) fetchData();
     }
     fetchResign();
-    fetchData();
   };
 
   // 참여자 목록 보기

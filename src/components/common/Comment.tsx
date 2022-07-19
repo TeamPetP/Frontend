@@ -3,9 +3,14 @@ import styled from "styled-components";
 import * as theme from "../../styles/theme";
 import user_profile from "../../assets/images/user_profile.png";
 import showBtnArrow from "../../assets/images/arrow_left.png";
-import { SearchComment } from "../../services/commentApi";
+import {
+	SearchComment,
+	CreateCommentReply,
+	CreateComment,
+} from "../../services/commentApi";
 import { UserContext } from "../../contexts/UserContext";
 import { timeBefore } from "../../lib/timeBefore";
+import { useStores } from "../../hooks/useStores";
 
 interface ICommentType {
 	length?: number;
@@ -56,21 +61,83 @@ function CommentReply({ data }: any) {
 
 function Comment({ postId, length }: ICommentType) {
 	const { user } = useContext(UserContext);
+	const { modalStore, userStore } = useStores();
 
 	const [isShowCommentList, setIShowCommentList] = useState<boolean>(false);
 
 	const [data, setData] = useState<any>([]);
+	const [commentInputText, setCommentInputText] = useState("");
+
+	const [selectedComment, setSelectedComment] = useState<any>(null);
+	const [commentLength, setCommentLength] = useState<number | undefined>(0);
+
+	useEffect(() => {
+		setCommentLength(length);
+	}, []);
+
+	function clickReplyEvent(data: any) {
+		console.log(data);
+		setSelectedComment(data);
+		setCommentInputText(data.nickName + " ");
+	}
 
 	const VisibleComment = (e: any) => {
 		e.preventDefault();
 		setIShowCommentList(!isShowCommentList);
 	};
 
+	function UploadComment() {
+		if (commentInputText != "") {
+			if (user != null && user.userAccessState) {
+				if (selectedComment != null) {
+					console.log(
+						commentInputText.slice(selectedComment.nickName.length)
+					);
+					CreateCommentReply(
+						user,
+						postId,
+						selectedComment.commentId,
+						commentInputText.slice(
+							selectedComment.nickName.length + 1
+						)
+					).then((e: any) => {
+						setCommentInputText("");
+						console.log(e);
+						if (e.statusText == "Created") {
+							SearchComment(user, postId).then((e: any) => {
+								console.log(e);
+
+								setData(e.data.commentRetrieveRespDtoList);
+								setCommentLength(e.data.commentCnt);
+							});
+						}
+					});
+				} else {
+					CreateComment(user, postId, commentInputText).then(
+						(e: any) => {
+							setCommentInputText("");
+							console.log(e);
+							if (e.statusText == "Created") {
+								SearchComment(user, postId).then((e: any) => {
+									console.log(e);
+									setData(e.data.commentRetrieveRespDtoList);
+									setCommentLength(e.data.commentCnt);
+								});
+							}
+						}
+					);
+				}
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (isShowCommentList == true) {
 			console.log("실행");
 			SearchComment(user, postId).then((e: any) => {
-				setData(e.data.content);
+				console.log(e);
+				setCommentLength(e.data.commentCnt);
+				setData(e.data.commentRetrieveRespDtoList);
 			});
 		}
 	}, [isShowCommentList, user]);
@@ -81,7 +148,7 @@ function Comment({ postId, length }: ICommentType) {
 				onClick={VisibleComment}
 				visible={isShowCommentList}
 			>
-				댓글 {length ? length : "0"}개 모두{" "}
+				댓글 {commentLength ? commentLength : "0"}개 모두{" "}
 				{isShowCommentList ? `접기` : `보기`}
 				<img src={showBtnArrow} alt="댓글 목록보기 버튼" />
 			</ShowCommentListBtn>
@@ -105,7 +172,11 @@ function Comment({ postId, length }: ICommentType) {
 									</div>
 									<div>
 										<CommentText>{e.content}</CommentText>
-										<ReplyBtn>답글달기</ReplyBtn>
+										<ReplyBtn
+											onClick={() => clickReplyEvent(e)}
+										>
+											답글달기
+										</ReplyBtn>
 									</div>
 								</Commenter>
 								<CommentReply data={e}></CommentReply>
@@ -115,9 +186,34 @@ function Comment({ postId, length }: ICommentType) {
 				})}
 
 			<WriteComment>
-				<CommenterThumbnail src={user_profile} />
-				<Input type="text" placeholder="댓글 달기" />
-				<RegisterComment type="submit" value="게시" />
+				{userStore.info.imgUrl && userStore.info.imgUrl.length > 0 ? (
+					<CommenterThumbnail src={userStore.info.imgUrl} />
+				) : (
+					<CommenterThumbnail src={user_profile} />
+				)}
+
+				<Input
+					type="text"
+					placeholder="댓글 달기"
+					value={commentInputText}
+					onChange={(e) => {
+						if (selectedComment != null) {
+							if (
+								selectedComment.nickName !=
+								e.target.value.slice(
+									0,
+									selectedComment.nickName.length
+								)
+							) {
+								setSelectedComment(null);
+							}
+						}
+						setCommentInputText(e.target.value);
+					}}
+				/>
+				<RegisterComment onClick={() => UploadComment()}>
+					게시
+				</RegisterComment>
 			</WriteComment>
 		</CommentWrap>
 	);
@@ -254,6 +350,7 @@ const ShowReplyBtn = styled.div`
 	color: ${theme.TextSubColor};
 	padding-left: 90px;
 	margin-top: 10px;
+	cursor: pointer;
 	&::before {
 		display: inline-block;
 		content: "";
@@ -297,12 +394,14 @@ const Input = styled.input`
 	}
 `;
 
-const RegisterComment = styled.input`
+const RegisterComment = styled.div`
 	color: ${theme.PrimaryColor};
 	font-size: 16px;
 	background: none;
 	margin-left: 10px;
 	cursor: pointer;
+
+	min-width: fit-content;
 
 	@media screen and (max-width: 600px) {
 		font-size: 14px;

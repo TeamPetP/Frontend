@@ -1,39 +1,44 @@
 import axios from "axios";
 
 export const CreateComment = (user: any, postId: number, content: string) => {
-	axios
-		.post(
-			`/posts/${postId}/comments`,
-			{
-				content: content,
-			},
-			{
-				headers: user,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve) => {
+		axios
+			.post(
+				`/posts/${postId}/comments`,
+				{
+					content: content,
+				},
+				{
+					headers: user,
+				}
+			)
+			.then((e) => {
+				resolve(e);
+			});
+	});
 };
 
 export const CreateCommentReply = (
 	user: any,
+	postId: number,
 	commentId: number,
 	content: string
 ) => {
-	axios
-		.post(
-			`/comments/${commentId}`,
-			{
-				content: content,
-			},
-			{
-				headers: user,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+	return new Promise((resolve) => {
+		axios
+			.post(
+				`/posts/${postId}/comments/${commentId}`,
+				{
+					content: content,
+				},
+				{
+					headers: user,
+				}
+			)
+			.then((e) => {
+				resolve(e);
+			});
+	});
 };
 
 export const EditComment = (user: any, commentId: number, content: string) => {

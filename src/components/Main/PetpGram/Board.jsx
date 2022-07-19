@@ -15,7 +15,7 @@ import { LikePost } from "../../../services/postApi";
 import { timeBefore } from "../../../lib/timeBefore";
 const BoardWrapper = styled.div`
 	width: 100%;
-	max-height: 865px;
+	/* max-height: 865px; */
 	padding: 16px 20px;
 
 	border: 1px solid #c1c1c1;
@@ -235,7 +235,7 @@ function Board(props) {
 	function EditPost() {
 		props.EditEvent(props.info.postId);
 	}
-
+	function CommentLengthEvent() {}
 	async function Like(postId, state) {
 		if (user != null && user.userAccessState === true) {
 			await LikePost(user, postId).then((e) => {

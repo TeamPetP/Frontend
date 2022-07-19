@@ -5,16 +5,61 @@ import user_profile from "../../assets/images/user_profile.png";
 import showBtnArrow from "../../assets/images/arrow_left.png";
 import { SearchComment } from "../../services/commentApi";
 import { UserContext } from "../../contexts/UserContext";
+import { timeBefore } from "../../lib/timeBefore";
 
 interface ICommentType {
 	length?: number;
 	postId?: any;
 }
+
+function CommentReply({ data }: any) {
+	const [isShowReplyList, setIShowReplyList] = useState<boolean>(false);
+	const VisibleReply = (e: any) => {
+		e.preventDefault();
+		setIShowReplyList(!isShowReplyList);
+	};
+	console.log(data);
+	return (
+		<>
+			{data.childComment.length != 0 ? (
+				<ShowReplyBtn onClick={VisibleReply}>
+					답글{" "}
+					{isShowReplyList
+						? "숨기기"
+						: `${data.childComment.length}개 보기`}
+				</ShowReplyBtn>
+			) : (
+				<></>
+			)}
+			{isShowReplyList &&
+				data.childComment.map((e: any) => {
+					return (
+						<ReplyList>
+							<Commenter>
+								<ReplyByThumbnail src={e.memberImageUrl} />
+								<div>
+									<CommenterNickname>
+										{e.nickName}
+									</CommenterNickname>
+									<CreateTime>
+										{timeBefore(e.createdDate)}
+									</CreateTime>
+								</div>
+								<CommentText>{e.content}</CommentText>
+							</Commenter>
+						</ReplyList>
+					);
+				})}
+		</>
+	);
+}
+
 function Comment({ postId, length }: ICommentType) {
 	const { user } = useContext(UserContext);
 
 	const [isShowCommentList, setIShowCommentList] = useState<boolean>(false);
-	const [isShowReplyList, setIShowReplyList] = useState<boolean>(false);
+
+	const [data, setData] = useState<any>([]);
 
 	const VisibleComment = (e: any) => {
 		e.preventDefault();
@@ -25,15 +70,10 @@ function Comment({ postId, length }: ICommentType) {
 		if (isShowCommentList == true) {
 			console.log("실행");
 			SearchComment(user, postId).then((e: any) => {
-				console.log("결고", e);
+				setData(e.data.content);
 			});
 		}
 	}, [isShowCommentList, user]);
-
-	const VisibleReply = (e: any) => {
-		e.preventDefault();
-		setIShowReplyList(!isShowReplyList);
-	};
 
 	return (
 		<CommentWrap>
@@ -45,44 +85,35 @@ function Comment({ postId, length }: ICommentType) {
 				{isShowCommentList ? `접기` : `보기`}
 				<img src={showBtnArrow} alt="댓글 목록보기 버튼" />
 			</ShowCommentListBtn>
-			{isShowCommentList && (
-				<div>
-					<CommentList>
-						<Commenter>
-							<CommenterThumbnail src={user_profile} />
-							<div>
-								<CommenterNickname>user1</CommenterNickname>
-								<CreateTime>3시간전</CreateTime>
-							</div>
-							<div>
-								<CommentText>
-									수제간식 만든 곳 위치 알고 싶은데 혹시
-									어디인가요?
-								</CommentText>
-								<ReplyBtn>답글달기</ReplyBtn>
-							</div>
-						</Commenter>
-					</CommentList>
-					{isShowReplyList && (
-						<ReplyList>
-							<Commenter>
-								<ReplyByThumbnail src={user_profile} />
-								<div>
-									<CommenterNickname>user1</CommenterNickname>
-									<CreateTime>3시간전</CreateTime>
-								</div>
-								<CommentText>
-									수제간식 만든 곳 위치 알고 싶은데 혹시
-									어디인가요?
-								</CommentText>
-							</Commenter>
-						</ReplyList>
-					)}
-					<ShowReplyBtn onClick={VisibleReply}>
-						답글 {isShowReplyList ? "숨기기" : `1개 보기`}
-					</ShowReplyBtn>
-				</div>
-			)}
+
+			{isShowCommentList &&
+				data.map((e: any) => {
+					return (
+						<div>
+							<CommentList>
+								<Commenter>
+									<CommenterThumbnail
+										src={e.memberImageUrl}
+									/>
+									<div>
+										<CommenterNickname>
+											{e.nickName}
+										</CommenterNickname>
+										<CreateTime>
+											{timeBefore(e.createdDate)}
+										</CreateTime>
+									</div>
+									<div>
+										<CommentText>{e.content}</CommentText>
+										<ReplyBtn>답글달기</ReplyBtn>
+									</div>
+								</Commenter>
+								<CommentReply data={e}></CommentReply>
+							</CommentList>
+						</div>
+					);
+				})}
+
 			<WriteComment>
 				<CommenterThumbnail src={user_profile} />
 				<Input type="text" placeholder="댓글 달기" />

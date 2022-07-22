@@ -1,103 +1,21 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
+import styled from "styled-components";
 import Slider from "react-slick";
 import { useStores } from "../../../../hooks/useStores";
-import { useNavigate } from "react-router";
 import { UserContext } from "../../../../contexts/UserContext";
 import Comment from "../../../../components/common/Comment";
-import styled from "styled-components";
 import * as theme from "../../../../styles/theme";
 import nullIcon from "../../../../assets/images/null.png";
 import pencil from "../../../../assets/images/pencil.png";
-import { GetBoardList } from "../../../../services/MeetingApi";
-import { timeBefore } from "../../../../lib/timeBefore";
-import { useInView } from "react-intersection-observer";
 
-const Board = observer(({ meetingId }) => {
-  const navigate = useNavigate();
+import { timeBefore } from "../../../../lib/timeBefore";
+
+const Board = observer(({ meetingId, boardData }) => {
   const { user } = useContext(UserContext);
-  const { modalStore, userStore } = useStores();
-  const [boardData, setBoardData] = useState([]);
+  const { modalStore } = useStores();
   const slider = useRef();
   const [sliderDot, setSliderDot] = useState([]);
-  const [pageNumber, setPageNumber] = useState(0);
-  const [ref, inView] = useInView();
-  const [loading, setLoading] = useState(false);
-
-  const getItems = useCallback(
-    async (state, userToken) => {
-      setLoading(true);
-
-      if (pageNumber === 0 && state == true) {
-        console.log("aaa", userToken);
-        await GetBoardList(user, meetingId, pageNumber, 20).then((res) => {
-          if (Math.floor(boardData.length / 10) < pageNumber + 1) {
-            setBoardData([...res.data.content]);
-            setLoading(false);
-          }
-          if (res.data.content.length === 0) {
-            setLoading(true);
-          }
-          console.log("klkkk", boardData);
-        });
-      } else {
-        await GetBoardList(user, meetingId, pageNumber, 20).then((res) => {
-          console.log(
-            "mmm",
-            res.data,
-            Math.floor(boardData.length / 10) < pageNumber,
-            Math.floor(boardData.length / 10),
-            pageNumber
-          );
-          if (Math.floor(boardData.length / 10) < pageNumber + 1) {
-            setBoardData((prevState) => [...prevState, ...res.data.content]);
-            setLoading(false);
-          }
-          if (res.data.content.length === 0) {
-            setLoading(true);
-          }
-          console.log("klkkk", boardData);
-        });
-      }
-    },
-    [pageNumber]
-  );
-
-  useEffect(() => {
-    console.log("test");
-    getItems(false);
-  }, [getItems]);
-
-  useEffect(() => {
-    console.log("test", user);
-    getItems(true, user);
-  }, [user]);
-
-  useEffect(() => {
-    // 사용자가 마지막 요소를 보고 있고, 로딩 중이 아니라면
-    if (inView && !loading) {
-      setPageNumber((prevState) => prevState + 1);
-    }
-  }, [inView, loading]);
-
-  /* useEffect(() => {
-    console.log(user);
-    console.log(`meetingId = ${meetingId}`);
-    async function fetchData() {
-      const d: any = await GetBoardList(user, meetingId, pageNumber, 20);
-      console.log("모임게시글 전체 조회 data=", d);
-      console.log("슬라이더", slider);
-
-      setBoardData(d.data.content);
-    }
-    fetchData();
-  }, [user]); */
 
   useEffect(() => {
     let arr;
@@ -113,11 +31,14 @@ const Board = observer(({ meetingId }) => {
 
   function setActiveSlide(data) {
     let arr;
-    (arr = []).length = slider.current.props.children.length;
+    (arr = []).length = slider.current.props.children
+      ? slider.current.props.children.length
+      : 0;
     arr.fill(false);
     arr[data] = true;
     setSliderDot(arr);
   }
+
   function DotClickEvent(data) {
     slider.current.slickGoTo(data);
   }
@@ -156,14 +77,25 @@ const Board = observer(({ meetingId }) => {
             </Creator>
             <BoardContent>
               <BoardTitle>{data.title}</BoardTitle>
-              {/* <SliderWrap>
+              <SliderWrap>
                 <Slider {...settings} ref={slider}>
                   {data.imgUrlList != null &&
-                    data.imgUrlList.map((image) => (
-                      <BoardListImage src={image} alt="image" />
+                    data.imgUrlList.map((image, index) => (
+                      <BoardListImage src={image} alt="image" key={index} />
                     ))}
                 </Slider>
-              </SliderWrap> */}
+              </SliderWrap>
+              <SwiperToggle>
+                {data.imgUrlList != null && data.imgUrlList.length != 0
+                  ? sliderDot.map((value, index) => (
+                      <SwiperToggleDot
+                        key={index}
+                        state={value}
+                        onClick={() => DotClickEvent(index)}
+                      />
+                    ))
+                  : ""}
+              </SwiperToggle>
               <Content>{data.content}</Content>
             </BoardContent>
             <Comment />
@@ -356,6 +288,25 @@ const SliderWrap = styled.div`
       }
     }
   }
+`;
+
+const SwiperToggle = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SwiperToggleDot = styled.div`
+  width: 10px;
+  height: 10px;
+  background-color: ${(props) => (props.state == true ? "#FFC9BE" : "#EBEBEB")};
+
+  border-radius: 100%;
+
+  margin: 0px 3px;
+
+  cursor: pointer;
 `;
 
 const BoardListImage = styled.img`

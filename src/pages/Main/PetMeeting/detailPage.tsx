@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react";
 import { useLocation } from "react-router";
 import { UserContext } from "../../../contexts/UserContext";
-import { SearchMeet } from "../../../services/MeetingApi";
+import { SearchMeet, GetBoardList } from "../../../services/MeetingApi";
 import withMain from "../../../hocs/ui/withMain";
 import styled from "styled-components";
 import * as theme from "../../../styles/theme";
@@ -15,6 +15,8 @@ const DetailPage = observer(() => {
   const params = new URLSearchParams(search);
   const meetingId = Number(params.get("id"));
   const [meetData, setMeetData] = useState<any>([]);
+  const [boardData, setBoardData] = useState<any>([]);
+  const [pageNumber, setPageNumber] = useState(0);
   const { user } = useContext(UserContext);
 
   async function fetchData() {
@@ -23,6 +25,15 @@ const DetailPage = observer(() => {
 
     setMeetData(d.data);
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      const dd: any = await GetBoardList(user, meetingId, pageNumber, 20);
+
+      setBoardData(dd.data.content);
+    }
+    fetchData();
+  }, [user]);
 
   useEffect(() => {
     fetchData();
@@ -68,7 +79,9 @@ const DetailPage = observer(() => {
             {selectedTabs === "info" && (
               <MeetInfo data={meetData} fetchData={fetchData} />
             )}
-            {selectedTabs === "board" && <Board meetingId={meetingId} />}
+            {selectedTabs === "board" && (
+              <Board meetingId={meetingId} boardData={boardData} />
+            )}
             {selectedTabs === "gallery" && <Gallery meetingId={meetingId} />}
           </div>
         </>

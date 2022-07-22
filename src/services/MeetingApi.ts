@@ -98,6 +98,8 @@ export const EditMeet = (
 // 모임 가입 요청
 export const JoinMeet = (user: any, meetingId: number) => {
   return new Promise((resolve, reject) => {
+    console.log("모임 가입요청", user, meetingId);
+
     axios
       .post(`/meetings/${meetingId}`, null, {
         headers: user,
@@ -150,10 +152,15 @@ export const ResignMeet = (user: any, meetingId: number) => {
 };
 
 // 모임 게시글 전체 조회
-export const GetBoardList = (user: any, meetingId: number) => {
+export const GetBoardList = (
+  user: any,
+  meetingId: number,
+  page: number,
+  size: number
+) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`/meetings/${meetingId}/meetingPosts`, {
+      .get(`/meetings/${meetingId}/meetingPosts?page=${page}&size=${size}`, {
         headers: user,
       })
       .then((e: any) => {

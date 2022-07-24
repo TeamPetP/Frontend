@@ -32,8 +32,8 @@ const AttentionMeetPage = observer(() => {
 		fetchData();
 	}, [user]);
 
-	const moveDetailPage = () => {
-		navigate(`/meeting/detail`);
+	const moveDetailPage = (id: number) => {
+		navigate(`/meeting/detail?id=${id}`);
 	};
 
 	return (
@@ -43,7 +43,7 @@ const AttentionMeetPage = observer(() => {
 				{petpListData.map((e: any) => {
 					return (
 						<>
-							<Meeting onClick={() => moveDetailPage()}>
+							<Meeting onClick={() => moveDetailPage(1)}>
 								<Options>
 									<Tags>
 										<Tag

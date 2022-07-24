@@ -98,7 +98,12 @@ const Board = observer(({ meetingId, boardData }) => {
               </SwiperToggle>
               <Content>{data.content}</Content>
             </BoardContent>
-            <Comment />
+            <Comment
+              length={data.commentCnt}
+              meetingId={data.meetingId}
+              meetingPostId={data.meetingPostId}
+              clickedPage="petpMeetingBoard"
+            />
           </Meeting>
         ))}
       {boardData == null || boardData.length === 0 ? (

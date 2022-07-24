@@ -6,6 +6,7 @@ import CreatePetpGramModal from "./CreatePetpGramModal";
 import EditProfileModal from "./EditProfile";
 import EditPetpGramModal from "./EditPetpGramModal";
 import CreatePetMeetingBoardModal from "./CreatePetMeetingBoardModal";
+import ViewPetMeetingGalleryModal from "./ViewPetMeetingGalleryModal";
 
 const Modal = observer(() => {
   const { modalStore } = useStores();
@@ -49,6 +50,13 @@ const Modal = observer(() => {
           modalStore.createPetMeetingBoardState = false;
         }}
       ></CreatePetMeetingBoardModal>
+      <ViewPetMeetingGalleryModal
+        visibility={modalStore.getViewPetMeetingGalleryState}
+        imgUrl={modalStore.getPetMeetingImgUrl}
+        ViewPetMeetingGalleryModalState={() => {
+          modalStore.viewPetMeetingGalleryState = false;
+        }}
+      ></ViewPetMeetingGalleryModal>
     </>
   );
 });

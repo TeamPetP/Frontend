@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback, Fragment } from "react";
 import MeetList from "../../../components/PetMeeting/MeetList";
 import styled from "styled-components";
 import { observer } from "mobx-react";
@@ -10,6 +10,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import { SearchMeetList } from "../../../services/MeetingApi";
 import Submit from "../../../components/common/Submit";
 import sido from "../../../components/common/AddressData";
+import { useInView } from "react-intersection-observer";
 
 const IndexPage = observer(() => {
   const navigate = useNavigate();
@@ -21,21 +22,78 @@ const IndexPage = observer(() => {
   const [searchfilter, setSearchFilter] = useState<string>("keyword"); // 선택한 검색 조건
   const { user } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const [ref, inView] = useInView();
+
+  const getItems = useCallback(
+    async (state: boolean, userToken?: any) => {
+      setLoading(true);
+      let paramsString = `isOpened=${isOpened}`;
+      if (pageNumber === 0 && state == true) {
+        console.log("aaa", userToken);
+        await SearchMeetList(user, pageNumber, 20, paramsString).then(
+          (res: any) => {
+            if (Math.floor(meetData.length / 10) < pageNumber + 1) {
+              setMeetData([...res.data.content]);
+              setLoading(false);
+            }
+            if (res.data.content.length === 0) {
+              setLoading(true);
+            }
+            console.log("klkkk", meetData);
+          }
+        );
+      } else {
+        await SearchMeetList(user, pageNumber, 20, paramsString).then(
+          (res: any) => {
+            console.log(
+              "mmm",
+              res.data,
+              Math.floor(meetData.length / 10) < pageNumber,
+              Math.floor(meetData.length / 10),
+              pageNumber
+            );
+            if (Math.floor(meetData.length / 10) < pageNumber + 1) {
+              setMeetData((prevState: any) => [
+                ...prevState,
+                ...res.data.content,
+              ]);
+              setLoading(false);
+            }
+            if (res.data.content.length === 0) {
+              setLoading(true);
+            }
+            console.log("klkkk", meetData);
+          }
+        );
+      }
+    },
+    [pageNumber]
+  );
 
   useEffect(() => {
-    console.log(user);
-    async function fetchData() {
-      let paramsString = `dosi=${dosi}&isOpened=${isOpened}`;
-      const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
-      setMeetData(d.data);
-    }
-    fetchData();
+    console.log("test");
+    getItems(false);
+  }, [getItems]);
+
+  useEffect(() => {
+    console.log("test", user);
+    getItems(true, user);
   }, [user]);
+
+  useEffect(() => {
+    // 사용자가 마지막 요소를 보고 있고, 로딩 중이 아니라면
+    if (inView && !loading) {
+      setPageNumber((prevState) => prevState + 1);
+    }
+  }, [inView, loading]);
 
   async function PostSearch(e: any) {
     e.preventDefault();
 
-    let paramsString = `dosi=${dosi}&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
+    let paramsString = `${
+      dosi !== "전체" ? `dosi=${dosi}` : ""
+    }&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
 
     // 필요없는 조회조건 제거
     if (content == "" || content === null) {
@@ -129,11 +187,23 @@ const IndexPage = observer(() => {
           />
         </SpaceBetween>
       </form>
-      {meetData.content != null &&
-        meetData.content.map((e: any) => {
-          return <MeetList key={e.meetingId} data={e} />;
+      {meetData != null &&
+        meetData.map((e: any, idx: any) => {
+          return (
+            <MeetWrap key={idx}>
+              {meetData.length - 1 == idx ? (
+                <div ref={ref}>
+                  <MeetList key={e.meetingId} data={e} fetchData={getItems} />
+                </div>
+              ) : (
+                <div>
+                  <MeetList key={e.meetingId} data={e} fetchData={getItems} />
+                </div>
+              )}
+            </MeetWrap>
+          );
         })}
-      {meetData.content == null || meetData.content.length === 0 ? (
+      {meetData == null || meetData.length === 0 ? (
         <NullWrapper>
           <img src={nullIcon} />
           <div>게시물이 존재하지 않습니다.</div>
@@ -153,8 +223,20 @@ export default withMain(IndexPage, "펫미팅");
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+
+  padding: 18px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    background: white;
+    width: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #f3593a;
+    border-radius: 20px;
+  }
+
   position: relative;
-  padding: 10px;
 `;
 
 const SpaceBetween = styled.div`
@@ -197,6 +279,13 @@ const Select = styled.select`
   border-radius: 5px;
   font-size: 15px;
   padding: 10px;
+`;
+
+const MeetWrap = styled.div`
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const NullWrapper = styled.div`

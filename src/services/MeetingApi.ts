@@ -30,7 +30,6 @@ export const SearchMeetList = (
         headers: user,
       })
       .then((e: any) => {
-        //console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -48,7 +47,6 @@ export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -66,7 +64,6 @@ export const SearchMeet = (user: any, meetingId: number) => {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -101,11 +98,31 @@ export const EditMeet = (
 // 모임 가입 요청
 export const JoinMeet = (user: any, meetingId: number) => {
   return new Promise((resolve, reject) => {
+    console.log("모임 가입요청", user, meetingId);
+
     axios
-      .post(`/meetings/${meetingId}`, {
+      .post(`/meetings/${meetingId}`, null, {
         headers: user,
       })
       .then((e: any) => {
+        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 가입취소 요청
+export const CancleJoinMeet = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}/cancel`, {
+        headers: user,
+      })
+      .then((e) => {
         console.log(e);
         resolve(e);
       })
@@ -120,7 +137,7 @@ export const JoinMeet = (user: any, meetingId: number) => {
 export const ResignMeet = (user: any, meetingId: number) => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(`/meetings/${meetingId}`, {
+      .delete(`/meetings/${meetingId}/resign`, {
         headers: user,
       })
       .then((e: any) => {
@@ -135,14 +152,18 @@ export const ResignMeet = (user: any, meetingId: number) => {
 };
 
 // 모임 게시글 전체 조회
-export const GetBoardList = (user: any, meetingId: number) => {
+export const GetBoardList = (
+  user: any,
+  meetingId: number,
+  page: number,
+  size: number
+) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`/meetings/${meetingId}/meetingPosts`, {
+      .get(`/meetings/${meetingId}/meetingPosts?page=${page}&size=${size}`, {
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
         resolve(e);
       })
       .catch((e) => {
@@ -170,7 +191,57 @@ export const CreateBoardPost = (
         headers: user,
       })
       .then((e: any) => {
-        console.log(e);
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 북마크등록
+export const AddBookmark = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`/meetings/${meetingId}/meetingBookmarks`, null, {
+        headers: user,
+      })
+      .then((e: any) => {
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 북마크취소
+export const CancleBookmark = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`/meetings/${meetingId}/bookmark`, {
+        headers: user,
+      })
+      .then((e: any) => {
+        resolve(e);
+      })
+      .catch((e) => {
+        console.log(e.response);
+        reject(e);
+      });
+  });
+};
+
+// 모임 사진첩 조회
+export const GetGallery = (user: any, meetingId: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/meetings/${meetingId}/images`, {
+        headers: user,
+      })
+      .then((e: any) => {
         resolve(e);
       })
       .catch((e) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import * as theme from "../../styles/theme";
@@ -6,15 +6,17 @@ import Tag from "../../components/common/Tag";
 import BookmarkButton from "../../components/common/BookmarkButton";
 import MeetCondition from "../../components/common/MeetCondition";
 import { timeBefore } from "../../lib/timeBefore";
+import { UserContext } from "../../contexts/UserContext";
+import { AddBookmark, CancleBookmark } from "../../services/MeetingApi";
 
 interface IMeetType {
   data: any;
+  fetchData: any;
 }
-const MeetList = ({ data }: IMeetType) => {
+const MeetList = ({ data, fetchData }: IMeetType) => {
   const navigate = useNavigate();
-  const moveDetailPage = (id: number) => {
-    navigate(`/meeting/detail?id=${id}`, { state: data });
-  };
+  const { user } = useContext(UserContext);
+  const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
     const date1 = new Date(d1);
@@ -29,11 +31,30 @@ const MeetList = ({ data }: IMeetType) => {
     .toString()
     .split(".");
 
-  const [category, setCategory] = useState("");
+  // 상세페이지 이동
+  const moveDetailPage = (id: number) => {
+    navigate(`/meeting/detail?id=${id}`, { state: data });
+  };
+
+  // 북마크
+  const ChangeBookmarkState = () => {
+    async function fetchBookmark() {
+      const dd: any = await AddBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+    async function fetchBookmarkCancle() {
+      const dd: any = await CancleBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+
+    if (data.isBookmarked === true) {
+      fetchBookmarkCancle();
+    } else {
+      fetchBookmark();
+    }
+  };
 
   useEffect(() => {
-    console.log(data.category);
-
     switch (data.category) {
       case "PICTURE":
         setCategory("사진 공유");
@@ -62,7 +83,7 @@ const MeetList = ({ data }: IMeetType) => {
   }, [data]);
 
   return (
-    <Meeting onClick={() => moveDetailPage(data.meetingId)}>
+    <Meeting>
       <Options>
         <Tags>
           {data.isOpened === true && (
@@ -77,26 +98,32 @@ const MeetList = ({ data }: IMeetType) => {
           )}
           <Tag text={category} />
         </Tags>
-        <BookmarkButton isBookmark={data.isBookmarked} />
+        <BookmarkButton
+          isBookmark={data.isBookmarked}
+          onClick={ChangeBookmarkState}
+        />
       </Options>
-      <MeetCondition
-        status={data.isOpened}
-        meetTitle={data.title}
-        conditions={data.conditions}
-        date={data.period}
-        personnel={data.joinPeople}
-        memberId={data.memberId}
-      />
-      <Content>{data.content}</Content>
-      <Bottom>
-        <div>
-          <Nickname>{data.nickname}</Nickname>
-          <Place>
-            {data.doName} {data.doName !== "전체" && data.sigungu}
-          </Place>
-        </div>
-        <CreateTime>{timeBefore(data.createDate)}</CreateTime>
-      </Bottom>
+      <div onClick={() => moveDetailPage(data.meetingId)}>
+        <MeetCondition
+          status={data.isOpened}
+          meetTitle={data.title}
+          conditions={data.conditions}
+          date={data.period}
+          personnel={data.joinPeople}
+          memberId={data.memberId}
+          sex={data.sex}
+        />
+        <Content>{data.content}</Content>
+        <Bottom>
+          <div>
+            <Nickname>{data.nickname}</Nickname>
+            <Place>
+              {data.doName} {data.doName !== "전체" && data.sigungu}
+            </Place>
+          </div>
+          <CreateTime>{timeBefore(data.createDate)}</CreateTime>
+        </Bottom>
+      </div>
     </Meeting>
   );
 };
@@ -108,13 +135,8 @@ const Meeting = styled.div`
   background-color: #fff;
   border: 1px solid ${theme.PrimaryColor};
   box-sizing: border=box;
-  margin-bottom: 20px;
   cursor: pointer;
   transition: ${theme.Transition};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 `;
 
 const Options = styled.div`

@@ -1,23 +1,87 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import withMain from "../../hocs/ui/withMain";
 import * as theme from "../../styles/theme";
+import { UserContext } from "../../contexts/UserContext";
 import PageTitle from "../../components/common/PageTitle";
 import Tag from "../../components/common/Tag";
 import user_profile from "../../assets/images/user_profile.png";
 import checkmark_full from "../../assets/images/checkmark_full.png";
 import checkmark_outline from "../../assets/images/checkmark_outline.png";
+import {
+  MyMeetWaitPartiList,
+  AcceptJoinMeet,
+  RefuseJoinMeet,
+  ExileMeet,
+} from "../../services/authApi";
+import { SearchMeet } from "../../services/MeetingApi";
+import { useStores } from "../../hooks/useStores";
+import nullIcon from "../../assets/images/null.png";
 
 const ParticipantsManagePage = () => {
-  const [isSelect, setIsSelect] = useState(false);
-  type checkList = { id: string; nickname: string };
+  const { userStore } = useStores();
+  const { user } = useContext(UserContext);
   const [checkedInputs, setCheckedInputs] = useState([] as any);
+  const { meetingId } = useParams();
+  const [meetData, setMeetData] = useState<any>([]);
+  const [waitData, setWaitData] = useState([]);
+  const [category, setCategory] = useState("");
 
-  const data = [
-    { id: "1", nickname: "user1" },
-    { id: "2", nickname: "user2" },
-    { id: "3", nickname: "user3" },
-  ];
+  const getDateDiff = (d1: string, d2: string) => {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    const diffDate = date1.getTime() - date2.getTime();
+
+    return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리세컨 * 초 * 분 * 시 = 일
+  };
+
+  let meetingOpenDueDate = getDateDiff(new Date().toString(), meetData.period)
+    .toString()
+    .split(".");
+
+  async function fetchData() {
+    const d: any = await SearchMeet(user, Number(meetingId));
+    setMeetData(d.data);
+  }
+  async function fetchPartiListData() {
+    const d: any = await MyMeetWaitPartiList(user, Number(meetingId));
+    setWaitData(d.data);
+  }
+
+  useEffect(() => {
+    fetchData();
+    fetchPartiListData();
+  }, [user]);
+
+  useEffect(() => {
+    switch (meetData.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [meetData.category]);
 
   // 참여 중인 친구 개별 선택
   const changeHandler = useCallback(
@@ -32,20 +96,46 @@ const ParticipantsManagePage = () => {
     [checkedInputs]
   );
 
-  const acceptParticipation = (id: Number) => {
-    console.log(`참여수락`);
+  // 가입 승인
+  const acceptParticipation = (memberId: Number) => {
+    async function fetchAccept() {
+      const dd: any = await AcceptJoinMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+      if (dd.status === 204) {
+        fetchPartiListData();
+        fetchData();
+      }
+    }
+    fetchAccept();
   };
 
-  const refuseParticipation = (id: Number) => {
-    console.log(`참여거절`);
+  // 가입 거절
+  const refuseParticipation = (memberId: Number) => {
+    async function fetchRefuse() {
+      const dd: any = await RefuseJoinMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+      if (dd.status === 204) fetchPartiListData();
+    }
+    fetchRefuse();
   };
 
-  const exileParticipation = (id: Number) => {
-    console.log(`추방`);
-  };
-
-  const exileselectMember = (list: any) => {
-    console.log(`선택한 친구의 id : ${list}`);
+  // 추방
+  const exileParticipation = (memberId: Number) => {
+    async function fetchExile() {
+      const dd: any = await ExileMeet(
+        user,
+        Number(meetingId),
+        Number(memberId)
+      );
+      if (dd.status === 204) fetchData();
+    }
+    fetchExile();
   };
 
   return (
@@ -55,39 +145,54 @@ const ParticipantsManagePage = () => {
         <Content>
           <Options>
             <Tags>
-              <Tag color={theme.PrimaryColor} text="D-3" />
-              <Tag text="공예/만들기" />
+              <Tag
+                color={theme.PrimaryColor}
+                text={
+                  meetData.meetingType === "REGULAR"
+                    ? "상시"
+                    : `D-${meetingOpenDueDate[0]}`
+                }
+              />
+              <Tag text={category} />
             </Tags>
           </Options>
           <Top>
-            <Progress Isprogress={true}>모집중</Progress>
-            <Title>
-              수제간식 원데이클래스 같이 하실 분!제간식 원데이클래스 같이 하실
-              분!
-            </Title>
+            <Progress Isprogress={meetData.isOpened}>
+              {meetData.isOpened ? "모집중" : "모집완료"}
+            </Progress>
+            <Title>{meetData.title}</Title>
           </Top>
         </Content>
         {/* 참여 요청 중인 친구 */}
         <Participate>
           <SubTitle>
             <div>
-              참여 요청 중인 친구 <span className="Primary">1</span>
+              참여 요청 중인 친구
+              <span className="Primary">{waitData?.length}</span>
             </div>
           </SubTitle>
-          <List>
-            <FlexStart>
-              <Profile src={user_profile} alt="참여자 프로필" />
-              <div>User-1</div>
-            </FlexStart>
-            <SpaceBetween width="210px">
-              <Button width="100px" onClick={() => acceptParticipation(1)}>
-                수락
-              </Button>
-              <Button width="100px" onClick={() => refuseParticipation(1)}>
-                거절
-              </Button>
-            </SpaceBetween>
-          </List>
+          {waitData.map((data: any) => (
+            <List key={data.memberId}>
+              <FlexStart>
+                <Profile src={data.memberImgUrl} alt="참여자 프로필" />
+                <div>{data.nickname}</div>
+              </FlexStart>
+              <SpaceBetween width="210px">
+                <Button
+                  width="100px"
+                  onClick={() => acceptParticipation(data.memberId)}
+                >
+                  수락
+                </Button>
+                <Button
+                  width="100px"
+                  onClick={() => refuseParticipation(data.memberId)}
+                >
+                  거절
+                </Button>
+              </SpaceBetween>
+            </List>
+          ))}
         </Participate>
         {/* 참여중인 친구 */}
         <Participate>
@@ -95,42 +200,43 @@ const ParticipantsManagePage = () => {
             <div>
               참여 중인 친구
               <span>
-                <span className="Primary">1</span>/4
+                방장 포함
+                <span className="Primary">{meetData.joinPeople}</span>
+                {meetData.maxPeople === 999999
+                  ? "명"
+                  : `/${meetData.maxPeople}명`}
               </span>
             </div>
           </SubTitle>
-          {data.map((data) => (
-            <div key={data.id}>
-              <Checkbox
-                type="checkbox"
-                id={data.id}
-                name={data.nickname}
-                checked={checkedInputs.includes(data.id) ? true : false}
-                onChange={(e) => {
-                  changeHandler(e.currentTarget.checked, data.id);
-                }}
-              />
-              <ParticipantsList
-                htmlFor={data.id}
-                checked={checkedInputs.includes(data.id) ? true : false}
-              >
-                <FlexStart>
-                  <Profile src={user_profile} alt="참여자 프로필" />
-                  <div>{data.nickname}</div>
-                </FlexStart>
-                <SpaceBetween width="100px">
-                  <Button width="100px" onClick={() => exileParticipation(1)}>
-                    추방
-                  </Button>
-                </SpaceBetween>
-              </ParticipantsList>
-            </div>
-          ))}
-          <SpaceBetween width="100%">
-            <ExileBtn onClick={() => exileselectMember(checkedInputs)}>
-              선택 목록 추방
-            </ExileBtn>
-          </SpaceBetween>
+          {meetData.joinPeople === 1 ? (
+            <NullWrapper>
+              <img src={nullIcon} />
+              <div>참여중인 친구가 없습니다.</div>
+            </NullWrapper>
+          ) : (
+            <>
+              {meetData.joinMembers
+                ?.filter((data: any) => data.memberId !== userStore.getMemberId)
+                .map((data: any) => (
+                  <div key={data.memberId}>
+                    <ParticipantsList>
+                      <FlexStart>
+                        <Profile src={data.memberImgUrl} alt="참여자 프로필" />
+                        <div>{data.nickname}</div>
+                      </FlexStart>
+                      <SpaceBetween width="100px">
+                        <Button
+                          width="100px"
+                          onClick={() => exileParticipation(data.memberId)}
+                        >
+                          추방
+                        </Button>
+                      </SpaceBetween>
+                    </ParticipantsList>
+                  </div>
+                ))}
+            </>
+          )}
         </Participate>
       </Wrapper>
     </>
@@ -230,13 +336,11 @@ const List = styled.div`
   cursor: pointer;
 `;
 
-const ParticipantsList = styled.label<{ checked: boolean }>`
+const ParticipantsList = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 28px;
-  cursor: pointer;
-  background-color: ${(props) => (props.checked ? "#F9F9F9" : "#fff")};
 `;
 
 const Checkbox = styled.input`
@@ -255,6 +359,7 @@ const Allchecked = styled.label`
 const Profile = styled.img`
   width: 40px;
   margin-right: 14px;
+  border-radius: 50%;
 
   &:last-child {
     margin-right: 0;
@@ -292,4 +397,24 @@ const ExileBtn = styled.button`
   font-family: "yg-jalnan";
   border-radius: 5px;
   margin: 20px;
+`;
+
+const NullWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: calc(100% - 180px);
+  margin: 20px 0px;
+  & > div {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-family: "yg-jalnan";
+
+    font-size: 28px;
+  }
+  & > img {
+    width: 100%;
+  }
 `;

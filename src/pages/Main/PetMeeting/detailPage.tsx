@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react";
 import { useLocation } from "react-router";
 import { UserContext } from "../../../contexts/UserContext";
-import { SearchMeet } from "../../../services/MeetingApi";
+import { SearchMeet, GetBoardList } from "../../../services/MeetingApi";
 import withMain from "../../../hocs/ui/withMain";
 import styled from "styled-components";
 import * as theme from "../../../styles/theme";
@@ -15,15 +15,27 @@ const DetailPage = observer(() => {
   const params = new URLSearchParams(search);
   const meetingId = Number(params.get("id"));
   const [meetData, setMeetData] = useState<any>([]);
+  const [boardData, setBoardData] = useState<any>([]);
+  const [pageNumber, setPageNumber] = useState(0);
   const { user } = useContext(UserContext);
+
+  async function fetchData() {
+    const d: any = await SearchMeet(user, meetingId);
+    console.log("ddata", d);
+
+    setMeetData(d.data);
+  }
 
   useEffect(() => {
     async function fetchData() {
-      const d: any = await SearchMeet(user, meetingId);
-      console.log("ddata", d);
+      const dd: any = await GetBoardList(user, meetingId, pageNumber, 20);
 
-      setMeetData(d.data);
+      setBoardData(dd.data.content);
     }
+    fetchData();
+  }, [user]);
+
+  useEffect(() => {
     fetchData();
   }, [user]);
 
@@ -33,41 +45,49 @@ const DetailPage = observer(() => {
     const role = e.target.dataset.role;
     setSelectedTabs(role);
   }
-
-  useEffect(() => {}, []);
   return (
     <>
-      <TabsWrap>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="info"
-          page="info"
-          selectedTabs={selectedTabs}
-        >
-          모임정보
-        </Tab>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="board"
-          page="board"
-          selectedTabs={selectedTabs}
-        >
-          게시판
-        </Tab>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="gallery"
-          page="gallery"
-          selectedTabs={selectedTabs}
-        >
-          사진첩
-        </Tab>
-      </TabsWrap>
-      <div>
-        {selectedTabs === "info" && <MeetInfo data={meetData} />}
-        {selectedTabs === "board" && <Board meetingId={meetingId} />}
-        {selectedTabs === "gallery" && <Gallery />}
-      </div>
+      {meetData.isJoined ? (
+        <>
+          <TabsWrap>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="info"
+              page="info"
+              selectedTabs={selectedTabs}
+            >
+              모임정보
+            </Tab>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="board"
+              page="board"
+              selectedTabs={selectedTabs}
+            >
+              게시판
+            </Tab>
+            <Tab
+              onClick={setClickedTabs}
+              data-role="gallery"
+              page="gallery"
+              selectedTabs={selectedTabs}
+            >
+              사진첩
+            </Tab>
+          </TabsWrap>
+          <div>
+            {selectedTabs === "info" && (
+              <MeetInfo data={meetData} fetchData={fetchData} />
+            )}
+            {selectedTabs === "board" && (
+              <Board meetingId={meetingId} boardData={boardData} />
+            )}
+            {selectedTabs === "gallery" && <Gallery meetingId={meetingId} />}
+          </div>
+        </>
+      ) : (
+        <MeetInfo data={meetData} fetchData={fetchData} />
+      )}
     </>
   );
 });

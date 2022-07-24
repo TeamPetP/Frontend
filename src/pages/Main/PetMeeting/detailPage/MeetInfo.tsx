@@ -1,23 +1,26 @@
 import React, { useEffect, useState, useContext } from "react";
+import styled from "styled-components";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router";
 import { useStores } from "../../../../hooks/useStores";
 import { UserContext } from "../../../../contexts/UserContext";
-import { JoinMeet, ResignMeet } from "../../../../services/MeetingApi";
-import styled from "styled-components";
 import { timeBefore } from "../../../../lib/timeBefore";
 import * as theme from "../../../../styles/theme";
-import user_profile from "../../../../assets/images/user_profile.png";
 import Tag from "../../../../components/common/Tag";
 import BookmarkButton from "../../../../components/common/BookmarkButton";
 import MeetCondition from "../../../../components/common/MeetCondition";
+import {
+  JoinMeet,
+  ResignMeet,
+  CancleJoinMeet,
+  AddBookmark,
+  CancleBookmark,
+} from "../../../../services/MeetingApi";
 
-const MeetInfo = observer(({ data }: any) => {
+const MeetInfo = observer(({ data, fetchData }: any) => {
   const navigate = useNavigate();
-  const { modalStore, userStore } = useStores();
+  const { userStore } = useStores();
   const { user } = useContext(UserContext);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const [status, setStatus] = useState(false);
   const [category, setCategory] = useState("");
 
   const getDateDiff = (d1: string, d2: string) => {
@@ -33,10 +36,7 @@ const MeetInfo = observer(({ data }: any) => {
     .toString()
     .split(".");
 
-  useEffect(() => {
-    console.log("MeetInfo data = ", data);
-  }, [data]);
-
+  // 모임 수정
   const editMeet = () => {
     navigate(`/meeting/edit`, {
       state: { data },
@@ -47,18 +47,27 @@ const MeetInfo = observer(({ data }: any) => {
   const JoinMeeting = () => {
     async function fetchJoin() {
       const dd: any = await JoinMeet(user, data.meetingId);
-      console.log("join, ", dd);
+      if (dd.status === 204) fetchData();
     }
     fetchJoin();
   };
 
+  // 모임 참여 신청 취소
+  const CancleJoinMeeting = () => {
+    async function fetchCancleJoin() {
+      const dd: any = await CancleJoinMeet(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+    fetchCancleJoin();
+  };
+
   // 모임 탈퇴
   const ResignMeeting = () => {
-    async function fetchJoin() {
+    async function fetchResign() {
       const dd: any = await ResignMeet(user, data.meetingId);
-      console.log("Resign, ", dd);
+      if (dd.status === 204) fetchData();
     }
-    fetchJoin();
+    fetchResign();
   };
 
   // 참여자 목록 보기
@@ -66,6 +75,24 @@ const MeetInfo = observer(({ data }: any) => {
     navigate(`/meeting/joinMembers`, {
       state: { data },
     });
+  };
+
+  // 북마크
+  const ChangeBookmarkState = () => {
+    async function fetchBookmark() {
+      const dd: any = await AddBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+    async function fetchBookmarkCancle() {
+      const dd: any = await CancleBookmark(user, data.meetingId);
+      if (dd.status === 204) fetchData();
+    }
+
+    if (data.isBookmarked === true) {
+      fetchBookmarkCancle();
+    } else {
+      fetchBookmark();
+    }
   };
 
   useEffect(() => {
@@ -95,6 +122,7 @@ const MeetInfo = observer(({ data }: any) => {
         setCategory("");
     }
   }, [data]);
+
   return (
     <Meeting>
       <Options>
@@ -111,12 +139,15 @@ const MeetInfo = observer(({ data }: any) => {
           )}
           <Tag text={category} />
         </Tags>
-        <BookmarkButton isBookmark={data.isBookmarked} />
+        <BookmarkButton
+          isBookmark={data.isBookmarked}
+          onClick={ChangeBookmarkState}
+        />
       </Options>
       <Creator>
-        <CreatorThumbnail src={user_profile} />
+        <CreatorThumbnail src={data.memberImgUrl} />
         <div>
-          <Nickname>{userStore.getName}</Nickname>
+          <Nickname>{data.nickname}</Nickname>
           <div>
             <Place>
               {data.doName} {data.doName !== "전체" && data.sigungu}
@@ -132,6 +163,7 @@ const MeetInfo = observer(({ data }: any) => {
         date={data.period}
         personnel={data.joinPeople}
         memberId={data.memberId}
+        sex={data.sex}
       />
       {data.imgUrlList?.length > 0 && (
         <MeetThumbnail src={data.imgUrlList} alt="활동소개사진" />
@@ -156,16 +188,25 @@ const MeetInfo = observer(({ data }: any) => {
         </ButtonWrap>
       ) : (
         <>
-          {data.isJoined === false && data.isOpened === true && (
-            <ButtonWrap>
-              <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
-            </ButtonWrap>
-          )}
-          {data.isJoined === true && (
+          {data.isJoined === false &&
+            data.isOpened === true &&
+            data.joinStatus !== "승인됨" &&
+            data.joinStatus !== "대기중" && (
+              <ButtonWrap>
+                <SubmitBtn onClick={JoinMeeting}>참여 신청</SubmitBtn>
+              </ButtonWrap>
+            )}
+
+          {data.isJoined === true && data.joinStatus === "승인됨" && (
             <ButtonWrap>
               <SubmitBtn onClick={ResignMeeting} dark>
                 모임탈퇴
               </SubmitBtn>
+            </ButtonWrap>
+          )}
+          {data.isJoined === false && data.joinStatus === "대기중" && (
+            <ButtonWrap>
+              <SubmitBtn onClick={CancleJoinMeeting}>참여 신청 취소</SubmitBtn>
             </ButtonWrap>
           )}
           {data.isOpened === false && <div>현재 모집완료된 모임입니다</div>}

@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { useStores } from "../../../hooks/useStores";
 import { UserContext } from "../../../contexts/UserContext";
 import * as theme from "../../../styles/theme";
@@ -12,16 +13,16 @@ const MyMeetList = ({ data }: any) => {
   const navigate = useNavigate();
   const { userStore } = useStores();
   const { user } = useContext(UserContext);
-  const isParticipants = data.members.includes(userStore.getNickname);
+  const [category, setCategory] = useState("");
 
-  const editMeet = (data: any) => {
+  const editMeet = () => {
     navigate(`/meeting/edit`, {
-      state: data,
+      state: { data },
     });
   };
 
   const management = (id: Number) => {
-    navigate(`/mypage/participants/${id}`);
+    navigate(`/mypage/participants/meetingId=${id}`);
   };
 
   const goMeetInfo = (id: Number) => {
@@ -35,6 +36,41 @@ const MyMeetList = ({ data }: any) => {
   const cancleParticipation = (id: Number) => {
     console.log(`참여취소`);
   };
+
+  // 참여자 목록 보기
+  const ViewMembers = () => {
+    navigate(`/meeting/joinMembers`, {
+      state: { data },
+    });
+  };
+
+  useEffect(() => {
+    switch (data.category) {
+      case "PICTURE":
+        setCategory("사진 공유");
+        return;
+      case "WALK":
+        setCategory("산책");
+        return;
+      case "VOLUNTEER":
+        setCategory("봉사");
+        return;
+      case "CLASS":
+        setCategory("클래스/수업");
+        return;
+      case "TRAINING":
+        setCategory("교육/훈련");
+        return;
+      case "AMITY":
+        setCategory("친목/모임");
+        return;
+      case "ETC":
+        setCategory("기타");
+        return;
+      default:
+        setCategory("");
+    }
+  }, [data]);
   return (
     <Wrapper>
       <Options>
@@ -42,52 +78,70 @@ const MyMeetList = ({ data }: any) => {
           {data.status === "모집중" && (
             <Tag color={theme.PrimaryColor} text="D-3" />
           )}
-          <Tag text={data.category} />
+          <Tag text={category} />
         </Tags>
       </Options>
       <Top>
-        <Progress Isprogress={data.status === "모집중"}>
-          {data.status === "모집중" ? "모집중" : "모집완료"}
+        <Progress Isprogress={data.isOpened === true}>
+          {data.isOpened === true ? "모집중" : "모집완료"}
         </Progress>
         <Title crown={user.memberId === data.memberId}>{data.title}</Title>
       </Top>
       <Content>{data.content}</Content>
-      <Participate>
-        <div>
-          참여중인 친구 <span>{data.members.length}/5</span>
-        </div>
-        <Profile src={user_profile} alt="참여자 프로필" />
-        <Profile src={user_profile} alt="참여자 프로필" />
-        <Profile src={user_profile} alt="참여자 프로필" />
-      </Participate>
+      <Member>
+        <Members>
+          참여중인 친구
+          <MemberLength>
+            {data.joinPeople}
+            {data.maxPeople === 999999 ? "명" : `/${data.maxPeople}명`}
+          </MemberLength>
+        </Members>
+        <ViewJoinMembers onClick={() => ViewMembers()}>
+          목록보기
+        </ViewJoinMembers>
+      </Member>
       {/* 모임 개설자일 때 */}
-      {user.memberId === data.memberId && (
+      {userStore.getMemberId === data.memberId && (
         <SpaceBetween>
-          <Button width="calc(50% - 5px)" onClick={() => editMeet(data)}>
+          <Button
+            to={`/mypage/participants/meetingId=${data.meetingId}`}
+            width="calc(50% - 5px)"
+          >
+            {" "}
             수정하기
           </Button>
-          <Button width="calc(50% - 5px)" onClick={() => management(1)}>
+          <Button
+            to={`/mypage/participants/${data.meetingId}`}
+            width="calc(50% - 5px)"
+          >
+            {" "}
             참여자 관리
           </Button>
         </SpaceBetween>
       )}
       {/* 일반 모임 참여자일 때 */}
-      {user.memberId !== data.memberId && isParticipants && (
+      {/* {userStore.getMemberId !== data.memberId && data.isJoined === true && (
         <SpaceBetween>
-          <Button width="calc(50% - 5px)" onClick={() => goMeetInfo(1)}>
+          <Button
+            width="calc(50% - 5px)"
+            onClick={() => goMeetInfo(data.meetingId)}
+          >
             모임으로 이동
           </Button>
-          <Button width="calc(50% - 5px)" onClick={() => leaveMeet(1)}>
+          <Button
+            width="calc(50% - 5px)"
+            onClick={() => leaveMeet(data.meetingId)}
+          >
             탈퇴하기
           </Button>
         </SpaceBetween>
-      )}
+      )} */}
       {/* 모임 참여신청자일 때 (승인 전) */}
-      {user.memberId !== data.memberId && !isParticipants && (
+      {/*  {userStore.getMemberId !== data.memberId && data.isJoined === false && (
         <Button width="100%" onClick={() => cancleParticipation(1)}>
           참여 취소
         </Button>
-      )}
+      )} */}
     </Wrapper>
   );
 };
@@ -139,7 +193,7 @@ const SpaceBetween = styled.div`
   align-items: center;
 `;
 
-const Button = styled.button`
+const Button = styled(Link)`
   color: #575757;
   border: 1px solid #c9c9c9;
   border-radius: 3px;
@@ -147,6 +201,8 @@ const Button = styled.button`
   display: block;
   height: 35px;
   margin-top: 10px;
+  text-align: center;
+  line-height: 35px;
 `;
 
 /*  */
@@ -222,4 +278,37 @@ const Progress = styled.span`
     display: block;
     font-size: 14px;
   }
+`;
+
+const Member = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  & img {
+    margin-right: 8px;
+  }
+`;
+
+const ViewJoinMembers = styled.button`
+  width: 80px;
+  height: 40px;
+  background-color: #fff;
+  border: 1px solid gray;
+  border-radius: 4px;
+  color: gray;
+`;
+
+const Members = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+
+  @media screen and (max-width: 600px) {
+    font-size: 16px;
+  }
+`;
+
+const MemberLength = styled.span`
+  color: ${theme.PrimaryColor};
+  padding-left: 12px;
 `;

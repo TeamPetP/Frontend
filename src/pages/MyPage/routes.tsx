@@ -12,7 +12,10 @@ function MyPageRoutes() {
       <Route path="/alrim" element={<AlrimPage />} />
       <Route path="/myMeet" element={<MyMeetPage />} />
       <Route path="/attentionMeet" element={<AttentionMeetPage />} />
-      <Route path="/participants" element={<ParticipantsManagePage />} />
+      <Route
+        path="/participants/:meetingId"
+        element={<ParticipantsManagePage />}
+      />
     </Routes>
   );
 }

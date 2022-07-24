@@ -135,13 +135,8 @@ const Meeting = styled.div`
   background-color: #fff;
   border: 1px solid ${theme.PrimaryColor};
   box-sizing: border=box;
-  margin-bottom: 20px;
   cursor: pointer;
   transition: ${theme.Transition};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 `;
 
 const Options = styled.div`

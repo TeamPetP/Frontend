@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import * as theme from "../../../styles/theme";
 import close_btn from "../../../assets/images/close-btn.png";
+import { timeBefore } from "../../../lib/timeBefore";
 
 interface IAlrimType {
 	data: any;
@@ -14,22 +15,25 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 	let notiType = "";
 	let notiMsg = "";
 
+	console.log(data);
+
 	switch (data.notificationType) {
-		case "comment":
+		case "commentWrite":
 			notiType = "댓글";
 			notiMsg = `${data.nickname}님이 댓글을 남겼습니다.`;
 			break;
-
 		case "reply":
 			notiType = "대댓글";
 			notiMsg = `${data.nickname}님이 대댓글을 남겼습니다.`;
 			break;
-
 		case "closeMeet":
 			notiType = "모임";
 			notiMsg = `${data.postTitle}의 모집 마감이 하루 남았습니다!`;
 			break;
-
+		case "postLike":
+			notiType = "좋아요";
+			notiMsg = `${data.nickname}님이 좋아요를 남겼습니다.`;
+			break;
 		default:
 			notiType = "";
 			notiMsg = "";
@@ -37,7 +41,7 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 	}
 
 	return (
-		<Wrapper isChecked={data.isChecked}>
+		<Wrapper isChecked={data.checked}>
 			<Thumbnail src={data.memberImgUrl} alt={data.postTitle} />
 			<Info onClick={() => ReadAlrim(data.notificationId)}>
 				<Top>
@@ -46,7 +50,7 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 				</Top>
 				<Bottom>
 					{data.nickname && <Nickname>{data.nickname}</Nickname>}
-					<Date>{data.createDate}</Date>
+					<Date>{timeBefore(data.createdDate)}</Date>
 				</Bottom>
 			</Info>
 			<DeleteBtn
@@ -85,6 +89,10 @@ const Thumbnail = styled.img`
 const Info = styled.div`
 	width: calc(100% - 110px);
 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
 	@media screen and (max-width: 600px) {
 		width: calc(100% - 60px);
 	}
@@ -92,15 +100,18 @@ const Info = styled.div`
 
 const Top = styled.div`
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
+	align-items: center;
 	align-items: top;
-	margin-top: 10px;
+	margin-bottom: 4px;
 `;
 
 const Type = styled.div`
-	width: 90px;
-	font-size: 22px;
-	font-weigh: bold;
+	margin-left: 8px;
+	margin-right: 8px;
+	margin-bottom: 1px;
+	font-size: 20px;
+	font-weight: bold;
 	color: ${theme.PrimaryColor};
 
 	@media screen and (max-width: 600px) {
@@ -120,6 +131,8 @@ const Message = styled.div`
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 
+	word-break: keep-all;
+
 	@media screen and (max-width: 600px) {
 		font-size: 16px;
 		width: calc(100% - 50px);
@@ -127,6 +140,8 @@ const Message = styled.div`
 `;
 
 const Bottom = styled(Top)`
+	margin-left: 8px;
+
 	font-size: 16px;
 	color: ${theme.TextSubColor};
 	justify-content: start;

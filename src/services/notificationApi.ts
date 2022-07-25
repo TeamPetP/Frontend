@@ -18,9 +18,13 @@ export const SearchAlrim = (user: any) => {
 export const CheckedAllAlrim = (user: any) => {
 	return new Promise((resolve) => {
 		axios
-			.patch(`/members/me/notifications`, {
-				headers: user,
-			})
+			.patch(
+				`/members/me/notifications`,
+				{},
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -32,9 +36,13 @@ export const CheckedAllAlrim = (user: any) => {
 export const CheckedAlrim = (user: any, notificationId: number) => {
 	return new Promise((resolve) => {
 		axios
-			.patch(`/members/me/notifications/${notificationId}`, {
-				headers: user,
-			})
+			.patch(
+				`/members/me/notifications/${notificationId}`,
+				{},
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -51,6 +59,7 @@ export const DeleteAllAlrim = (user: any) => {
 			})
 			.then((e) => {
 				console.log(e);
+				resolve(e);
 			});
 	});
 };

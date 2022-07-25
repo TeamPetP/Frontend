@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import styled from "styled-components";
 import user_profile from "../../../assets/images/user_profile.png";
-
+import { useNavigate } from "react-router";
 import Slider from "react-slick";
 import speech_bubble from "../../../assets/images/speech_bubble.png";
 import heart from "../../../assets/images/heart.png";
@@ -191,7 +191,7 @@ const BoardText = styled.div`
 const TagText = styled.div``;
 function Board(props) {
   const { user } = useContext(UserContext);
-
+  const navigate = useNavigate();
   const slider = useRef();
   const [sliderDot, setSliderDot] = useState([]);
   const [like, setLike] = useState(false);
@@ -235,7 +235,7 @@ function Board(props) {
     props.EditEvent(props.info.postId);
   }
   async function DeletePostt() {
-    const dd = await DeletePost(user, postId);
+    const dd = await DeletePost(user, props.info.postId);
     if (dd.status === 204) navigate(-1);
   }
   function CommentLengthEvent() {}
@@ -270,7 +270,7 @@ function Board(props) {
         {props.info.owner ? (
           <BoardOnwerSetting>
             <span onClick={() => EditPost()}>수정</span>
-            <span onClick={() => DeletePost()}>삭제</span>
+            <span onClick={() => DeletePostt()}>삭제</span>
           </BoardOnwerSetting>
         ) : (
           ""

@@ -4,6 +4,7 @@ import AlrimPage from "./Alrim";
 import MyMeetPage from "./MyMeet";
 import AttentionMeetPage from "./AttentionMeet";
 import ParticipantsManagePage from "./ParticipantsManage";
+import ViewFeed from "./ViewFeed";
 
 function MyPageRoutes() {
   return (
@@ -16,6 +17,7 @@ function MyPageRoutes() {
         path="/participants/:meetingId"
         element={<ParticipantsManagePage />}
       />
+      <Route path="/viewFeed" element={<ViewFeed />} />
     </Routes>
   );
 }

@@ -11,7 +11,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import bookmark2 from "../../../assets/images/bookmark2.png";
 import bookmark2__fill from "../../../assets/images/bookmark2__fill.png";
 import Comment from "../../../components/common/Comment";
-import { LikePost } from "../../../services/postApi";
+import { LikePost, DeletePost } from "../../../services/postApi";
 import { timeBefore } from "../../../lib/timeBefore";
 const BoardWrapper = styled.div`
   width: 100%;
@@ -234,6 +234,10 @@ function Board(props) {
   function EditPost() {
     props.EditEvent(props.info.postId);
   }
+  async function DeletePostt() {
+    const dd = await DeletePost(user, postId);
+    if (dd.status === 204) navigate(-1);
+  }
   function CommentLengthEvent() {}
   async function Like(postId, state) {
     if (user != null && user.userAccessState === true) {
@@ -266,7 +270,7 @@ function Board(props) {
         {props.info.owner ? (
           <BoardOnwerSetting>
             <span onClick={() => EditPost()}>수정</span>
-            <span>삭제</span>
+            <span onClick={() => DeletePost()}>삭제</span>
           </BoardOnwerSetting>
         ) : (
           ""

@@ -7,7 +7,7 @@ import { useStores } from "../../hooks/useStores";
 import PageTitle from "../../components/common/PageTitle";
 import { UserContext } from "../../contexts/UserContext";
 import { useLocation, useNavigate } from "react-router";
-import { SearchDetailPost, LikePost } from "../../services/postApi";
+import { SearchDetailPost, LikePost, DeletePost } from "../../services/postApi";
 import nullIcon from "../../assets/images/null.png";
 import heart from "../../assets/images/heart.png";
 import heart__fill from "../../assets/images/heart__fill.png";
@@ -77,10 +77,9 @@ const ViewFeed = observer(() => {
     modalStore.petpGramPostId = postId;
     modalStore.editPetpGramState = true;
   }
-  async function DeletePost() {
-    await DeletePost(user, postId).then((e) => {
-      navigate(-1);
-    });
+  async function DeletePostt() {
+    const dd = await DeletePost(user, postId);
+    if (dd.status === 204) navigate(-1);
   }
   function CommentLengthEvent() {}
   async function Like(postId, state) {
@@ -116,7 +115,7 @@ const ViewFeed = observer(() => {
           {data.owner ? (
             <BoardOnwerSetting>
               <span onClick={() => EditPost()}>수정</span>
-              <span onClick={() => DeletePost()}>삭제</span>
+              <span onClick={() => DeletePostt()}>삭제</span>
             </BoardOnwerSetting>
           ) : (
             ""

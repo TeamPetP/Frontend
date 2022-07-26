@@ -12,6 +12,7 @@ import MeetCondition from "../../components/common/MeetCondition";
 import { UserContext } from "../../contexts/UserContext";
 
 import { MyBookmarkPetpMetting } from "../../services/authApi";
+import { timeBefore } from "../../lib/timeBefore";
 
 const AttentionMeetPage = observer(() => {
 	const { userStore } = useStores();
@@ -21,6 +22,27 @@ const AttentionMeetPage = observer(() => {
 
 	const { user } = useContext(UserContext);
 	const [petpListData, setPetPListData] = useState<any>([]);
+
+	function category(category: string): string {
+		switch (category) {
+			case "PICTURE":
+				return "사진 공유";
+			case "WALK":
+				return "산책";
+			case "VOLUNTEER":
+				return "봉사";
+			case "CLASS":
+				return "클래스/수업";
+			case "TRAINING":
+				return "교육/훈련";
+			case "AMITY":
+				return "친목/모임";
+			case "ETC":
+				return "기타";
+			default:
+				return "";
+		}
+	}
 
 	useEffect(() => {
 		async function fetchData() {
@@ -32,9 +54,22 @@ const AttentionMeetPage = observer(() => {
 		fetchData();
 	}, [user]);
 
-	const moveDetailPage = () => {
-		navigate(`/meeting/detail`);
+	const moveDetailPage = (id: number) => {
+		navigate(`/meeting/detail?id=${id}`);
 	};
+
+	function DueDate(e: any) {
+		const date1 = new Date(new Date().toString());
+		const date2 = new Date(e.period);
+
+		const diffDate = date1.getTime() - date2.getTime();
+
+		let meetingOpenDueDate = Math.abs(diffDate / (1000 * 60 * 60 * 24))
+			.toString()
+			.split(".");
+
+		return meetingOpenDueDate[0];
+	}
 
 	return (
 		<Wrapper>
@@ -43,36 +78,44 @@ const AttentionMeetPage = observer(() => {
 				{petpListData.map((e: any) => {
 					return (
 						<>
-							<Meeting onClick={() => moveDetailPage()}>
+							<Meeting
+								onClick={() => moveDetailPage(e.meetingId)}
+							>
 								<Options>
 									<Tags>
 										<Tag
 											color={theme.PrimaryColor}
-											text="D-3"
+											text={
+												e.meetingType === "REGULAR"
+													? "상시"
+													: `D-${DueDate(e)}`
+											}
 										/>
-										<Tag text="공예/만들기" />
+										<Tag text={category(e.category)} />
 									</Tags>
 									<BookmarkButton isBookmark={isBookmark} />
 								</Options>
 								<MeetCondition
 									status={status}
-									meetTitle="수제간식 원데이클래스 같이 하실 분!"
-									conditions="20~30대만"
-									date="5월 7일 오후 2시"
-									personnel={2}
-									sex="누구나"
+									meetTitle={e.title}
+									conditions={e.conditions}
+									date={e.period}
+									personnel={e.joinPeople}
+									// memberId={e.memberId}
+									sex={e.sex}
 								/>
-								<Content>
-									aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-									<br />
-									aaaaaaa
-								</Content>
+								<Content>{e.content}</Content>
 								<Bottom>
 									<div>
-										<Nickname>User</Nickname>
-										<Place>서울시 마포구</Place>
+										<Nickname>{e.nickname}</Nickname>
+										<Place>
+											{e.doName}
+											{e.doName !== "전체" && e.sigungu}
+										</Place>
 									</div>
-									<CreateTime>3시간전</CreateTime>
+									<CreateTime>
+										{timeBefore(e.createDate)}
+									</CreateTime>
 								</Bottom>
 							</Meeting>
 						</>

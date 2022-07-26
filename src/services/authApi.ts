@@ -87,7 +87,7 @@ export const InfoData = (user: any) => {
 export const MyPost = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/posts`, {
+			.get(`/members/me/posts?pageNumber=${page}&pageSize=${size}`, {
 				headers: user,
 			})
 			.then((e) => {
@@ -100,10 +100,11 @@ export const MyPost = (user: any, page: number, size: number) => {
 			});
 	});
 };
-export const MyLikePost = (user: any) => {
+export const MyLikePost = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
+		console.log("user = ", user);
 		axios
-			.get(`/members/me/likes`, {
+			.get(`/members/me/likes?pageNumber=${page}&pageSize=${size}`, {
 				headers: user,
 			})
 			.then((e) => {

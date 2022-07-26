@@ -33,7 +33,7 @@ const AlrimPage = observer(() => {
 		console.log(`모든 알림 읽기`);
 		const d: any = await CheckedAllAlrim(user);
 		console.log("모든 알림 읽기", d);
-		// setAlrimData(d.data);
+		setAlrimData(d.data);
 	}
 
 	async function alrimAllDelete() {
@@ -54,7 +54,7 @@ const AlrimPage = observer(() => {
 		console.log(`이 알림만 읽기`);
 		const d: any = await CheckedAlrim(user, notificationId);
 		console.log("이 알림만 읽기", d);
-		// setAlrimData(d.data);
+		setAlrimData(d.data);
 	}
 
 	return (

@@ -28,22 +28,7 @@ const IndexPage = observer(() => {
 			console.log("마이페이지의 info", info);
 			setInfo(info.data);
 		}
-
-		async function fetcFeedhData() {
-			const feed: any = await MyPost(user, 0, 20);
-			console.log("feed", feed);
-			setFeedData(feed.data);
-		}
-
-		async function fetchBookmarkData() {
-			const likepost: any = await MyLikePost(user);
-			console.log("likepost", likepost);
-			setLikePost(likepost.data);
-		}
-
 		fetchInfoData();
-		fetcFeedhData();
-		fetchBookmarkData();
 	}, [user]);
 
 	const MoveAlrimPage = () => {
@@ -125,14 +110,9 @@ const IndexPage = observer(() => {
 				</Tab>
 			</TabsWrap>
 			<div>
-				{selectedTabs === "feed" && <Feed data={feedData} />}
-				{selectedTabs === "bookmark" && <Feed data={likePost} />}
+				{selectedTabs === "feed" && <Feed clickedPage="feed" />}
+				{selectedTabs === "bookmark" && <Feed clickedPage="bookmark" />}
 			</div>
-			{/* <input
-        onChange={(value) => {
-          userStore.setName(value.target.value);
-        }}
-      /> */}
 		</Wrapper>
 	);
 });
@@ -165,7 +145,6 @@ const Padding = styled.div`
 
 const MyInfo = styled.div`
 	padding: 25px 40px;
-
 	@media screen and (max-width: 600px) {
 		padding: 15px 20px;
 	}
@@ -180,7 +159,6 @@ const Count = styled.div`
 	font-size: 22px;
 	font-weight: bold;
 	color: #000;
-
 	@media screen and (max-width: 600px) {
 		word-break: break-all;
 		font-size: 18px;
@@ -191,7 +169,6 @@ const Title = styled.div`
 	font-size: 18px;
 	font-weight: 400;
 	color: #000;
-
 	@media screen and (max-width: 600px) {
 		font-size: 16px;
 	}
@@ -205,9 +182,7 @@ const ProfileWrap = styled.div`
 
 const ProfileImg = styled.img`
 	width: 90px;
-
 	border-radius: 100%;
-
 	@media screen and (max-width: 600px) {
 		width: 60px;
 	}
@@ -217,7 +192,6 @@ const NickName = styled.div`
 	margin-top: 20px;
 	font-size: 24px;
 	font-weight: bold;
-
 	@media screen and (max-width: 600px) {
 		font-size: 16px;
 	}
@@ -225,7 +199,6 @@ const NickName = styled.div`
 
 const Intro = styled.div`
 	font-size: 20px;
-
 	@media screen and (max-width: 600px) {
 		word-break: break-all;
 		font-size: 16px;
@@ -240,7 +213,6 @@ const EditProfile = styled.button`
 	height: 50px;
 	display: block;
 	font-size: 20px;
-
 	@media screen and (max-width: 600px) {
 		font-size: 16px;
 		height: 40px;
@@ -275,11 +247,9 @@ const Tab = styled.div`
 		props.selectedTabs === props.page ? `${theme.PrimaryColor}` : "#000"};
 	font-weight: ${(props: { selectedTabs: string; page: string }) =>
 		props.selectedTabs === props.page ? 600 : 500};
-
 	&:hover {
 		color: ${theme.PrimaryColor};
 	}
-
 	@media screen and (max-width: 600px) {
 		padding: 14px;
 		font-size: 16px;

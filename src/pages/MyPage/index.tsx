@@ -41,77 +41,105 @@ const IndexPage = observer(() => {
     navigate("/mypage/attentionMeet");
   };
 
-  // 클릭한 탭 구별
-  const [selectedTabs, setSelectedTabs] = useState("feed");
-  function setClickedTabs(e: any) {
-    const role = e.target.dataset.role;
-    setSelectedTabs(role);
-  }
-  return (
-    <Wrapper>
-      <Padding>
-        <MyInfo>
-          <ProfileWrap>
-            {userStore.info.imgUrl ? (
-              <ProfileImg src={userStore.info.imgUrl} alt="프로필이미지" />
-            ) : (
-              <ProfileImg src={user_profile} alt="프로필이미지" />
-            )}
-            <MyActivity
-              count={info.notificationCnt}
-              title="알림"
-              onPageChange={MoveAlrimPage}
-            />
-            <MyActivity
-              count={info.joinedMeetingCnt}
-              title="내모임"
-              onPageChange={MoveMyMeetPage}
-            />
-            <MyActivity
-              count={info.meetingBookCnt}
-              title="관심모임"
-              onPageChange={MoveAttentionMeetPage}
-            />
-          </ProfileWrap>
-          <NickName>{userStore.getNickname}</NickName>
-          <Intro>{userStore.getIntroduce}</Intro>
-        </MyInfo>
-        <EditProfile onClick={() => (modalStore.editProfile = true)}>
-          프로필 편집
-        </EditProfile>
-        <LogoutBtn
-          onClick={() => {
-            signOut();
-            window.location.href = "/";
-          }}
-        >
-          로그아웃
-        </LogoutBtn>
-      </Padding>
-      <TabsWrap>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="feed"
-          page="feed"
-          selectedTabs={selectedTabs}
-        >
-          피드
-        </Tab>
-        <Tab
-          onClick={setClickedTabs}
-          data-role="bookmark"
-          page="bookmark"
-          selectedTabs={selectedTabs}
-        >
-          좋아요 게시판
-        </Tab>
-      </TabsWrap>
-      <div>
-        {selectedTabs === "feed" && <Feed clickedPage="feed" />}
-        {selectedTabs === "bookmark" && <Feed clickedPage="bookmark" />}
-      </div>
-    </Wrapper>
-  );
+		async function fetchBookmarkData() {
+			const likepost: any = await MyLikePost(user);
+			console.log("likepost", likepost);
+			setLikePost(likepost.data);
+		}
+		fetchInfoData();
+		fetcFeedhData();
+		fetchBookmarkData();
+	}, [user]);
+
+	const MoveAlrimPage = () => {
+		navigate("/mypage/alrim");
+	};
+	const MoveMyMeetPage = () => {
+		navigate("/mypage/myMeet");
+	};
+	const MoveAttentionMeetPage = () => {
+		navigate("/mypage/attentionMeet");
+	};
+
+	// 클릭한 탭 구별
+	const [selectedTabs, setSelectedTabs] = useState("feed");
+	function setClickedTabs(e: any) {
+		const role = e.target.dataset.role;
+		setSelectedTabs(role);
+	}
+	return (
+		<Wrapper>
+			<Padding>
+				<MyInfo>
+					<ProfileWrap>
+						{userStore.info.imgUrl ? (
+							<ProfileImg
+								src={userStore.info.imgUrl}
+								alt="프로필이미지"
+							/>
+						) : (
+							<ProfileImg src={user_profile} alt="프로필이미지" />
+						)}
+						<MyActivity
+							count={info.notificationCnt}
+							title="알림"
+							onPageChange={MoveAlrimPage}
+						/>
+						<MyActivity
+							count={info.joinedMeetingCnt}
+							title="내모임"
+							onPageChange={MoveMyMeetPage}
+						/>
+						<MyActivity
+							count={info.meetingBookCnt}
+							title="관심모임"
+							onPageChange={MoveAttentionMeetPage}
+						/>
+					</ProfileWrap>
+					<NickName>{userStore.getNickname}</NickName>
+					<Intro>{userStore.getIntroduce}</Intro>
+				</MyInfo>
+				<EditProfile onClick={() => (modalStore.editProfile = true)}>
+					프로필 편집
+				</EditProfile>
+				<LogoutBtn
+					onClick={() => {
+						signOut();
+						window.location.href = "/";
+					}}
+				>
+					로그아웃
+				</LogoutBtn>
+			</Padding>
+			<TabsWrap>
+				<Tab
+					onClick={setClickedTabs}
+					data-role="feed"
+					page="feed"
+					selectedTabs={selectedTabs}
+				>
+					피드
+				</Tab>
+				<Tab
+					onClick={setClickedTabs}
+					data-role="bookmark"
+					page="bookmark"
+					selectedTabs={selectedTabs}
+				>
+					좋아요 게시판
+				</Tab>
+			</TabsWrap>
+			<div>
+				{selectedTabs === "feed" && <Feed data={feedData} />}
+				{selectedTabs === "bookmark" && <Feed data={likePost} />}
+			</div>
+			{/* <input
+        onChange={(value) => {
+          userStore.setName(value.target.value);
+        }}
+      /> */}
+		</Wrapper>
+	);
 });
 
 interface ITitleType {

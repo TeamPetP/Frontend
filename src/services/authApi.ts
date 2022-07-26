@@ -85,21 +85,20 @@ export const InfoData = (user: any) => {
 
 // 회원이 작성한 게시글 조회
 export const MyPost = (user: any, page: number, size: number) => {
-  return new Promise((resolve, reject) => {
-    console.log("user = ", user);
-    axios
-      .get(`/members/me/posts?page=${page}&size=${size}`, {
-        headers: user,
-      })
-      .then((e) => {
-        console.log(e);
-        resolve(e);
-      })
-      .catch((e) => {
-        console.log(e.response);
-        reject(e);
-      });
-  });
+	return new Promise((resolve, reject) => {
+		axios
+			.get(`/members/me/posts?pageNumber=${page}&pageSize=${size}`, {
+				headers: user,
+			})
+			.then((e) => {
+				console.log(e);
+				resolve(e);
+			})
+			.catch((e) => {
+				console.log(e.response);
+				reject(e);
+			});
+	});
 };
 export const MyLikePost = (user: any, page: number, size: number) => {
   return new Promise((resolve, reject) => {

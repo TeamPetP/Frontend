@@ -4,9 +4,12 @@ import axios from "axios";
 export const SearchAlrim = (user: any) => {
 	return new Promise((resolve) => {
 		axios
-			.get(`/members/me/notifications`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/notifications`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -19,7 +22,7 @@ export const CheckedAllAlrim = (user: any) => {
 	return new Promise((resolve) => {
 		axios
 			.patch(
-				`/members/me/notifications`,
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/notifications`,
 				{},
 				{
 					headers: user,
@@ -37,7 +40,7 @@ export const CheckedAlrim = (user: any, notificationId: number) => {
 	return new Promise((resolve) => {
 		axios
 			.patch(
-				`/members/me/notifications/${notificationId}`,
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/notifications/${notificationId}`,
 				{},
 				{
 					headers: user,
@@ -54,9 +57,12 @@ export const CheckedAlrim = (user: any, notificationId: number) => {
 export const DeleteAllAlrim = (user: any) => {
 	return new Promise((resolve) => {
 		axios
-			.delete(`/members/me/notifications`, {
-				headers: user,
-			})
+			.delete(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/notifications`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -68,9 +74,12 @@ export const DeleteAllAlrim = (user: any) => {
 export const DeleteAlrim = (user: any, notificationId: number) => {
 	return new Promise((resolve) => {
 		axios
-			.delete(`/notification/${notificationId}`, {
-				headers: user,
-			})
+			.delete(
+				`${process.env.REACT_APP_SERVER_API_URL}/notification/${notificationId}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log("Sf", e);
 				resolve(e);
@@ -82,9 +91,12 @@ export const DeleteAlrim = (user: any, notificationId: number) => {
 export const CountAlrim = (user: any) => {
 	return new Promise((resolve) => {
 		axios
-			.get(`/members/me/notifications/count`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/notifications/count`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);

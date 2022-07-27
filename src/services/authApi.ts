@@ -18,7 +18,7 @@ export const SignUp = (
 	);
 	axios
 		.post(
-			`/members`,
+			`${process.env.REACT_APP_SERVER_API_URL}/members`,
 			{
 				nickname: nickname,
 				introduce: introduce,
@@ -41,7 +41,7 @@ export const SignUp = (
 export const EditProfile = (user: any, nickname: string, introduce: string) => {
 	axios
 		.patch(
-			`/members/me`,
+			`${process.env.REACT_APP_SERVER_API_URL}/members/me`,
 			{
 				nickname: nickname,
 				introduce: introduce,
@@ -57,7 +57,7 @@ export const EditProfile = (user: any, nickname: string, introduce: string) => {
 
 export const DeleteAuth = (user: any) => {
 	axios
-		.delete(`/members/me`, {
+		.delete(`${process.env.REACT_APP_SERVER_API_URL}/members/me`, {
 			headers: user,
 		})
 		.then((e) => {
@@ -69,7 +69,7 @@ export const DeleteAuth = (user: any) => {
 export const InfoData = (user: any) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/info`, {
+			.get(`${process.env.REACT_APP_SERVER_API_URL}/members/me/info`, {
 				headers: user,
 			})
 			.then((e) => {
@@ -87,9 +87,12 @@ export const InfoData = (user: any) => {
 export const MyPost = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/posts?pageNumber=${page}&pageSize=${size}`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/posts?page=${page}&size=${size}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -104,9 +107,12 @@ export const MyLikePost = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		console.log("user = ", user);
 		axios
-			.get(`/members/me/likes?pageNumber=${page}&pageSize=${size}`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/likes?page=${page}&size=${size}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -122,9 +128,12 @@ export const MyLikePost = (user: any, page: number, size: number) => {
 export const MyMeeting = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/meetings?page=0&size=2000`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetings?page=0&size=2000`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -140,9 +149,12 @@ export const MyMeeting = (user: any, page: number, size: number) => {
 export const MyMeetingWait = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/meetings/apply?page=0&size=2000`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetings/apply?page=0&size=2000`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -158,9 +170,12 @@ export const MyMeetingWait = (user: any, page: number, size: number) => {
 export const MyMeetingWaitList = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/meetings/${meetingId}`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetings/${meetingId}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				resolve(e);
 				console.log(e);
@@ -172,9 +187,12 @@ export const MyMeetingWaitList = (user: any, meetingId: number) => {
 export const MyBookmark = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/bookmark?page=${page}&size=${size}`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/bookmark?page=${page}&size=${size}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -190,9 +208,12 @@ export const MyBookmark = (user: any, page: number, size: number) => {
 export const MyBookmarkPetpMetting = (user: any) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/meetingBookmark?page=0&size=2000`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetingBookmark?page=0&size=2000`,
+				{
+					headers: user,
+				}
+			)
 			.then((e) => {
 				console.log(e);
 				resolve(e);
@@ -207,9 +228,12 @@ export const MyBookmarkPetpMetting = (user: any) => {
 // 회원이 작성한 모임 게시글 조회
 export const MyMeetingBoard = (user: any, page: number, size: number) => {
 	axios
-		.get(`/members/me/meetings/meetingPosts?page=${page}&size=${size}`, {
-			headers: user,
-		})
+		.get(
+			`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetings/meetingPosts?page=${page}&size=${size}`,
+			{
+				headers: user,
+			}
+		)
 		.then((e) => {
 			console.log(e);
 		});
@@ -219,9 +243,12 @@ export const MyMeetingBoard = (user: any, page: number, size: number) => {
 export const MyMeetWaitPartiList = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`/members/me/meetings/${meetingId}`, {
-				headers: user,
-			})
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/members/me/meetings/${meetingId}`,
+				{
+					headers: user,
+				}
+			)
 			.then((e: any) => {
 				resolve(e);
 			})
@@ -240,9 +267,13 @@ export const AcceptJoinMeet = (
 ) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.post(`/meetings/${meetingId}/members/${memberId}/approve`, null, {
-				headers: user,
-			})
+			.post(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/members/${memberId}/approve`,
+				null,
+				{
+					headers: user,
+				}
+			)
 			.then((e: any) => {
 				console.log(e);
 				resolve(e);
@@ -262,9 +293,12 @@ export const RefuseJoinMeet = (
 ) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.delete(`/meetings/${meetingId}/members/${memberId}/decline`, {
-				headers: user,
-			})
+			.delete(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/members/${memberId}/decline`,
+				{
+					headers: user,
+				}
+			)
 			.then((e: any) => {
 				console.log(e);
 				resolve(e);
@@ -280,9 +314,12 @@ export const RefuseJoinMeet = (
 export const ExileMeet = (user: any, meetingId: number, memberId: number) => {
 	return new Promise((resolve, reject) => {
 		axios
-			.delete(`/meetings/${meetingId}/members/${memberId}/expel`, {
-				headers: user,
-			})
+			.delete(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/members/${memberId}/expel`,
+				{
+					headers: user,
+				}
+			)
 			.then((e: any) => {
 				console.log(e);
 				resolve(e);

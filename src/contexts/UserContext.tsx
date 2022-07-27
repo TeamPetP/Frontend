@@ -7,64 +7,67 @@ import { useStores } from "../hooks/useStores";
 export const UserContext: any = React.createContext(null);
 
 export const defaultHeaders: any = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
+	"Content-Type": "application/json",
+	Accept: "application/json",
 };
 
 export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState({});
-  const navigate: any = useNavigate();
-  const { modalStore, userStore } = useStores();
+	const [user, setUser] = useState({});
+	const navigate: any = useNavigate();
+	const { modalStore, userStore } = useStores();
 
-  useEffect(() => {
-    // 로그아웃
-    auth.onAuthStateChanged(async (firebaseUser: any) => {
-      if (firebaseUser) {
-        // 토큰을 가져온다.
-        const token = await firebaseUser.getIdToken();
-        console.log(token);
-        // Header에 인증 정보 추가
-        defaultHeaders.Authorization = `Bearer ${token}`;
-        defaultHeaders.userAccessState = false;
-        // 로그인 시도 (백엔드 API 구현 필요)
-        axios
-          .get("/members/me", {
-            headers: defaultHeaders,
-          })
-          .then(async (res: any) => {
-            console.log("testdtest");
+	useEffect(() => {
+		// 로그아웃
+		auth.onAuthStateChanged(async (firebaseUser: any) => {
+			if (firebaseUser) {
+				// 토큰을 가져온다.
+				const token = await firebaseUser.getIdToken();
+				console.log(token);
+				// Header에 인증 정보 추가
+				defaultHeaders.Authorization = `Bearer ${token}`;
+				defaultHeaders.userAccessState = false;
+				// 로그인 시도 (백엔드 API 구현 필요)
+				axios
+					.get(`${process.env.REACT_APP_SERVER_API_URL}/members/me`, {
+						headers: defaultHeaders,
+					})
+					.then(async (res: any) => {
+						console.log("testdtest");
 
-            // 로그인 성공시 user를 넘겨줌
-            console.log(res.data);
-            userStore.info = res.data;
-            console.log("1", user);
-            setUser({ ...defaultHeaders, userAccessState: true });
+						// 로그인 성공시 user를 넘겨줌
+						console.log(res.data);
+						userStore.info = res.data;
+						console.log("1", user);
+						setUser({ ...defaultHeaders, userAccessState: true });
 
-            console.log("2", user);
-            // setUser(user);
-            modalStore.signInState = false;
-            console.log(defaultHeaders.Authorization);
-          })
-          .catch((e) => {
-            console.log("test2dtest", e.response?.data);
+						console.log("2", user);
+						// setUser(user);
+						modalStore.signInState = false;
+						console.log(defaultHeaders.Authorization);
+					})
+					.catch((e) => {
+						console.log("test2dtest", e.response?.data);
 
-            if (e.response?.data.code === "USER_NOT_FOUND") {
-              setUser({ ...defaultHeaders, userAccessState: false });
+						if (e.response?.data.code === "USER_NOT_FOUND") {
+							setUser({
+								...defaultHeaders,
+								userAccessState: false,
+							});
 
-              modalStore.signUpState = true;
-              modalStore.signInState = false;
-            }
-          });
-      } else {
-        // 로그아웃시 Header에서
-        delete defaultHeaders.Authorizations;
-        setUser({});
-      }
-    });
-  }, []); // 컴포넌트 첫 로딩시만 실행되도록 []
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+							modalStore.signUpState = true;
+							modalStore.signInState = false;
+						}
+					});
+			} else {
+				// 로그아웃시 Header에서
+				delete defaultHeaders.Authorizations;
+				setUser({});
+			}
+		});
+	}, []); // 컴포넌트 첫 로딩시만 실행되도록 []
+	return (
+		<UserContext.Provider value={{ user, setUser }}>
+			{children}
+		</UserContext.Provider>
+	);
 };

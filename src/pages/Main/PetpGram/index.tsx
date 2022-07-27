@@ -23,7 +23,6 @@ import { useInView } from "react-intersection-observer";
 const Wrapper = styled.div`
 	width: 100%;
 	height: 100%;
-
 	padding: 18px 16px;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -35,17 +34,14 @@ const Wrapper = styled.div`
 		background: #f3593a;
 		border-radius: 20px;
 	}
-
 	position: relative;
 `;
 
 const SearchBar = styled.div`
 	width: 100%;
 	height: 60px;
-
 	border: 2px solid #fec9be;
 	border-radius: 10px;
-
 	display: flex;
 `;
 const SearchInput = styled.input`
@@ -58,14 +54,11 @@ const SearchInput = styled.input`
 const SearchButton = styled.div`
 	min-width: 60px;
 	height: 100%;
-
 	background-color: #f3593a;
 	border-radius: 0px 10px 10px 0px;
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
 	cursor: pointer;
 `;
 
@@ -74,20 +67,14 @@ const CreateButton = styled.div`
 	position: sticky;
 	bottom: 0px;
 	right: -10px;
-
 	width: 60px;
 	height: 60px;
-
 	border-radius: 100%;
-
 	background-color: #f3593a;
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
 	margin-left: auto;
-
 	cursor: pointer;
 `;
 
@@ -106,14 +93,12 @@ const NullWrapper = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-
 	height: calc(100% - 180px);
 	margin: 20px 0px;
 	& > div {
 		margin-top: 20px;
 		margin-bottom: 40px;
 		font-family: "yg-jalnan";
-
 		font-size: 28px;
 	}
 	& > img {
@@ -131,53 +116,42 @@ const IndexPage = observer(() => {
 	const [ref, inView] = useInView();
 	const [loading, setLoading] = useState(false);
 
-	const getItems = useCallback(
-		async (state: boolean, userToken?: any) => {
-			setLoading(true);
-			let k: string = serachInput;
+	const [serachInputC, setSearchInputC] = useState("");
 
-			if (pageNumber === 0 && state == true) {
-				console.log("aaa", userToken);
-				await SearchPost(
+	const getItems = useCallback(
+		async (state: boolean, userToken: any = {}) => {
+			setLoading(true);
+
+			console.log("pageNumber", pageNumber, "state", state);
+
+			let res: any = {};
+
+			if (serachInputC.length > 0) {
+				res = await SearchPost(
 					userToken,
 					pageNumber,
-					k.replace("#", "")
-				).then((res: any) => {
-					if (Math.floor(postData.length / 10) < pageNumber + 1) {
-						setPostData([...res.data.content]);
-						setLoading(false);
-					}
-					if (res.data.content.length === 0) {
-						setLoading(true);
-					}
-					console.log("klkkk", postData);
-				});
-			} else {
-				await SearchPost(user, pageNumber, k.replace("#", "")).then(
-					(res: any) => {
-						console.log(
-							"mmm",
-							res.data,
-							Math.floor(postData.length / 10) < pageNumber,
-							Math.floor(postData.length / 10),
-							pageNumber
-						);
-						if (Math.floor(postData.length / 10) < pageNumber + 1) {
-							setPostData((prevState: any) => [
-								...prevState,
-								...res.data.content,
-							]);
-							setLoading(false);
-						}
-						if (res.data.content.length === 0) {
-							setLoading(true);
-						}
-						console.log("klkkk", postData);
-					}
+					serachInputC.replace("#", "")
 				);
+			} else {
+				res = await SearchPost(userToken, pageNumber, "");
 			}
+
+			if (pageNumber === 0) {
+				setPostData([...res.data.content]);
+				setLoading(false);
+			} else {
+				setPostData((prevState: any) => [
+					...prevState,
+					...res.data.content,
+				]);
+				setLoading(false);
+			}
+			if (res.data.content.length === 0) {
+				setLoading(true);
+			}
+			console.log("klkkk", postData);
 		},
-		[pageNumber]
+		[pageNumber, serachInputC]
 	);
 
 	useEffect(() => {
@@ -236,9 +210,12 @@ const IndexPage = observer(() => {
 	async function PostSearch() {
 		let k: string = serachInput;
 		console.log("now", user, pageNumber, k.replace("#", ""));
-		const d: any = await SearchPost(user, pageNumber, k.replace("#", ""));
-		console.log("Daata", d);
-		setPostData(d.data);
+		setPageNumber(0);
+		setSearchInputC(k.replace("#", ""));
+
+		// const d: any = await SearchPost(user, pageNumber, k.replace("#", ""));
+		// console.log("Daata", d);
+		// setPostData(d.data.content);
 	}
 	// useEffect(() => {
 	// 	console.log(user);
@@ -261,7 +238,11 @@ const IndexPage = observer(() => {
 		<Wrapper>
 			<SearchBar>
 				<SearchInput
-					onKeyPress={() => PostSearch()}
+					onKeyDown={(event: any) => {
+						if (event.keyCode == 13) {
+							PostSearch();
+						}
+					}}
 					ref={searchInputRef}
 					value={serachInput}
 					placeholder="검색할 태그를 입력해주세요. EX) #강아지"

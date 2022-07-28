@@ -1,4 +1,11 @@
-import { useEffect, useState, useContext, useCallback, Fragment } from "react";
+import {
+  Fragment,
+  useRef,
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+} from "react";
 import MeetList from "../../../components/PetMeeting/MeetList";
 import styled from "styled-components";
 import { observer } from "mobx-react";
@@ -24,49 +31,26 @@ const IndexPage = observer(() => {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [ref, inView] = useInView();
+  const [serachInputC, setSearchInputC] = useState("isOpened=true");
 
   const getItems = useCallback(
-    async (state: boolean, userToken?: any) => {
+    async (state: boolean, userToken: any = {}) => {
       setLoading(true);
-      let paramsString = `isOpened=${isOpened}`;
-      if (pageNumber === 0 && state == true) {
-        console.log("aaa", userToken);
-        await SearchMeetList(user, pageNumber, 20, paramsString).then(
-          (res: any) => {
-            if (Math.floor(meetData.length / 10) < pageNumber + 1) {
-              setMeetData([...res.data.content]);
-              setLoading(false);
-            }
-            if (res.data.content.length === 0) {
-              setLoading(true);
-            }
-            console.log("klkkk", meetData);
-          }
-        );
+      let res: any = {};
+
+      res = await SearchMeetList(userToken, pageNumber, 20, serachInputC);
+
+      if (pageNumber === 0) {
+        setMeetData([...res.data.content]);
+        setLoading(false);
       } else {
-        await SearchMeetList(user, pageNumber, 20, paramsString).then(
-          (res: any) => {
-            console.log(
-              "mmm",
-              res.data,
-              Math.floor(meetData.length / 10) < pageNumber,
-              Math.floor(meetData.length / 10),
-              pageNumber
-            );
-            if (Math.floor(meetData.length / 10) < pageNumber + 1) {
-              setMeetData((prevState: any) => [
-                ...prevState,
-                ...res.data.content,
-              ]);
-              setLoading(false);
-            }
-            if (res.data.content.length === 0) {
-              setLoading(true);
-            }
-            console.log("klkkk", meetData);
-          }
-        );
+        setMeetData((prevState: any) => [...prevState, ...res.data.content]);
+        setLoading(false);
       }
+      if (res.data.content.length === 0) {
+        setLoading(true);
+      }
+      console.log("meetData = ", meetData);
     },
     [pageNumber]
   );
@@ -88,12 +72,18 @@ const IndexPage = observer(() => {
     }
   }, [inView, loading]);
 
-  async function PostSearch(e: any) {
-    e.preventDefault();
+  useEffect(() => {
+    getParams();
+  }, [dosi, isOpened, content, meetingHost]);
 
-    let paramsString = `${
-      dosi !== "전체" ? `dosi=${dosi}` : ""
-    }&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
+  function getParams() {
+    let paramsString = "";
+
+    if (dosi !== "전체") {
+      paramsString = `dosi=${dosi}&isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
+    } else {
+      paramsString = `isOpened=${isOpened}&content=${content}&meetingHost=${meetingHost}`;
+    }
 
     // 필요없는 조회조건 제거
     if (content == "" || content === null) {
@@ -102,8 +92,22 @@ const IndexPage = observer(() => {
     if (meetingHost == "" || meetingHost === null) {
       paramsString = paramsString.replace(/&meetingHost=/g, "").trim();
     }
-    const d: any = await SearchMeetList(user, pageNumber, 20, paramsString);
-    setMeetData(d.data);
+
+    return setSearchInputC(paramsString);
+  }
+
+  async function PostSearch(e: any) {
+    e.preventDefault();
+    getParams();
+    setLoading(true);
+    let res: any = {};
+
+    res = await SearchMeetList(user, 0, 20, serachInputC);
+    setMeetData(res.data.content);
+    setLoading(false);
+    if (res.data.content.length === 0) {
+      setLoading(true);
+    }
   }
 
   const meetState = [
@@ -122,6 +126,7 @@ const IndexPage = observer(() => {
 
   const ChangeState = (value: string) => {
     setIsOpened(value);
+    console.log("setIsOpened", value);
   };
 
   const ChangeSearchRequirement = (value: string) => {

@@ -8,7 +8,10 @@ import Comment from "../../../../components/common/Comment";
 import * as theme from "../../../../styles/theme";
 import nullIcon from "../../../../assets/images/null.png";
 import pencil from "../../../../assets/images/pencil.png";
-
+import speech_bubble from "../../../../assets/images/speech_bubble.png";
+import heart from "../../../../assets/images/heart.png";
+import heart__fill from "../../../../assets/images/heart__fill.png";
+import { LikePost } from "../../../../services/postApi";
 import { timeBefore } from "../../../../lib/timeBefore";
 
 const Board = observer(({ meetingId, boardData }) => {
@@ -16,6 +19,8 @@ const Board = observer(({ meetingId, boardData }) => {
   const { modalStore } = useStores();
   const slider = useRef();
   const [sliderDot, setSliderDot] = useState([]);
+  const [like, setLike] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
     let arr;
@@ -38,6 +43,16 @@ const Board = observer(({ meetingId, boardData }) => {
     arr[data] = true;
     setSliderDot(arr);
   }
+
+  useEffect(() => {
+    console.log(boardData.isLiked);
+    if (boardData.isLiked == null) {
+      setLike(false);
+    } else {
+      setLike(boardData.isLiked);
+    }
+    setLikeCount(boardData.likeCnt);
+  }, [boardData, user]);
 
   function DotClickEvent(data) {
     slider.current.slickGoTo(data);
@@ -63,6 +78,16 @@ const Board = observer(({ meetingId, boardData }) => {
     }
   }
 
+  async function Like(postId, state) {
+    if (user != null && user.userAccessState === true) {
+      await LikePost(user, postId).then((e) => {
+        setLike(state);
+        console.log(e);
+        setLikeCount(e);
+      });
+    }
+  }
+
   return (
     <>
       {boardData != null &&
@@ -79,23 +104,40 @@ const Board = observer(({ meetingId, boardData }) => {
               <BoardTitle>{data.title}</BoardTitle>
               <SliderWrap>
                 <Slider {...settings} ref={slider}>
-                  {data.imgUrlList != null &&
-                    data.imgUrlList.map((image, index) => (
-                      <BoardListImage src={image} alt="image" key={index} />
+                  {boardData.imgUrlList != null &&
+                    boardData.imgUrlList.map((image) => (
+                      <BoardListImage src={image} alt="image" />
                     ))}
                 </Slider>
               </SliderWrap>
-              <SwiperToggle>
-                {data.imgUrlList != null && data.imgUrlList.length != 0
-                  ? sliderDot.map((value, index) => (
-                      <SwiperToggleDot
-                        key={index}
-                        state={value}
-                        onClick={() => DotClickEvent(index)}
-                      />
-                    ))
-                  : ""}
-              </SwiperToggle>
+              <BoardNav>
+                <IconWrapper>
+                  {like ? (
+                    <HeartIconImage
+                      src={heart__fill}
+                      onClick={() => Like(boardData.postId, false)}
+                    />
+                  ) : (
+                    <HeartIconImage
+                      src={heart}
+                      onClick={() => Like(boardData.postId, true)}
+                    />
+                  )}
+                  <IconImage src={speech_bubble} />
+                </IconWrapper>
+                <SwiperToggle>
+                  {boardData.imgUrlList != null &&
+                  boardData.imgUrlList.length != 0
+                    ? sliderDot.map((value, index) => (
+                        <SwiperToggleDot
+                          key={index}
+                          state={value}
+                          onClick={() => DotClickEvent(index)}
+                        />
+                      ))
+                    : ""}
+                </SwiperToggle>
+              </BoardNav>
               <Content>{data.content}</Content>
             </BoardContent>
             <Comment
@@ -226,6 +268,27 @@ const ContentImg = styled.div`
     box-sizing: border-box;
   }
   margin-bottom: 16px;
+`;
+
+const BoardNav = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 10px;
+`;
+const IconWrapper = styled.div`
+  width: 70px;
+  display: flex;
+`;
+
+const HeartIconImage = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+`;
+
+const IconImage = styled.img`
+  margin-right: 10px;
 `;
 
 const CreateButton = styled.div`

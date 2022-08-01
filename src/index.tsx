@@ -6,7 +6,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RootStore } from "./stores/RootStore";
-import { AuthProvider } from "./contexts/UserContext";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
@@ -19,9 +18,7 @@ root.render(
 	// <React.StrictMode>
 	<Router>
 		<StoreProvider store={rootstore}>
-			<AuthProvider>
-				<App />
-			</AuthProvider>
+			<App />
 			<GlobalStyle />
 		</StoreProvider>
 	</Router>

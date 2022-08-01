@@ -20,6 +20,8 @@ import { SearchPost } from "../../../services/postApi";
 import { UserContext } from "../../../contexts/UserContext";
 import { useInView } from "react-intersection-observer";
 
+import axios from "axios";
+
 const Wrapper = styled.div`
 	width: 100%;
 	height: 100%;

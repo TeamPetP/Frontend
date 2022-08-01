@@ -24,12 +24,14 @@ export const SearchMeetList = (
 	size: number,
 	urlParams: any
 ) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
 	return new Promise((resolve, reject) => {
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings?page=${page}&size=${size}&${urlParams}`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -44,13 +46,16 @@ export const SearchMeetList = (
 
 // 모임등록
 export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
+
 	return new Promise((resolve, reject) => {
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings`,
 				postRequestData,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -65,12 +70,15 @@ export const CreateMeet = (user: any, postRequestData: IPostRequestData) => {
 
 // 모임 단건 조회
 export const SearchMeet = (user: any, meetingId: number) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
+
 	return new Promise((resolve, reject) => {
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -90,12 +98,15 @@ export const EditMeet = (
 	postRequestData: IPostRequestData
 ) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+
 		axios
 			.put(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}`,
 				postRequestData,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -113,13 +124,14 @@ export const EditMeet = (
 export const JoinMeet = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
 		console.log("모임 가입요청", user, meetingId);
-
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}`,
 				null,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -136,11 +148,13 @@ export const JoinMeet = (user: any, meetingId: number) => {
 // 모임 가입취소 요청
 export const CancleJoinMeet = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.delete(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/cancel`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -157,11 +171,13 @@ export const CancleJoinMeet = (user: any, meetingId: number) => {
 // 모임 탈퇴 요청
 export const ResignMeet = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.delete(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/resign`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -183,11 +199,13 @@ export const GetBoardList = (
 	size: number
 ) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts?page=${page}&size=${size}`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -213,12 +231,14 @@ export const CreateBoardPost = (
 	postRequestData: IPostRequestData
 ) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts`,
 				postRequestData,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -234,12 +254,15 @@ export const CreateBoardPost = (
 // 모임 북마크등록
 export const AddBookmark = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingBookmarks`,
 				null,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -255,11 +278,13 @@ export const AddBookmark = (user: any, meetingId: number) => {
 // 모임 북마크취소
 export const CancleBookmark = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.delete(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/bookmark`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {
@@ -275,11 +300,14 @@ export const CancleBookmark = (user: any, meetingId: number) => {
 // 모임 사진첩 조회
 export const GetGallery = (user: any, meetingId: number) => {
 	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/images`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e: any) => {

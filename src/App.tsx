@@ -6,10 +6,11 @@ import MyPageRoutes from "./pages/MyPage/routes";
 import AuthRoutes from "./pages/Auth/routes";
 import Modal from "./modals";
 import "./App.css";
+import { AuthProvider } from "./contexts/UserContext";
 
 function App() {
 	return (
-		<>
+		<AuthProvider>
 			<Navbar />
 			<Routes>
 				<Route path="/*" element={<MainRoutes />} />
@@ -17,7 +18,7 @@ function App() {
 				<Route path="/auth/*" element={<AuthRoutes />} />
 			</Routes>
 			<Modal />
-		</>
+		</AuthProvider>
 	);
 }
 

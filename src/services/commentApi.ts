@@ -2,6 +2,8 @@ import axios from "axios";
 
 export const CreateComment = (user: any, postId: number, content: string) => {
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}/comments`,
@@ -9,7 +11,7 @@ export const CreateComment = (user: any, postId: number, content: string) => {
 					content: content,
 				},
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -25,6 +27,8 @@ export const CreateCommentReply = (
 	content: string
 ) => {
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}/comments/${commentId}`,
@@ -32,7 +36,7 @@ export const CreateCommentReply = (
 					content: content,
 				},
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -42,6 +46,8 @@ export const CreateCommentReply = (
 };
 
 export const EditComment = (user: any, commentId: number, content: string) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
 	axios
 		.put(
 			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
@@ -49,7 +55,7 @@ export const EditComment = (user: any, commentId: number, content: string) => {
 				content: content,
 			},
 			{
-				headers: user,
+				headers: user_regex,
 			}
 		)
 		.then((e) => {
@@ -58,11 +64,13 @@ export const EditComment = (user: any, commentId: number, content: string) => {
 };
 
 export const DeleteComment = (user: any, commentId: number) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
 	axios
 		.delete(
 			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
 			{
-				headers: user,
+				headers: user_regex,
 			}
 		)
 		.then((e) => {
@@ -73,11 +81,13 @@ export const DeleteComment = (user: any, commentId: number) => {
 export const SearchComment = (user: any, postId: number) => {
 	console.log(user, postId);
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/posts/${postId}/comments`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -87,11 +97,13 @@ export const SearchComment = (user: any, postId: number) => {
 };
 
 export const LikeComment = (user: any, commentId: number) => {
+	let user_regex = { ...user };
+	delete user_regex.userAccessState;
 	axios
 		.patch(
 			`${process.env.REACT_APP_SERVER_API_URL}/comments/${commentId}`,
 			{
-				headers: user,
+				headers: user_regex,
 			}
 		)
 		.then((e) => {
@@ -105,11 +117,13 @@ export const SearchMeetingBoardComment = (
 	meetingPostId: number
 ) => {
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostId}/meetingComments`,
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -126,6 +140,8 @@ export const CreateMeetingBoardCommentReply = (
 	content: string
 ) => {
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostId}/meetingComments/${meetingCommentId}`,
@@ -133,7 +149,7 @@ export const CreateMeetingBoardCommentReply = (
 					content: content,
 				},
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {
@@ -149,6 +165,8 @@ export const CreateMeetingBoardComment = (
 	content: string
 ) => {
 	return new Promise((resolve) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
 		axios
 			.post(
 				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostId}/meetingComments`,
@@ -156,7 +174,7 @@ export const CreateMeetingBoardComment = (
 					content: content,
 				},
 				{
-					headers: user,
+					headers: user_regex,
 				}
 			)
 			.then((e) => {

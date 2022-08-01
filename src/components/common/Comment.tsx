@@ -99,6 +99,7 @@ function Comment({
 	};
 
 	function UploadComment() {
+		console.log(user);
 		if (commentInputText != "") {
 			if (user != null && user.userAccessState) {
 				if (selectedComment != null) {
@@ -116,18 +117,11 @@ function Comment({
 						  ).then((e: any) => {
 								setCommentInputText("");
 								console.log(e);
-								if (e.statusText == "Created") {
-									SearchComment(user, postId).then(
-										(e: any) => {
-											console.log(e);
-											setData(
-												e.data
-													.commentRetrieveRespDtoList
-											);
-											setCommentLength(e.data.commentCnt);
-										}
-									);
-								}
+								SearchComment(user, postId).then((e: any) => {
+									console.log(e);
+									setData(e.data.commentRetrieveRespDtoList);
+									setCommentLength(e.data.commentCnt);
+								});
 						  })
 						: CreateMeetingBoardCommentReply(
 								user,
@@ -139,42 +133,33 @@ function Comment({
 								)
 						  ).then((e: any) => {
 								setCommentInputText("");
-								console.log(e);
-								if (e.statusText == "Created") {
-									SearchMeetingBoardComment(
-										user,
-										meetingId,
-										meetingPostId
-									).then((e: any) => {
-										console.log(e);
-										setCommentLength(e.data.commentCnt);
-										setData(
-											e.data
-												.meetingCommentRetrieveRespDtoList
-										);
-									});
-								}
+								SearchMeetingBoardComment(
+									user,
+									meetingId,
+									meetingPostId
+								).then((e: any) => {
+									console.log(e);
+									setCommentLength(e.data.commentCnt);
+									setData(
+										e.data.meetingCommentRetrieveRespDtoList
+									);
+								});
 						  });
 				} else {
 					clickedPage === "petpGram"
 						? CreateComment(user, postId, commentInputText).then(
 								(e: any) => {
 									setCommentInputText("");
-									console.log(e);
-									if (e.statusText == "Created") {
-										SearchComment(user, postId).then(
-											(e: any) => {
-												console.log(e);
-												setData(
-													e.data
-														.commentRetrieveRespDtoList
-												);
-												setCommentLength(
-													e.data.commentCnt
-												);
-											}
-										);
-									}
+									SearchComment(user, postId).then(
+										(e: any) => {
+											console.log(e);
+											setData(
+												e.data
+													.commentRetrieveRespDtoList
+											);
+											setCommentLength(e.data.commentCnt);
+										}
+									);
 								}
 						  )
 						: CreateMeetingBoardComment(
@@ -185,20 +170,17 @@ function Comment({
 						  ).then((e: any) => {
 								setCommentInputText("");
 								console.log(e);
-								if (e.statusText == "Created") {
-									SearchMeetingBoardComment(
-										user,
-										meetingId,
-										meetingPostId
-									).then((e: any) => {
-										console.log(e);
-										setCommentLength(e.data.commentCnt);
-										setData(
-											e.data
-												.meetingCommentRetrieveRespDtoList
-										);
-									});
-								}
+								SearchMeetingBoardComment(
+									user,
+									meetingId,
+									meetingPostId
+								).then((e: any) => {
+									console.log(e);
+									setCommentLength(e.data.commentCnt);
+									setData(
+										e.data.meetingCommentRetrieveRespDtoList
+									);
+								});
 						  });
 				}
 			}

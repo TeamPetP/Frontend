@@ -25,6 +25,9 @@ const EditMeeting = observer(() => {
   const originState: any = { state }.state;
   const [data, setData] = useState(originState.data);
 
+  useEffect(()=>{console.log(`모임 수정 state=${state}`);
+  },[])
+
   const uploadPhoto = useRef<any>("");
   const [meetingId, setMeetingId] = useState<number>(data.meetingId);
   const [title, setTitle] = useState<string>(data.title);

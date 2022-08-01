@@ -15,26 +15,16 @@ const MyMeetList = ({ data }: any) => {
   const { user } = useContext(UserContext);
   const [category, setCategory] = useState("");
 
+  // 수정하기
   const editMeet = () => {
     navigate(`/meeting/edit`, {
       state: { data },
     });
   };
 
+  // 참여자 관리
   const management = (id: Number) => {
-    navigate(`/mypage/participants/meetingId=${id}`);
-  };
-
-  const goMeetInfo = (id: Number) => {
-    navigate(`/meeting/detail/${id}`);
-  };
-
-  const leaveMeet = (id: Number) => {
-    console.log(`탈퇴하기`);
-  };
-
-  const cancleParticipation = (id: Number) => {
-    console.log(`참여취소`);
+    navigate(`/mypage/participants/${id}`);
   };
 
   // 참여자 목록 보기
@@ -104,44 +94,19 @@ const MyMeetList = ({ data }: any) => {
       {userStore.getMemberId === data.memberId && (
         <SpaceBetween>
           <Button
-            to={`/mypage/participants/meetingId=${data.meetingId}`}
+            onClick={()=>editMeet()}
             width="calc(50% - 5px)"
           >
-            {" "}
             수정하기
           </Button>
           <Button
-            to={`/mypage/participants/${data.meetingId}`}
+            onClick={()=>management(data.meetingId)}
             width="calc(50% - 5px)"
           >
-            {" "}
             참여자 관리
           </Button>
         </SpaceBetween>
       )}
-      {/* 일반 모임 참여자일 때 */}
-      {/* {userStore.getMemberId !== data.memberId && data.isJoined === true && (
-        <SpaceBetween>
-          <Button
-            width="calc(50% - 5px)"
-            onClick={() => goMeetInfo(data.meetingId)}
-          >
-            모임으로 이동
-          </Button>
-          <Button
-            width="calc(50% - 5px)"
-            onClick={() => leaveMeet(data.meetingId)}
-          >
-            탈퇴하기
-          </Button>
-        </SpaceBetween>
-      )} */}
-      {/* 모임 참여신청자일 때 (승인 전) */}
-      {/*  {userStore.getMemberId !== data.memberId && data.isJoined === false && (
-        <Button width="100%" onClick={() => cancleParticipation(1)}>
-          참여 취소
-        </Button>
-      )} */}
     </Wrapper>
   );
 };
@@ -193,7 +158,7 @@ const SpaceBetween = styled.div`
   align-items: center;
 `;
 
-const Button = styled(Link)`
+const Button = styled.button`
   color: #575757;
   border: 1px solid #c9c9c9;
   border-radius: 3px;

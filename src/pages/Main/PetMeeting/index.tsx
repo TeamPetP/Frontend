@@ -58,7 +58,12 @@ const IndexPage = observer(() => {
 	);
 
 	useEffect(() => {
-		getItems(false);
+    if(user && user.userAccessState) {
+      getItems(true, user);
+    }else{
+      getItems(false);
+    }
+		
 	}, [getItems]);
 
 	useEffect(() => {
@@ -205,19 +210,11 @@ const IndexPage = observer(() => {
 						<MeetWrap key={idx}>
 							{meetData.length - 1 == idx ? (
 								<div ref={ref}>
-									<MeetList
-										key={e.meetingId}
-										data={e}
-										fetchData={() => getItems(true, user)}
-									/>
+									<MeetList key={e.meetingId} data={e} />
 								</div>
 							) : (
 								<div>
-									<MeetList
-										key={e.meetingId}
-										data={e}
-										fetchData={() => getItems(true, user)}
-									/>
+									<MeetList key={e.meetingId} data={e} />
 								</div>
 							)}
 						</MeetWrap>

@@ -20,25 +20,29 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 			notiType = "댓글";
 			notiMsg = `${data.nickname}님이 댓글을 남겼습니다.`;
 			break;
-		case "reply":
-			notiType = "대댓글";
-			notiMsg = `${data.nickname}님이 대댓글을 남겼습니다.`;
-			break;
-		case "closeMeet":
+		case "meetingCommentWrite":
 			notiType = "모임";
-			notiMsg = `${data.postTitle}의 모집 마감이 하루 남았습니다!`;
-			break;
-		case "postLike":
-			notiType = "좋아요";
-			notiMsg = `${data.nickname}님이 좋아요를 남겼습니다.`;
+			notiMsg = `${data.nickname}님이 모임 게시물에 댓글을 남겼습니다.`;
 			break;
 		case "meetingJoinApproved":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임에 가입하였습니다.`;
+			notiMsg = `${data.nickname}님이 모임에 승인되셨습니다.`;
+			break;
+		case "meetingJoinDeclined":
+			notiType = "모임";
+			notiMsg = `${data.nickname}님이 모임에 거절되셨습니다.`;
 			break;
 		case "meetingJoinedRequest":
 			notiType = "모임";
 			notiMsg = `${data.nickname}님이 모임에 가입신청을 하였습니다.`;
+			break;
+		case "meetingPostWrite":
+			notiType = "모임";
+			notiMsg = `${data.nickname}님이 모임에 글이 올라왔습니다.`;
+			break;
+		case "postLike":
+			notiType = "게시판";
+			notiMsg = `${data.nickname}님의 게시판에 좋아요가 달렸습니다.`;
 			break;
 		default:
 			notiType = "";

@@ -32,6 +32,14 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 			notiType = "좋아요";
 			notiMsg = `${data.nickname}님이 좋아요를 남겼습니다.`;
 			break;
+		case "meetingJoinApproved":
+			notiType = "모임";
+			notiMsg = `${data.nickname}님이 모임에 가입하였습니다.`;
+			break;
+		case "meetingJoinedRequest":
+			notiType = "모임";
+			notiMsg = `${data.nickname}님이 모임에 가입신청을 하였습니다.`;
+			break;
 		default:
 			notiType = "";
 			notiMsg = "";

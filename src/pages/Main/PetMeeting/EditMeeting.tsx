@@ -193,7 +193,7 @@ const EditMeeting = observer(() => {
 				<Distance top={0} bottom={30}>
 					<ContentName inputTitle="참여자 모집" />
 					<RadioWrap>
-						{meetingState.map((value) => (
+						{meetingState?.map((value) => (
 							<>
 								<Radio
 									type="radio"
@@ -230,7 +230,7 @@ const EditMeeting = observer(() => {
 							onChange={(e) => changeCategory(e.target.value)}
 							value={category}
 						>
-							{meetCategory.map((c) => (
+							{meetCategory?.map((c) => (
 								<option key={c.value} value={c.value}>
 									{c.name}
 								</option>
@@ -283,7 +283,7 @@ const EditMeeting = observer(() => {
 							onChange={(e) => changedoNm(e.target.value)}
 							value={address.doNm}
 						>
-							{sido.map((s) => (
+							{sido?.map((s) => (
 								<option key={s.value} value={s.value}>
 									{s.name}
 								</option>
@@ -296,7 +296,7 @@ const EditMeeting = observer(() => {
 							value={address.sigunguNm}
 						>
 							{address.doNm ? (
-								sigungu[address.doNm].map(
+								sigungu[address.doNm]?.map(
 									(sigunguNm: string, index: any) => (
 										<option key={index} value={sigunguNm}>
 											{sigunguNm}
@@ -327,7 +327,7 @@ const EditMeeting = observer(() => {
 				<Distance top={0} bottom={0}>
 					<ContentName inputTitle="날짜 및 시간" />
 					<RadioWrap>
-						{meetingType.map((value) => (
+						{meetingType?.map((value) => (
 							<>
 								<Radio
 									type="radio"
@@ -369,7 +369,7 @@ const EditMeeting = observer(() => {
 				<Distance top={0} bottom={0}>
 					<ContentName inputTitle="인원" />
 					<RadioWrap>
-						{personnel.map((value) => (
+						{personnel?.map((value) => (
 							<>
 								<Radio
 									type="radio"
@@ -400,7 +400,7 @@ const EditMeeting = observer(() => {
 				<Distance top={0} bottom={40}>
 					<ContentName inputTitle="성별" />
 					<RadioWrap>
-						{gender.map((value) => (
+						{gender?.map((value) => (
 							<>
 								<Radio
 									type="radio"

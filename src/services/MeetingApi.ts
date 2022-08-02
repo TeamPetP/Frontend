@@ -302,3 +302,86 @@ export const GetGallery = (user: any, meetingId: number) => {
 			});
 	});
 };
+
+interface IEditMeetingBoard {
+	content: string;
+	imgUrlList: any;
+	title: string;
+}
+export const EditMeetingBoard = (
+	user: any,
+	meetingId: number,
+	meetingPostid: number,
+	data: IEditMeetingBoard
+) => {
+	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+		console.log(user, meetingId);
+		axios
+			.put(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostid}`,
+				data,
+				{
+					headers: user_regex,
+				}
+			)
+			.then((e: any) => {
+				console.log(e);
+				resolve(e);
+			})
+			.catch((e) => {
+				reject(e);
+			});
+	});
+};
+
+export const DeleteMeetingBoard = (
+	user: any,
+	meetingId: number,
+	meetingPostId: number
+) => {
+	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+
+		axios
+			.delete(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostId}`,
+				{
+					headers: user_regex,
+				}
+			)
+			.then((e: any) => {
+				resolve(e);
+			})
+			.catch((e) => {
+				reject(e);
+			});
+	});
+};
+
+export const SearchDetailPost = (
+	user: any,
+	meetingId: number,
+	meetingPostId: number
+) => {
+	return new Promise((resolve, reject) => {
+		let user_regex = { ...user };
+		delete user_regex.userAccessState;
+
+		axios
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}/meetings/${meetingId}/meetingPosts/${meetingPostId}`,
+				{
+					headers: user_regex,
+				}
+			)
+			.then((e: any) => {
+				resolve(e);
+			})
+			.catch((e) => {
+				reject(e);
+			});
+	});
+};

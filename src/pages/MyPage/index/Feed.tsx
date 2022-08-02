@@ -146,6 +146,8 @@ const Wrapper = styled.div`
 	padding: 0 20px;
 
 	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
 	flex-wrap: wrap;
 `;
 
@@ -181,16 +183,17 @@ const NullWrapper = styled.div`
 	align-items: center;
 	flex-direction: column;
 
+	width: 100%;
 	height: calc(100% - 180px);
 	margin: 20px 0px;
 	& > div {
-		margin-top: 20px;
-		margin-bottom: 40px;
+		margin: 20px auto 40px auto;
 		font-family: "yg-jalnan";
 
 		font-size: 28px;
 	}
 	& > img {
+		margin: 0 auto;
 		width: 100%;
 	}
 `;

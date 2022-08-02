@@ -11,18 +11,21 @@ import pencil from "../../../../assets/images/pencil.png";
 import speech_bubble from "../../../../assets/images/speech_bubble.png";
 import heart from "../../../../assets/images/heart.png";
 import heart__fill from "../../../../assets/images/heart__fill.png";
-import { LikePost } from "../../../../services/postApi";
+import { DeleteMeetingBoard } from "../../../../services/MeetingApi";
 import { timeBefore } from "../../../../lib/timeBefore";
+import { useNavigate } from "react-router";
 
 const Board = observer(({ meetingId, boardData }) => {
+	const navigate = useNavigate();
 	const { user } = useContext(UserContext);
 	const { modalStore } = useStores();
 	const slider = useRef();
 	const [sliderDot, setSliderDot] = useState([]);
 	const [like, setLike] = useState(false);
 	const [likeCount, setLikeCount] = useState(0);
-
 	useEffect(() => {
+		console.log("board", boardData);
+
 		let arr;
 		(arr = []).length =
 			slider.current != undefined && slider.current.props.children
@@ -31,6 +34,7 @@ const Board = observer(({ meetingId, boardData }) => {
 		arr.fill(false);
 		arr[0] = true;
 
+		console.log(arr);
 		setSliderDot(arr);
 	}, []);
 
@@ -78,12 +82,16 @@ const Board = observer(({ meetingId, boardData }) => {
 		}
 	}
 
-	async function Like(postId, state) {
-		if (user != null && user.userAccessState === true) {
-			await LikePost(user, postId).then((e) => {
-				setLike(state);
-				setLikeCount(e);
-			});
+	function EditPost(meetingId, meetingPostId) {
+		modalStore.petMeetingEditId = meetingId;
+		modalStore.petMeetingEditPostId = meetingPostId;
+		modalStore.editPetMeetingBoardState = true;
+	}
+	async function DeletePostEvent(meetingId, meetingPostId) {
+		const dd = await DeleteMeetingBoard(user, meetingId, meetingPostId);
+		if (dd.status === 204) {
+			window.location.href = `/meeting/detail?id=${meetingId}`;
+			// 안되면, props Event 처리
 		}
 	}
 
@@ -93,20 +101,48 @@ const Board = observer(({ meetingId, boardData }) => {
 				boardData.map((data) => (
 					<Meeting key={data.meetingPostId}>
 						<Creator>
-							<CreatorThumbnail src={data.memberImgUrl} />
-							<div>
-								<Nickname>{data.nickname}</Nickname>
-								<CreateTime>
-									{timeBefore(data.createdDate)}
-								</CreateTime>
-							</div>
+							<Flex>
+								<CreatorThumbnail src={data.memberImgUrl} />
+								<div>
+									<Nickname>{data.nickname}</Nickname>
+									<CreateTime>
+										{timeBefore(data.createdDate)}
+									</CreateTime>
+								</div>
+							</Flex>
+							{data.owner ? (
+								<BoardOnwerSetting>
+									<span
+										onClick={() =>
+											EditPost(
+												data.meetingId,
+												data.meetingPostId
+											)
+										}
+									>
+										수정
+									</span>
+									<span
+										onClick={() =>
+											DeletePostEvent(
+												data.meetingId,
+												data.meetingPostId
+											)
+										}
+									>
+										삭제
+									</span>
+								</BoardOnwerSetting>
+							) : (
+								""
+							)}
 						</Creator>
 						<BoardContent>
 							<BoardTitle>{data.title}</BoardTitle>
 							<SliderWrap>
 								<Slider {...settings} ref={slider}>
-									{boardData.imgUrlList != null &&
-										boardData.imgUrlList.map((image) => (
+									{data.imgUrlList != undefined &&
+										data.imgUrlList.map((image) => (
 											<BoardListImage
 												src={image}
 												alt="image"
@@ -115,27 +151,9 @@ const Board = observer(({ meetingId, boardData }) => {
 								</Slider>
 							</SliderWrap>
 							<BoardNav>
-								<IconWrapper>
-									{like ? (
-										<HeartIconImage
-											src={heart__fill}
-											onClick={() =>
-												Like(boardData.postId, false)
-											}
-										/>
-									) : (
-										<HeartIconImage
-											src={heart}
-											onClick={() =>
-												Like(boardData.postId, true)
-											}
-										/>
-									)}
-									<IconImage src={speech_bubble} />
-								</IconWrapper>
 								<SwiperToggle>
-									{boardData.imgUrlList != null &&
-									boardData.imgUrlList.length != 0
+									{data.imgUrlList != null &&
+									data.imgUrlList.length != 0
 										? sliderDot.map((value, index) => (
 												<SwiperToggleDot
 													key={index}
@@ -179,6 +197,10 @@ const Board = observer(({ meetingId, boardData }) => {
 
 export default Board;
 
+const Flex = styled.div`
+	display: flex;
+	align-items: center;
+`;
 const Meeting = styled.div`
 	padding: 10px 20px;
 	background-color: #fff;
@@ -194,9 +216,10 @@ const Meeting = styled.div`
 
 const Creator = styled.div`
 	display: flex;
-	justify-content: start;
+	justify-content: space-between;
 	align-items: center;
 	padding: 20px 0;
+
 	box-sizing: border-box;
 
 	@media screen and (max-width: 600px) {
@@ -418,5 +441,17 @@ const NullWrapper = styled.div`
 	}
 	& > img {
 		width: 100%;
+	}
+`;
+const BoardOnwerSetting = styled.div`
+	display: flex;
+
+	& > span {
+		color: #555555;
+		font-size: 18px;
+
+		margin-left: 14px;
+
+		cursor: pointer;
 	}
 `;

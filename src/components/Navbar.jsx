@@ -101,24 +101,34 @@ const Navbar = observer(() => {
 							<BackBtn onClick={handleMenuClick} />
 						</TitleArea>
 						<MobileMenuList>
-							<Menu to="/" selected={pathname === "/"}>
+							<Menu
+								to="/"
+								selected={pathname === "/"}
+								onClick={() => setMenuClick(false)}
+							>
 								펫피그램
 							</Menu>
 							<Menu
 								to="/meeting"
 								selected={pathname === "/meeting"}
+								onClick={() => setMenuClick(false)}
 							>
 								펫미팅
 							</Menu>
 							<UserMenu>
 								{user != null && user.userAccessState ? (
 									<>
-										<MobileBtn to="/mypage" PrimaryColor>
+										<MobileBtn
+											to="/mypage"
+											PrimaryColor
+											onClick={() => setMenuClick(false)}
+										>
 											마이페이지
 										</MobileBtn>
 										<MobileLoginBtn
 											onClick={() => {
 												signOut();
+												setMenuClick(false);
 												window.location.href = "/";
 											}}
 										>

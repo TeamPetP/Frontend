@@ -26,9 +26,16 @@ const DetailPage = observer(() => {
 
 	useEffect(() => {
 		async function fetchData() {
-			const dd: any = await GetBoardList(user, meetingId, pageNumber, 20);
+			const dd: any = await GetBoardList(
+				user,
+				meetingId,
+				pageNumber,
+				2000
+			);
 
 			setBoardData(dd.data.content);
+
+			console.log(dd.data.content);
 		}
 		fetchData();
 	}, [user]);

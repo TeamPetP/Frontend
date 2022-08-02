@@ -25,7 +25,11 @@ const MyMeetList = ({ data }: any) => {
 	// 참여자 관리
 	const management = (id: Number) => {
 		navigate(`/mypage/participants/${id}`);
-	};
+  };
+  
+  const meetingRouteEvent = (id: Number) =>[
+    navigate(`/meeting/detail?id=${id}`)
+  ]
 
 	// 참여자 목록 보기
 	const ViewMembers = () => {
@@ -97,18 +101,26 @@ const MyMeetList = ({ data }: any) => {
 			</Member>
 			{/* 모임 개설자일 때 */}
 			{userStore.getMemberId === data.memberId && (
-				<SpaceBetween>
-					<Button onClick={() => editMeet()} width="calc(50% - 5px)">
-						수정하기
-					</Button>
-					<Button
-						onClick={() => management(data.meetingId)}
-						width="calc(50% - 5px)"
-					>
-						참여자 관리
-					</Button>
-				</SpaceBetween>
+				<>
+					<SpaceBetween>
+						<Button
+							onClick={() => editMeet()}
+							width="calc(50% - 5px)"
+						>
+							수정하기
+						</Button>
+						<Button
+							onClick={() => management(data.meetingId)}
+							width="calc(50% - 5px)"
+						>
+							참여자 관리
+						</Button>
+					</SpaceBetween>
+				</>
 			)}
+			<Button onClick={() => meetingRouteEvent(data.meetingId)} width="100%">
+				모임 정보
+			</Button>
 		</Wrapper>
 	);
 };

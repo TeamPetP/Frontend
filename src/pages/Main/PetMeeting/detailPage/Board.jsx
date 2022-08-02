@@ -24,10 +24,10 @@ const Board = observer(({ meetingId, boardData }) => {
 
 	useEffect(() => {
 		let arr;
-
-		(arr = []).length = slider.current.props.children
-			? slider.current.props.children.length
-			: 0;
+		(arr = []).length =
+			slider.current != undefined && slider.current.props.children
+				? slider.current.props.children.length
+				: 0;
 		arr.fill(false);
 		arr[0] = true;
 
@@ -36,9 +36,10 @@ const Board = observer(({ meetingId, boardData }) => {
 
 	function setActiveSlide(data) {
 		let arr;
-		(arr = []).length = slider.current.props.children
-			? slider.current.props.children.length
-			: 0;
+		(arr = []).length =
+			slider.current != undefined && slider.current.props.children
+				? slider.current.props.children.length
+				: 0;
 		arr.fill(false);
 		arr[data] = true;
 		setSliderDot(arr);

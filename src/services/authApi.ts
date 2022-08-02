@@ -111,7 +111,7 @@ export const MyLikePost = (user: any, page: number, size: number) => {
 };
 
 // 회원이 가입한 모임 조회
-export const MyMeeting = (user: any, page: number, size: number) => {
+export const MyMeeting = (user: any) => {
 	return new Promise((resolve, reject) => {
 		let user_regex = { ...user };
 		delete user_regex.userAccessState;
@@ -132,7 +132,7 @@ export const MyMeeting = (user: any, page: number, size: number) => {
 };
 
 // 회원이 가입신청한 모임 조회
-export const MyMeetingWait = (user: any, page: number, size: number) => {
+export const MyMeetingWait = (user: any) => {
 	return new Promise((resolve, reject) => {
 		let user_regex = { ...user };
 		delete user_regex.userAccessState;

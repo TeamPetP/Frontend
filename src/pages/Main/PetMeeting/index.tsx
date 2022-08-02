@@ -208,7 +208,7 @@ const IndexPage = observer(() => {
 									<MeetList
 										key={e.meetingId}
 										data={e}
-										fetchData={getItems}
+										fetchData={() => getItems(true, user)}
 									/>
 								</div>
 							) : (
@@ -216,7 +216,7 @@ const IndexPage = observer(() => {
 									<MeetList
 										key={e.meetingId}
 										data={e}
-										fetchData={getItems}
+										fetchData={() => getItems(true, user)}
 									/>
 								</div>
 							)}

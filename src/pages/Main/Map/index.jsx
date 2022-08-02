@@ -170,8 +170,6 @@ const IndexPage = observer(() => {
 		};
 
 		let map = new window.kakao.maps.Map(container, options);
-
-		console.log("loading kakaomap");
 	}, []);
 	return (
 		<Wrapper>

@@ -29,7 +29,6 @@ function CommentReply({ data }: any) {
 		e.preventDefault();
 		setIShowReplyList(!isShowReplyList);
 	};
-	console.log(data);
 	return (
 		<>
 			{data.childComment.length != 0 ? (
@@ -88,7 +87,6 @@ function Comment({
 	}, []);
 
 	function clickReplyEvent(data: any) {
-		console.log(data);
 		setSelectedComment(data);
 		setCommentInputText(data.nickName + " ");
 	}
@@ -99,13 +97,9 @@ function Comment({
 	};
 
 	function UploadComment() {
-		console.log(user);
 		if (commentInputText != "") {
 			if (user != null && user.userAccessState) {
 				if (selectedComment != null) {
-					console.log(
-						commentInputText.slice(selectedComment.nickName.length)
-					);
 					clickedPage === "petpGram"
 						? CreateCommentReply(
 								user,
@@ -116,9 +110,7 @@ function Comment({
 								)
 						  ).then((e: any) => {
 								setCommentInputText("");
-								console.log(e);
 								SearchComment(user, postId).then((e: any) => {
-									console.log(e);
 									setData(e.data.commentRetrieveRespDtoList);
 									setCommentLength(e.data.commentCnt);
 								});
@@ -138,7 +130,6 @@ function Comment({
 									meetingId,
 									meetingPostId
 								).then((e: any) => {
-									console.log(e);
 									setCommentLength(e.data.commentCnt);
 									setData(
 										e.data.meetingCommentRetrieveRespDtoList
@@ -152,7 +143,6 @@ function Comment({
 									setCommentInputText("");
 									SearchComment(user, postId).then(
 										(e: any) => {
-											console.log(e);
 											setData(
 												e.data
 													.commentRetrieveRespDtoList
@@ -169,13 +159,11 @@ function Comment({
 								commentInputText
 						  ).then((e: any) => {
 								setCommentInputText("");
-								console.log(e);
 								SearchMeetingBoardComment(
 									user,
 									meetingId,
 									meetingPostId
 								).then((e: any) => {
-									console.log(e);
 									setCommentLength(e.data.commentCnt);
 									setData(
 										e.data.meetingCommentRetrieveRespDtoList
@@ -188,16 +176,13 @@ function Comment({
 	}
 
 	useEffect(() => {
-		console.log("펫미팅 실행");
 		clickedPage === "petpGram"
 			? SearchComment(user, postId).then((e: any) => {
-					console.log(e);
 					setCommentLength(e.data.commentCnt);
 					setData(e.data.commentRetrieveRespDtoList);
 			  })
 			: SearchMeetingBoardComment(user, meetingId, meetingPostId).then(
 					(e: any) => {
-						console.log("SearchMeetingBoardComment", e);
 						setCommentLength(e.data.commentCnt);
 						setData(e.data.meetingCommentRetrieveRespDtoList);
 					}

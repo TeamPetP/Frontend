@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }: any) => {
 	};
 
 	useEffect(() => {
-		console.log("handle2");
 		// 토큰을 가져온다.
 		// Header에 인증 정보 추가
 		// defaultHeaders.Authorization = `Bearer ${firebaseUser}`;
@@ -33,7 +32,6 @@ export const AuthProvider = ({ children }: any) => {
 			})
 			.then((res: any) => {
 				// 로그인 성공시 user를 넘겨줌
-				console.log("Result", res);
 				userStore.info = res.data;
 				setUser({
 					...defaultHeaders,
@@ -43,7 +41,6 @@ export const AuthProvider = ({ children }: any) => {
 				modalStore.signInState = false;
 			})
 			.catch((e) => {
-				console.log("Result_Err", e, e.response);
 				if (e.response?.data.code === "USER_NOT_FOUND") {
 					setUser({
 						...defaultHeaders,
@@ -59,7 +56,6 @@ export const AuthProvider = ({ children }: any) => {
 
 	useEffect(() => {
 		auth.onAuthStateChanged(async (firebaseUser: any) => {
-			console.log("Auth CHange");
 			if (firebaseUser) {
 				const token = await firebaseUser.getIdToken(true);
 				setFirebaseUser(token);

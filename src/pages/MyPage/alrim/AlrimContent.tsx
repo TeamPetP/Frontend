@@ -15,8 +15,6 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 	let notiType = "";
 	let notiMsg = "";
 
-	console.log(data);
-
 	switch (data.notificationType) {
 		case "commentWrite":
 			notiType = "댓글";

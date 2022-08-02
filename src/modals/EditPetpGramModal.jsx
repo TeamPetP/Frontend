@@ -139,9 +139,6 @@ function EditPetpGramModal(props) {
 		if (uploadPhoto.current.files.length !== 0) {
 			const reader = new FileReader();
 			// reader가 이미지 읽도록 하기
-			reader.onload = (e) => {
-				console.log(e, e.target.type);
-			};
 			setImageFile([...imageFile, uploadPhoto.current.files[0]]);
 			const data = await AwsS3([uploadPhoto.current.files[0]]);
 			setImage([...image, ...data]);
@@ -169,11 +166,6 @@ function EditPetpGramModal(props) {
 					""
 				);
 			}
-			console.log(tag, {
-				content: cText,
-				tagList: tag,
-				imgUrlList: [...image],
-			});
 
 			const editPostData = await EditPost(
 				user,
@@ -184,7 +176,6 @@ function EditPetpGramModal(props) {
 					imgUrlList: image,
 				}
 			);
-			console.log(editPostData);
 			if (editPostData.status == 200) {
 				window.location.href = "/";
 			}
@@ -193,7 +184,6 @@ function EditPetpGramModal(props) {
 
 	useEffect(() => {
 		SearchDetailPost(user, modalStore.getPetPGramPostIdState).then((e) => {
-			console.log("Test", e);
 			let regexText = "";
 			for (let i = 0; i < e.data.tagList.length; i++) {
 				regexText += "#" + e.data.tagList[i] + " ";

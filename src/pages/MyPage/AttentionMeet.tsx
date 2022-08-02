@@ -46,9 +46,7 @@ const AttentionMeetPage = observer(() => {
 
 	useEffect(() => {
 		async function fetchData() {
-			console.log("test", user);
 			const d: any = await MyBookmarkPetpMetting(user);
-			console.log("Daatㅇa", d.data.content);
 			setPetPListData(() => d.data.content);
 		}
 		fetchData();

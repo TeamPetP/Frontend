@@ -25,7 +25,6 @@ const IndexPage = observer(() => {
 	useEffect(() => {
 		async function fetchInfoData() {
 			const info: any = await InfoData(user);
-			console.log("마이페이지의 info", info);
 			setInfo(info.data);
 		}
 		fetchInfoData();

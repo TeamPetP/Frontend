@@ -79,7 +79,6 @@ export const DeleteComment = (user: any, commentId: number) => {
 };
 
 export const SearchComment = (user: any, postId: number) => {
-	console.log(user, postId);
 	return new Promise((resolve) => {
 		let user_regex = { ...user };
 		delete user_regex.userAccessState;

@@ -53,8 +53,6 @@ const Navbar = observer(() => {
 	};
 
 	window.addEventListener("resize", deviceSizeCheck);
-
-	console.log("adadaaad", pathname);
 	return (
 		<>
 			<NavWrap>
@@ -89,7 +87,6 @@ const Navbar = observer(() => {
 								<LoginBtn
 									onClick={() => {
 										modalStore.signInState = true;
-										console.log("sfsfsf", user);
 									}}
 								>
 									로그인

@@ -9,13 +9,6 @@ export const SignUp = (
 	closeEvent: any,
 	setUserInfo: any
 ) => {
-	console.log(
-		{
-			nickname: nickname,
-			introduce: introduce,
-		},
-		user
-	);
 	let user_regex = { ...user };
 	delete user_regex.userAccessState;
 	axios
@@ -31,44 +24,32 @@ export const SignUp = (
 		)
 		.then((e) => {
 			setUser({ ...user_regex, userAccessState: true });
-			console.log("test", e.data);
 			setUserInfo(e.data);
 			closeEvent();
-		})
-		.catch((e) => {
-			console.log(e);
 		});
 };
 
 export const EditProfile = (user: any, nickname: string, introduce: string) => {
 	let user_regex = { ...user };
 	delete user_regex.userAccessState;
-	axios
-		.patch(
-			`${process.env.REACT_APP_SERVER_API_URL}/members/me`,
-			{
-				nickname: nickname,
-				introduce: introduce,
-			},
-			{
-				headers: user_regex,
-			}
-		)
-		.then((e) => {
-			console.log(e);
-		});
+	axios.patch(
+		`${process.env.REACT_APP_SERVER_API_URL}/members/me`,
+		{
+			nickname: nickname,
+			introduce: introduce,
+		},
+		{
+			headers: user_regex,
+		}
+	);
 };
 
 export const DeleteAuth = (user: any) => {
 	let user_regex = { ...user };
 	delete user_regex.userAccessState;
-	axios
-		.delete(`${process.env.REACT_APP_SERVER_API_URL}/members/me`, {
-			headers: user_regex,
-		})
-		.then((e) => {
-			console.log(e);
-		});
+	axios.delete(`${process.env.REACT_APP_SERVER_API_URL}/members/me`, {
+		headers: user_regex,
+	});
 };
 
 // 회원의 알림, 내 모임, 관심모임 갯수
@@ -81,11 +62,9 @@ export const InfoData = (user: any) => {
 				headers: user_regex,
 			})
 			.then((e) => {
-				console.log("/members/me/info", e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -104,11 +83,9 @@ export const MyPost = (user: any, page: number, size: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -117,7 +94,6 @@ export const MyLikePost = (user: any, page: number, size: number) => {
 	return new Promise((resolve, reject) => {
 		let user_regex = { ...user };
 		delete user_regex.userAccessState;
-		console.log("user = ", user_regex);
 		axios
 			.get(
 				`${process.env.REACT_APP_SERVER_API_URL}/members/me/likes?page=${page}&size=${size}`,
@@ -126,11 +102,9 @@ export const MyLikePost = (user: any, page: number, size: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -149,11 +123,9 @@ export const MyMeeting = (user: any, page: number, size: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -172,11 +144,9 @@ export const MyMeetingWait = (user: any, page: number, size: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -196,7 +166,6 @@ export const MyMeetingWaitList = (user: any, meetingId: number) => {
 			)
 			.then((e) => {
 				resolve(e);
-				console.log(e);
 			});
 	});
 };
@@ -214,11 +183,9 @@ export const MyBookmark = (user: any, page: number, size: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -237,11 +204,9 @@ export const MyBookmarkPetpMetting = (user: any) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -279,7 +244,6 @@ export const MyMeetWaitPartiList = (user: any, meetingId: number) => {
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -303,11 +267,9 @@ export const AcceptJoinMeet = (
 				}
 			)
 			.then((e: any) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -330,11 +292,9 @@ export const RefuseJoinMeet = (
 				}
 			)
 			.then((e: any) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});
@@ -353,11 +313,9 @@ export const ExileMeet = (user: any, meetingId: number, memberId: number) => {
 				}
 			)
 			.then((e: any) => {
-				console.log(e);
 				resolve(e);
 			})
 			.catch((e) => {
-				console.log(e.response);
 				reject(e);
 			});
 	});

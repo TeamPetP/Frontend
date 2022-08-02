@@ -18,12 +18,10 @@ const MyMeetPage = observer(() => {
 	useEffect(() => {
 		async function fetchMeetData() {
 			const d: any = await MyMeeting(user, 0, 20);
-			console.log("내 참여중 모임 정보", d);
 			setMeetData(d.data.content);
 		}
 		async function fetchWaitData() {
 			const d: any = await MyMeetingWait(user, 0, 20);
-			console.log("내 신청중 모임 정보", d);
 			setWaitData(d.data.content);
 		}
 		fetchMeetData();

@@ -14,7 +14,6 @@ function Modal({ visible, children, width, closeVisible }: IModalType) {
 			<ModalWrapper visible={visible}>
 				<ModalOverlay
 					onClick={() => {
-						console.log("test");
 						closeVisible();
 					}}
 				/>

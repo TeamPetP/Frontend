@@ -135,7 +135,6 @@ function CreatePetpGramModal(props) {
 	async function Create() {
 		if (text != "") {
 			const data = await AwsS3(imageFile);
-			console.log(data);
 
 			let cText = text;
 
@@ -154,12 +153,6 @@ function CreatePetpGramModal(props) {
 					""
 				);
 			}
-			console.log(tag, {
-				content: cText,
-				tagList: tag,
-				imgUrlList: data,
-			});
-
 			const createPostData = await CreatePost(user, {
 				content: cText,
 				tagList: tag,
@@ -175,12 +168,10 @@ function CreatePetpGramModal(props) {
 			const reader = new FileReader();
 			// 이미지가 로드가 된 경우
 			reader.onload = (e) => {
-				console.log(e, e.target.type);
 				setImage([...image, e.target.result]);
 			};
 			// reader가 이미지 읽도록 하기
 			setImageFile([...imageFile, uploadPhoto.current.files[0]]);
-			console.log(uploadPhoto.current.files[0]);
 			reader.readAsDataURL(uploadPhoto.current.files[0]);
 		}
 	}

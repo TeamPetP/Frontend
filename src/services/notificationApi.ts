@@ -13,7 +13,6 @@ export const SearchAlrim = (user: any) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			});
 	});
@@ -34,7 +33,6 @@ export const CheckedAllAlrim = (user: any) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			});
 	});
@@ -55,7 +53,6 @@ export const CheckedAlrim = (user: any, notificationId: number) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			});
 	});
@@ -75,7 +72,6 @@ export const DeleteAllAlrim = (user: any) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			});
 	});
@@ -95,7 +91,6 @@ export const DeleteAlrim = (user: any, notificationId: number) => {
 				}
 			)
 			.then((e) => {
-				console.log("Sf", e);
 				resolve(e);
 			});
 	});
@@ -115,7 +110,6 @@ export const CountAlrim = (user: any) => {
 				}
 			)
 			.then((e) => {
-				console.log(e);
 				resolve(e);
 			});
 	});

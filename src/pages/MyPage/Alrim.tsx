@@ -21,39 +21,29 @@ const AlrimPage = observer(() => {
 
 	useEffect(() => {
 		async function fetchData() {
-			console.log("test", user);
 			const d: any = await SearchAlrim(user);
-			console.log("Daata", d);
 			setAlrimData(d.data);
 		}
 		fetchData();
 	}, [user]);
 
 	async function alrimAllChecked() {
-		console.log(`모든 알림 읽기`);
 		const d: any = await CheckedAllAlrim(user);
-		console.log("모든 알림 읽기", d);
 		setAlrimData(d.data);
 	}
 
 	async function alrimAllDelete() {
-		console.log(`알림 전체 삭제`);
 		const d: any = await DeleteAllAlrim(user);
-		console.log("알림 전체 삭제", d.data);
 		setAlrimData(d.data);
 	}
 
 	async function deleteAlrim(notificationId: number) {
-		console.log(`이 알림만 삭제`);
 		const d: any = await DeleteAlrim(user, notificationId);
-		console.log("이 알림만 삭제", d.data);
 		setAlrimData(d.data);
 	}
 
 	async function ReadAlrim(notificationId: number) {
-		console.log(`이 알림만 읽기`);
 		const d: any = await CheckedAlrim(user, notificationId);
-		console.log("이 알림만 읽기", d);
 		setAlrimData(d.data);
 	}
 

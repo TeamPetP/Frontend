@@ -12,7 +12,6 @@ export const StoreProvider: StoreComponent = ({
 	children,
 	store,
 }): ReactElement => {
-	console.log(store);
 	return (
 		<StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 	);

@@ -124,8 +124,6 @@ const IndexPage = observer(() => {
 		async (state: boolean, userToken: any = {}) => {
 			setLoading(true);
 
-			console.log("pageNumber", pageNumber, "state", state);
-
 			let res: any = {};
 
 			if (serachInputC.length > 0) {
@@ -151,18 +149,15 @@ const IndexPage = observer(() => {
 			if (res.data.content.length === 0) {
 				setLoading(true);
 			}
-			console.log("klkkk", postData);
 		},
 		[pageNumber, serachInputC]
 	);
 
 	useEffect(() => {
-		console.log("test");
 		getItems(false);
 	}, [getItems]);
 
 	useEffect(() => {
-		console.log("test", user);
 		getItems(true, user);
 	}, [user]);
 
@@ -187,10 +182,8 @@ const IndexPage = observer(() => {
 	function SerachInputRegex(e: React.ChangeEvent<HTMLInputElement>) {
 		let value = e.target.value;
 		let tagIndex = value.indexOf("#");
-		console.log(value, tagIndex, value.indexOf(" ", tagIndex + 1));
 		if (tagIndex != -1) {
 			if (value.indexOf(" ", tagIndex + 1) != -1) {
-				console.log("검색");
 				let k = value.slice(0, value.indexOf(" ", tagIndex + 1) + 1);
 				setSearchInput(() => {
 					return k;
@@ -211,30 +204,9 @@ const IndexPage = observer(() => {
 	}
 	async function PostSearch() {
 		let k: string = serachInput;
-		console.log("now", user, pageNumber, k.replace("#", ""));
 		setPageNumber(0);
 		setSearchInputC(k.replace("#", ""));
-
-		// const d: any = await SearchPost(user, pageNumber, k.replace("#", ""));
-		// console.log("Daata", d);
-		// setPostData(d.data.content);
 	}
-	// useEffect(() => {
-	// 	console.log(user);
-	// 	async function fetchData() {
-	// 		console.log("test", user);
-
-	// 		let k: string = serachInput;
-	// 		const d: any = await SearchPost(
-	// 			user,
-	// 			pageNumber,
-	// 			k.replace("#", "")
-	// 		);
-	// 		console.log("Daata", d);
-	// 		setPostData(d.data);
-	// 	}
-	// 	fetchData();
-	// }, [user]);
 
 	return (
 		<Wrapper>

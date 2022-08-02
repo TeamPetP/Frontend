@@ -211,7 +211,6 @@ function Board(props) {
 	}, []);
 
 	useEffect(() => {
-		console.log(props.info.isLiked);
 		if (props.info.isLiked == null) {
 			setLike(false);
 		} else {
@@ -246,7 +245,6 @@ function Board(props) {
 		if (user != null && user.userAccessState === true) {
 			await LikePost(user, postId).then((e) => {
 				setLike(state);
-				console.log(e);
 				setLikeCount(e);
 			});
 		}

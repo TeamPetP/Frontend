@@ -1,11 +1,8 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import LogoImg from "../logo.png";
-import { signInGoogle, auth } from "../services/firebaseAuth";
-import PetSignInImage from "../assets/images/signin_pet_image.svg";
 import Modal from "../components/common/Modal";
 import { UserContext } from "../contexts/UserContext";
-import ProfileDefaultImage from "../assets/images/profile_default_image.png";
 import { SignUp } from "../services/authApi";
 import { useStores } from "../hooks/useStores";
 import { signOut } from "../services/firebaseAuth";
@@ -126,12 +123,12 @@ function SignUpModal(props) {
 		}
 	}
 
-	function onChangeNickName(e){
-		setNickname(e.target.value)
+	function onChangeNickName(e) {
+		setNickname(e.target.value);
 	}
 
-	function onChangeIntroduce(e){
-		setIntroduce(e.target.value)
+	function onChangeIntroduce(e) {
+		setIntroduce(e.target.value);
 	}
 
 	return (
@@ -165,11 +162,17 @@ function SignUpModal(props) {
 				</label> */}
 				<InputWrapper>
 					<InputTitle>닉네임</InputTitle>
-					<Input placeholder="닉네임을 입력해주세요." onChange={e=> onChangeNickName(e)}></Input>
+					<Input
+						placeholder="닉네임을 입력해주세요."
+						onChange={(e) => onChangeNickName(e)}
+					></Input>
 				</InputWrapper>
 				<InputWrapper>
 					<InputTitle>내 소개</InputTitle>
-					<TextArea placeholder="나를 소개해주세요." onChange={e=> onChangeIntroduce(e)}></TextArea>
+					<TextArea
+						placeholder="나를 소개해주세요."
+						onChange={(e) => onChangeIntroduce(e)}
+					></TextArea>
 				</InputWrapper>
 				<Button
 					onClick={() =>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import LogoImg from "../logo.png";
 import { signInGoogle, auth } from "../services/firebaseAuth";
-import PetSignInImage from "../assets/images/signin_pet_image.svg";
+import PetSignInImage from "../assets/images/signin_pet_image.png";
 import Modal from "../components/common/Modal";
 
 const ModalWrapper = styled.div`

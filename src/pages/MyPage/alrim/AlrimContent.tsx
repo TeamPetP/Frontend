@@ -11,38 +11,64 @@ interface IAlrimType {
 }
 
 const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
+	console.log(data);
 	// notificationType에 따른 알림타입, 메세지 구분
 	let notiType = "";
 	let notiMsg = "";
 
+	function regexTitle(content: string) {
+		let regex_content = "";
+		if (content.length > 3) {
+			regex_content = content.substr(0, 3) + "...";
+		} else {
+			regex_content = content;
+		}
+
+		return '"' + regex_content + '"';
+	}
+
 	switch (data.notificationType) {
 		case "commentWrite":
 			notiType = "댓글";
-			notiMsg = `${data.nickname}님이 댓글을 남겼습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.content
+			)} 댓글을 남겼습니다.`;
 			break;
 		case "meetingCommentWrite":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임 게시물에 댓글을 남겼습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.content
+			)} 모임 게시물에 댓글을 남겼습니다.`;
 			break;
 		case "meetingJoinApproved":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임에 승인되셨습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.meetingTitle
+			)} 모임에 승인되셨습니다.`;
 			break;
 		case "meetingJoinDeclined":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임에 거절되셨습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.meetingTitle
+			)} 모임에 거절되셨습니다.`;
 			break;
 		case "meetingJoinedRequest":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임에 가입신청을 하였습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.meetingTitle
+			)} 모임에 가입신청을 하였습니다.`;
 			break;
 		case "meetingPostWrite":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 모임에 글이 올라왔습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.meetingTitle
+			)} 모임에 글이 올라왔습니다.`;
 			break;
 		case "postLike":
 			notiType = "게시판";
-			notiMsg = `${data.nickname}님의 게시판에 좋아요가 달렸습니다.`;
+			notiMsg = `${data.nickname}님이 ${regexTitle(
+				data.content
+			)} 글에 좋아요를 하였습니다.`;
 			break;
 		default:
 			notiType = "";

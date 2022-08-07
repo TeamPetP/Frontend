@@ -96,7 +96,12 @@ const Navbar = observer(() => {
 										<Badge>{alrimCount > 99 ? "99+" : alrimCount}</Badge>
 										</ProfileWrap>
 									) : (
-										<UserProfile src={ProfileImage} />
+										<ProfileWrap>
+										<UserProfile
+											src={userStore.info.imgUrl}
+										/>
+										<Badge>{alrimCount > 99 ? "99+" : alrimCount}</Badge>
+										</ProfileWrap>
 									)}
 								</ProfileButton>
 							) : (

@@ -13,6 +13,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useStores } from "../hooks/useStores";
 import { observer } from "mobx-react";
 import { signOut } from "../services/firebaseAuth";
+import {CountAlrim} from "../services/notificationApi";
 
 const Navbar = observer(() => {
 	const { pathname } = useLocation();
@@ -21,9 +22,17 @@ const Navbar = observer(() => {
 	const [IsIconClicked, setIsIconClicked] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(true); // 디바이스 사이즈 체크
 	const { modalStore, userStore } = useStores();
+	const [alrimCount, setAlrimCount] =useState(0);
 
 	const menuRef = useRef();
 	const { user } = useContext(UserContext);
+
+	// 안 읽은 알림 갯수
+	async function fetchAlrimData() {
+		const d = await CountAlrim(user);
+		console.log(d.data);
+		setAlrimCount(d.data);
+	}
 
 	useEffect(() => {
 		deviceSizeCheck();
@@ -35,6 +44,10 @@ const Navbar = observer(() => {
 			window.removeEventListener("click", handleClickOutside);
 		};
 	}, []);
+
+	useEffect(() => {
+		fetchAlrimData();
+	}, [user]);
 
 	const handleClickOutside = (e) => {
 		if (!menuRef.current?.contains(e.target)) setIsIconClicked(false);
@@ -76,9 +89,12 @@ const Navbar = observer(() => {
 									{/* imgUrl */}
 									{userStore.info.imgUrl &&
 									userStore.info.imgUrl.length > 0 ? (
+										<ProfileWrap>
 										<UserProfile
 											src={userStore.info.imgUrl}
 										/>
+										<Badge>{alrimCount > 99 ? "99+" : alrimCount}</Badge>
+										</ProfileWrap>
 									) : (
 										<UserProfile src={ProfileImage} />
 									)}
@@ -286,8 +302,12 @@ const ProfileButton = styled(Link)`
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
-	background-color: blue;
+	background-color: #eeeeee;
 	display: block;
+`;
+
+const ProfileWrap = styled.div`
+position: relative;
 `;
 
 const UserProfile = styled.img`
@@ -295,6 +315,20 @@ const UserProfile = styled.img`
 	height: 100%;
 
 	border-radius: 100%;
+`;
+
+const Badge = styled.div`
+    position: absolute;
+    top: -10px;
+    right: -15%;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: #ff3b3b;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    line-height: 30px;
 `;
 
 const LoginBtn = styled.button`

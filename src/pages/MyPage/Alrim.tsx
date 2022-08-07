@@ -23,8 +23,10 @@ const AlrimPage = observer(() => {
 		async function fetchData() {
 			const d: any = await SearchAlrim(user);
 			setAlrimData(d.data);
+			console.log(d.data);
 		}
 		fetchData();
+		
 	}, [user]);
 
 	async function alrimAllChecked() {

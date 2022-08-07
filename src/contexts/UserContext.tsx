@@ -39,6 +39,8 @@ export const AuthProvider = ({ children }: any) => {
 					Authorization: `Bearer ${firebaseUser}`,
 				});
 				modalStore.signInState = false;
+				console.log(`Bearer ${firebaseUser}`);
+				
 			})
 			.catch((e) => {
 				if (e.response?.data.code === "USER_NOT_FOUND") {

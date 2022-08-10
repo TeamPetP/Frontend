@@ -37,8 +37,8 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 		case "meetingCommentWrite":
 			notiType = "모임";
 			notiMsg = `${data.nickname}님이 ${regexTitle(
-				data.content
-			)} 모임 게시물에 댓글을 남겼습니다.`;
+				data.postTitle
+			)}글에 ${regexTitle(data.content)} 댓글을 남겼습니다.`;
 			break;
 		case "meetingJoinApproved":
 			notiType = "모임";
@@ -60,9 +60,9 @@ const AlrimContent = ({ data, deleteAlrim, ReadAlrim }: IAlrimType) => {
 			break;
 		case "meetingPostWrite":
 			notiType = "모임";
-			notiMsg = `${data.nickname}님이 ${regexTitle(
-				data.meetingTitle
-			)} 모임에 글이 올라왔습니다.`;
+			notiMsg = `${data.nickname}님이 모임에 ${regexTitle(
+				data.content
+			)} 글을 남겼습니다.`;
 			break;
 		case "postLike":
 			notiType = "게시판";
@@ -157,7 +157,7 @@ const Type = styled.div`
 `;
 
 const Message = styled.div`
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1.3;
 	color: ${theme.TextConentColor};
 	width: calc(100% - 100px);
@@ -178,7 +178,7 @@ const Message = styled.div`
 const Bottom = styled(Top)`
 	margin-left: 8px;
 
-	font-size: 16px;
+	font-size: 14px;
 	color: ${theme.TextSubColor};
 	justify-content: start;
 
